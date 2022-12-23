@@ -10,7 +10,7 @@
         };
         sock.onmessage = function ({data}) {
             document.getElementById('progress-bar').style.width = data + '%';
-            document.getElementById('progress-bar').firstChild.replaceWith(data + '%');
+            document.getElementById('progress-bar').innerText = data + '%';
         };
         sock.onclose = function () {
         };
@@ -26,9 +26,7 @@
     <div class="row">
         <div class="col-6">
             <div class="progress">
-                <div id="progress-bar" class="progress-bar bg-primary" role="progressbar">
-                    <!--leave at least a space here so there is something to replace-->
-                </div>
+                <div id="progress-bar" class="progress-bar bg-primary" role="progressbar"></div>
             </div>
         </div>
     </div>

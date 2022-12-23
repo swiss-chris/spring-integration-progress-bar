@@ -44,7 +44,7 @@ public class Application {
     IntegrationFlow pollingFlow() {
         return IntegrationFlow
                 .from(() -> EMPTY_MESSAGE, e -> e.poller(Pollers.fixedRate(Duration.ofMillis(1000 / PERCENT_PER_SECOND))))
-                .transform(m -> COUNTER.incrementAndGet() % 99 + 1) // from 1 to 100
+                .transform(m -> COUNTER.incrementAndGet() % 100 + 1) // from 1 to 100
                 .channel(webSocketFlow().getInputChannel())
                 .get();
     }

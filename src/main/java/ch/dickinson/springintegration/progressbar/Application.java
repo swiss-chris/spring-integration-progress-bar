@@ -9,7 +9,6 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.websocket.ServerWebSocketContainer;
 import org.springframework.integration.websocket.outbound.WebSocketOutboundMessageHandler;
-import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,17 +63,12 @@ public class Application {
                                 .build()))
                 .log(DEBUG, logCat, m -> "Sent (sessID " + m.getHeaders().get(SESSION_ID_HEADER) + "): " + m.getPayload())
                 .channel(c -> c.executor(Executors.newCachedThreadPool()))
-                .handle(webSocketOutboundAdapter());
+                .handle(new WebSocketOutboundMessageHandler(serverWebSocketContainer()));
     }
 
     @Bean
     ServerWebSocketContainer serverWebSocketContainer() {
         return new ServerWebSocketContainer("/messages").withSockJs();
-    }
-
-    @Bean
-    MessageHandler webSocketOutboundAdapter() {
-        return new WebSocketOutboundMessageHandler(serverWebSocketContainer());
     }
 
     private static String getLogCat(Object anonymousInstance) {

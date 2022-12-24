@@ -1,9 +1,8 @@
 package ch.dickinson.springintegration.progressbar;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.Pollers;
@@ -11,7 +10,6 @@ import org.springframework.integration.websocket.ServerWebSocketContainer;
 import org.springframework.integration.websocket.outbound.WebSocketOutboundMessageHandler;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.util.concurrent.Executors;
@@ -27,9 +25,7 @@ import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSI
  * <a href="https://github.com/johnpili/websocket-progress-bar">websocket-progress-bar</a>
  */
 @Configuration
-@ComponentScan
-@RestController
-@EnableAutoConfiguration
+@SpringBootApplication
 public class Application {
 
     private static final GenericMessage<Object> EMPTY_MESSAGE = new GenericMessage<>("");

@@ -7,13 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script type="text/javascript">
         function startflow () {
-            var form = document.getElementById("startflow");
-            var data = new FormData(form);
-            fetch("flow", {
-                method: "post",
-                body: data
-            });
-            return false; // prefent form submit & page refresh
+            fetch("flow", {method: "post"});
+            return false; // prevent form submit & page refresh
         }
     </script>
     <script type="text/javascript">
@@ -38,7 +33,7 @@
     <div class="row my-4">
         <div class="col-12">
             <form id="startflow" onsubmit="return startflow()">
-                <button class="btn btn-primary" name="key" value="value">Start Flow</button>
+                <button class="btn btn-primary">Start Flow</button>
             </form>
         </div>
     </div>

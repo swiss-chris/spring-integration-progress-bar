@@ -11,13 +11,17 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.http.dsl.Http;
 import org.springframework.integration.websocket.ServerWebSocketContainer;
 import org.springframework.integration.websocket.outbound.WebSocketOutboundMessageHandler;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
+import static org.springframework.integration.IntegrationMessageHeaderAccessor.CORRELATION_ID;
 import static org.springframework.integration.handler.LoggingHandler.Level.DEBUG;
 import static org.springframework.integration.handler.LoggingHandler.Level.INFO;
 import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSION_ID_HEADER;
@@ -51,13 +55,13 @@ public class Application {
                         .get())
                 .transform(m -> new GenericMessage<>(PERCENTAGES)) // this also removes all http headers as they interfere with the WebSocketOutboundMessageHandler
                 .split()
-                .transform(Application::sleep) // pace the messages at 'PERCENT_PER_SECOND'
+                .transform(Application::doSomeImportantWork) // pace the messages at 'PERCENT_PER_SECOND'
                 .channel(webSocketFlow().getInputChannel())
                 .get();
     }
 
     @SneakyThrows
-    private static <T> T sleep(T m) {
+    private static <T> T doSomeImportantWork(T m) {
         Thread.sleep(1000 / PERCENT_PER_SECOND);
         return m;
     }
@@ -67,11 +71,15 @@ public class Application {
         final String logCat = getLogCat(new Object() {});
         return flow -> flow
                 .log(INFO, logCat, m -> "Received: " + m.getPayload())
-                .split(Object.class, m -> serverWebSocketContainer()
+                .split(Message.class, m -> serverWebSocketContainer()
                         .getSessions()
                         .keySet()
                         .stream()
-                        .map(s -> MessageBuilder.withPayload(m)
+                        .map(s -> MessageBuilder
+                                .withPayload(Map.of(
+                                        "flowId", Objects.requireNonNull(m.getHeaders().get(CORRELATION_ID)),
+                                        "percent", m.getPayload()
+                                ))
                                 .setHeader(SESSION_ID_HEADER, s)
                                 .build()))
                 .log(DEBUG, logCat, m -> "Sent (sessID " + m.getHeaders().get(SESSION_ID_HEADER) + "): " + m.getPayload())

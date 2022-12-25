@@ -5,7 +5,7 @@ A progress bar that can be controlled from a Spring Integration (Java DSL) Flow.
 
 ![progress-bar.gif](progress-bar.gif)
 
-[version-2](https://github.com/swiss-chris/spring-integration-progress-bar/tree/version-2/manual-button)
+[version-2](https://github.com/swiss-chris/spring-integration-progress-bar/tree/version-2)
 
 ![progress-bar-2.gif](progress-bar-2.gif)
 

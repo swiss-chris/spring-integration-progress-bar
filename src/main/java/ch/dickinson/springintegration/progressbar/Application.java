@@ -4,16 +4,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.Pollers;
+import org.springframework.integration.http.dsl.Http;
 import org.springframework.integration.websocket.ServerWebSocketContainer;
 import org.springframework.integration.websocket.outbound.WebSocketOutboundMessageHandler;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 
-import java.time.Duration;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.springframework.integration.handler.LoggingHandler.Level.DEBUG;
 import static org.springframework.integration.handler.LoggingHandler.Level.INFO;
@@ -29,18 +28,21 @@ import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSI
 public class Application {
 
     private static final GenericMessage<Object> EMPTY_MESSAGE = new GenericMessage<>("");
-    private static final AtomicInteger COUNTER = new AtomicInteger();
-    private static final int PERCENT_PER_SECOND = 5;
+    private static final String HTTP_PATH = "/flow";
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Bean
-    IntegrationFlow pollingFlow() {
+    IntegrationFlow flow() {
         return IntegrationFlow
-                .from(() -> EMPTY_MESSAGE, e -> e.poller(Pollers.fixedRate(Duration.ofMillis(1000 / PERCENT_PER_SECOND))))
-                .transform(m -> COUNTER.incrementAndGet() % 100 + 1) // from 1 to 100
+                .from(Http.inboundChannelAdapter(HTTP_PATH)
+                        .requestMapping(mapping -> mapping.methods(HttpMethod.POST))
+                        .get())
+                .transform(m -> EMPTY_MESSAGE) // remove all http headers as they interfere with the WebSocketOutboundMessageHandler
+                .transform(m -> 50)
+                .split()
                 .channel(webSocketFlow().getInputChannel())
                 .get();
     }

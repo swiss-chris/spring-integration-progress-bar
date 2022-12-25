@@ -1,5 +1,6 @@
 package ch.dickinson.springintegration.progressbar;
 
+import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,9 @@ import org.springframework.integration.websocket.outbound.WebSocketOutboundMessa
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 
+import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
 
 import static org.springframework.integration.handler.LoggingHandler.Level.DEBUG;
 import static org.springframework.integration.handler.LoggingHandler.Level.INFO;
@@ -27,8 +30,11 @@ import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSI
 @SpringBootApplication
 public class Application {
 
-    private static final GenericMessage<Object> EMPTY_MESSAGE = new GenericMessage<>("");
     private static final String HTTP_PATH = "/flow";
+
+    private static final int PERCENT_PER_SECOND = 5;
+
+    private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -40,11 +46,17 @@ public class Application {
                 .from(Http.inboundChannelAdapter(HTTP_PATH)
                         .requestMapping(mapping -> mapping.methods(HttpMethod.POST))
                         .get())
-                .transform(m -> EMPTY_MESSAGE) // remove all http headers as they interfere with the WebSocketOutboundMessageHandler
-                .transform(m -> 50)
+                .transform(m -> new GenericMessage<>(PERCENTAGES)) // this also removes all http headers as they interfere with the WebSocketOutboundMessageHandler
                 .split()
+                .transform(Application::sleep) // pace the messages at 'PERCENT_PER_SECOND'
                 .channel(webSocketFlow().getInputChannel())
                 .get();
+    }
+
+    @SneakyThrows
+    private static <T> T sleep(T m) {
+        Thread.sleep(1000 / PERCENT_PER_SECOND);
+        return m;
     }
 
     @Bean

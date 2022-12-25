@@ -28,7 +28,6 @@ import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSI
 @SpringBootApplication
 public class Application {
 
-    private static final GenericMessage<Object> EMPTY_MESSAGE = new GenericMessage<>("");
     private static final AtomicInteger COUNTER = new AtomicInteger();
     private static final int PERCENT_PER_SECOND = 5;
 
@@ -39,8 +38,8 @@ public class Application {
     @Bean
     IntegrationFlow pollingFlow() {
         return IntegrationFlow
-                .from(() -> EMPTY_MESSAGE, e -> e.poller(Pollers.fixedRate(Duration.ofMillis(1000 / PERCENT_PER_SECOND))))
-                .transform(m -> COUNTER.incrementAndGet() % 100 + 1) // from 1 to 100
+                .from(() -> new GenericMessage<>(COUNTER.incrementAndGet() % 100 + 1),
+                        e -> e.poller(Pollers.fixedRate(Duration.ofMillis(1000 / PERCENT_PER_SECOND))))
                 .channel(webSocketFlow().getInputChannel())
                 .get();
     }

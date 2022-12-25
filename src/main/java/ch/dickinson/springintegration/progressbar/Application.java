@@ -26,11 +26,6 @@ import static org.springframework.integration.handler.LoggingHandler.Level.DEBUG
 import static org.springframework.integration.handler.LoggingHandler.Level.INFO;
 import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSION_ID_HEADER;
 
-/**
- * inspired by:
- * <a href="https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example">spring-integration-4.1-websockets-example</a>
- * <a href="https://github.com/johnpili/websocket-progress-bar">websocket-progress-bar</a>
- */
 @Slf4j
 @Configuration
 @SpringBootApplication

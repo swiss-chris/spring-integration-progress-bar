@@ -1,6 +1,7 @@
 package ch.dickinson.springintegration.progressbar;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,18 +27,20 @@ import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSI
  * <a href="https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example">spring-integration-4.1-websockets-example</a>
  * <a href="https://github.com/johnpili/websocket-progress-bar">websocket-progress-bar</a>
  */
+@Slf4j
 @Configuration
 @SpringBootApplication
 public class Application {
 
     private static final String HTTP_PATH = "/flow";
 
-    private static final int PERCENT_PER_SECOND = 5;
+    private static final int PERCENT_PER_SECOND = 10;
 
     private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+        log.info("Open: http://localhost:8080");
     }
 
     @Bean

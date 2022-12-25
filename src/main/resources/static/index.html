@@ -6,21 +6,26 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script type="text/javascript">
-        function startflow () {
+        let sock;
+
+        const connect = () => {
+            sock = new SockJS('http://localhost:8080/messages');
+
+            sock.onopen = function () {
+            };
+            sock.onmessage = function ({data}) {
+                document.getElementById('progress-bar').style.width = data + '%';
+                document.getElementById('progress-bar').innerText = data + '%';
+            };
+            sock.onclose = function () {
+            };
+        }
+
+        const startflow = () => {
+            connect();
             fetch("flow", {method: "post"});
             return false; // prevent form submit & page refresh
         }
-    </script>
-    <script type="text/javascript">
-        var sock = new SockJS('http://localhost:8080/messages');
-        sock.onopen = function () {
-        };
-        sock.onmessage = function ({data}) {
-            document.getElementById('progress-bar').style.width = data + '%';
-            document.getElementById('progress-bar').innerText = data + '%';
-        };
-        sock.onclose = function () {
-        };
     </script>
 </head>
 <body>

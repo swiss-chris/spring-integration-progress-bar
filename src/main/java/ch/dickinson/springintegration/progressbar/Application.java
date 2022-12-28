@@ -12,18 +12,17 @@ import org.springframework.integration.http.dsl.Http;
 import org.springframework.integration.websocket.ServerWebSocketContainer;
 import org.springframework.integration.websocket.outbound.WebSocketOutboundMessageHandler;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
+import static java.util.Objects.requireNonNull;
 import static org.springframework.integration.IntegrationMessageHeaderAccessor.CORRELATION_ID;
 import static org.springframework.integration.handler.LoggingHandler.Level.DEBUG;
-import static org.springframework.integration.handler.LoggingHandler.Level.INFO;
+import static org.springframework.integration.handler.LoggingHandler.Level.TRACE;
 import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSION_ID_HEADER;
 
 @Slf4j
@@ -36,6 +35,8 @@ public class Application {
     private static final int PERCENT_PER_SECOND = 10;
 
     private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
+    private static final String HTTP_PARAM_SOURCE = "source";
+    private static final String HTTP_PARAM_CATEGORY = "category";
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -47,8 +48,15 @@ public class Application {
         return IntegrationFlow
                 .from(Http.inboundChannelAdapter(HTTP_PATH)
                         .requestMapping(mapping -> mapping.methods(HttpMethod.POST))
+                        .headerExpression(HTTP_PARAM_SOURCE, "#requestParams['%s']".formatted(HTTP_PARAM_SOURCE))
+                        .headerExpression(HTTP_PARAM_CATEGORY, "#requestParams['%s']".formatted(HTTP_PARAM_CATEGORY))
                         .get())
-                .transform(m -> new GenericMessage<>(PERCENTAGES)) // this also removes all http headers as they interfere with the WebSocketOutboundMessageHandler
+                .transform(Message.class, m -> MessageBuilder
+                        .withPayload(PERCENTAGES)
+                        // keep only these http headers to prevent any interference with the WebSocketOutboundMessageHandler
+                        .setHeader(HTTP_PARAM_SOURCE, m.getHeaders().get(HTTP_PARAM_SOURCE))
+                        .setHeader(HTTP_PARAM_CATEGORY, m.getHeaders().get(HTTP_PARAM_CATEGORY))
+                        .build())
                 .split()
                 .transform(Application::doSomeImportantWork) // pace the messages at 'PERCENT_PER_SECOND'
                 .channel(webSocketFlow().getInputChannel())
@@ -65,19 +73,21 @@ public class Application {
     IntegrationFlow webSocketFlow() {
         final String logCat = getLogCat(new Object() {});
         return flow -> flow
-                .log(INFO, logCat, m -> "Received: " + m.getPayload())
+                .log(DEBUG, logCat, m -> "Received: " + m.getPayload())
                 .split(Message.class, m -> serverWebSocketContainer()
                         .getSessions()
                         .keySet()
                         .stream()
                         .map(s -> MessageBuilder
                                 .withPayload(Map.of(
-                                        "flowId", Objects.requireNonNull(m.getHeaders().get(CORRELATION_ID)),
+                                        "flowId", requireNonNull(m.getHeaders().get(CORRELATION_ID)),
+                                        HTTP_PARAM_SOURCE, requireNonNull(m.getHeaders().get(HTTP_PARAM_SOURCE)),
+                                        HTTP_PARAM_CATEGORY, requireNonNull(m.getHeaders().get(HTTP_PARAM_CATEGORY)),
                                         "percent", m.getPayload()
                                 ))
                                 .setHeader(SESSION_ID_HEADER, s)
                                 .build()))
-                .log(DEBUG, logCat, m -> "Sent (sessID " + m.getHeaders().get(SESSION_ID_HEADER) + "): " + m.getPayload())
+                .log(TRACE, logCat, m -> "Sent (sessID " + m.getHeaders().get(SESSION_ID_HEADER) + "): " + m.getPayload())
                 .channel(c -> c.executor(Executors.newCachedThreadPool()))
                 .handle(new WebSocketOutboundMessageHandler(serverWebSocketContainer()));
     }

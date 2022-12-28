@@ -14,13 +14,35 @@
             <h3>Spring Integration Progress Bar</h3>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-12">
-            <form id="startflow" onsubmit="return startflow()">
-                <button class="btn btn-sm btn-primary">Start Flow</button>
-            </form>
+    <form id="startflow" onsubmit="return startflow()">
+        <div class="row mt-3">
+            <div class="col-3">
+                <label for="source-select" class="form-label">Source</label>
+                <select class="form-select form-select-sm" name="source" id="source-select">
+                    <option value="all">--ANY--</option>
+                    <option value="source-a">Source A</option>
+                    <option value="source-b">Source B</option>
+                    <option value="source-c">Source C</option>
+                    <option value="source-d">Source D</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <label for="category-select" class="form-label">Category</label>
+                <select class="form-select form-select-sm" name="category" id="category-select">
+                    <option value="all">--ANY--</option>
+                    <option value="category-a">Category A</option>
+                    <option value="category-b">Category B</option>
+                    <option value="category-c">Category C</option>
+                    <option value="category-d">Category D</option>
+                </select>
+            </div>
         </div>
-    </div>
+        <div class="row mt-3">
+            <div class="col-3">
+                <button class="btn btn-sm btn-primary mt-3">Start Flow</button>
+            </div>
+        </div>
+    </form>
     <div class="row mt-4">
         <div class="col-6">
             <div class="progress">

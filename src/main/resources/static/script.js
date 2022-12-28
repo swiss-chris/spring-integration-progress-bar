@@ -28,6 +28,7 @@ const reconnect = () => {
 
 const startflow = () => {
     reconnect();
-    fetch("flow", {method: "post"});
+    const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
+    fetch(`flow?${params}`, {method: "post"});
     return false; // prevent form submit & page refresh
 }

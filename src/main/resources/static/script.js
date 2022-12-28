@@ -5,10 +5,12 @@ let latestFlowId;
 const connect = () => {
     sock = new SockJS('http://localhost:8080/messages');
     sock.onmessage = function ({data}) {
-        const {flowId, percent} = JSON.parse(data);
+        const {flowId, percent, sources, categories} = JSON.parse(data);
         if (!flowIds.includes(flowId)) {
             flowIds.push(flowId);
             latestFlowId = flowId;
+            document.getElementById('sources').innerText = sources;
+            document.getElementById('categories').innerText = categories;
         }
         if (flowId === latestFlowId) {
             // only show the progress of the most recently started flow

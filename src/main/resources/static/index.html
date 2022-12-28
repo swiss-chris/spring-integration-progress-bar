@@ -17,23 +17,23 @@
     <form id="startflow" onsubmit="return startflow()">
         <div class="row mt-3">
             <div class="col-3">
-                <label for="source-select" class="form-label">Source</label>
-                <select class="form-select form-select-sm" name="source" id="source-select">
-                    <option value="all">--ANY--</option>
-                    <option value="source-a">Source A</option>
-                    <option value="source-b">Source B</option>
-                    <option value="source-c">Source C</option>
-                    <option value="source-d">Source D</option>
+                <label for="sources-select" class="form-label">Sources</label>
+                <select class="form-select form-select-sm" name="sources" id="sources-select">
+                    <option value="all">--ALL--</option>
+                    <option value="A">Source A</option>
+                    <option value="B">Source B</option>
+                    <option value="C">Source C</option>
+                    <option value="D">Source D</option>
                 </select>
             </div>
             <div class="col-3">
-                <label for="category-select" class="form-label">Category</label>
-                <select class="form-select form-select-sm" name="category" id="category-select">
-                    <option value="all">--ANY--</option>
-                    <option value="category-a">Category A</option>
-                    <option value="category-b">Category B</option>
-                    <option value="category-c">Category C</option>
-                    <option value="category-d">Category D</option>
+                <label for="categories-select" class="form-label">Categories</label>
+                <select class="form-select form-select-sm" name="categories" id="categories-select">
+                    <option value="all">--ALL--</option>
+                    <option value="A">Category A</option>
+                    <option value="B">Category B</option>
+                    <option value="C">Category C</option>
+                    <option value="D">Category D</option>
                 </select>
             </div>
         </div>
@@ -45,9 +45,26 @@
     </form>
     <div class="row mt-4">
         <div class="col-6">
+            <div class="label">Progress</div>
+        </div>
+        <div class="col-3">
+            <div class="label">Sources</div>
+        </div>
+        <div class="col-3">
+            <div class="label">Categories</div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
             <div class="progress">
                 <div id="progress-bar" class="progress-bar bg-primary" role="progressbar"></div>
             </div>
+        </div>
+        <div class="col-3" id="sources">
+
+        </div>
+        <div class="col-3" id="categories">
+
         </div>
     </div>
 </div>

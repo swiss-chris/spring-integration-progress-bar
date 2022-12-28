@@ -19,8 +19,8 @@ const connect = () => {
 }
 
 const reconnect = () => {
-    const isSocketClosed = sock.readyState === 3;
-    if (isSocketClosed) {
+    const isSocketClosed = () => sock.readyState === 3;
+    if (!sock || isSocketClosed()) {
         // reconnects if the server was restarted
         connect();
     }
@@ -31,5 +31,3 @@ const startflow = () => {
     fetch("flow", {method: "post"});
     return false; // prevent form submit & page refresh
 }
-
-connect();

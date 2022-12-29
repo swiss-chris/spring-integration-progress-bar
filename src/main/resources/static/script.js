@@ -14,12 +14,8 @@ function addRow(flowId, sources, categories) {
         return row;
     }
 
-    if ('content' in document.createElement('template')) {
-        const row = createRowFromTemplate(flowId, sources, categories);
-        document.getElementById('root').appendChild(row);
-    } else {
-        console.error("HTML Templates are not supported.");
-    }
+    const row = createRowFromTemplate(flowId, sources, categories);
+    document.getElementById('root').appendChild(row);
 }
 
 function updateProgressForFlow({data}) {

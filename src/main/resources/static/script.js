@@ -1,10 +1,6 @@
 let sock;
 
-function updateProgressForFlow(data) {
-    function getRow(flowId) {
-        return document.getElementById(flowId);
-    }
-
+function addRow(flowId, sources, categories) {
     function createRowFromTemplate(flowId, sources, categories) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
         row.querySelector('.row-from-template').id = flowId;
@@ -13,11 +9,16 @@ function updateProgressForFlow(data) {
         return row;
     }
 
-    function addRow(flowId, sources, categories) {
-        const row = createRowFromTemplate(flowId, sources, categories);
-        document.getElementById('root').appendChild(row);
-        return row;
+    const row = createRowFromTemplate(flowId, sources, categories);
+    document.getElementById('root').appendChild(row);
+    return row;
+}
+
+function updateProgressForFlow(data) {
+    function getRow(flowId) {
+        return document.getElementById(flowId);
     }
+
     function updateProgress(row, percent) {
         row.querySelector('.progress-bar').style.width = percent + '%';
         row.querySelector('.progress-bar').innerText = percent + '%';

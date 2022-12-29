@@ -1,27 +1,41 @@
 let sock;
 
+function getRow(flowId) {
+    return document.getElementById(flowId);
+}
+
 function addRow(flowId, sources, categories) {
     function createRowFromTemplate(flowId, sources, categories) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
         row.querySelector('.row-from-template').id = flowId;
         row.querySelector('.sources').innerText = sources;
         row.querySelector('.categories').innerText = categories;
+        const startDiv = row.querySelector('.start');
+        const start = Date.now();
+        startDiv.dataset.start = start;
+        startDiv.innerText = new Date(start).toLocaleTimeString();
         return row;
     }
 
     const row = createRowFromTemplate(flowId, sources, categories);
     document.getElementById('root').appendChild(row);
-    return row;
+    return getRow(flowId); // returning 'row' here causes an error later on 'row.querySelector('.progress-bar').style'
 }
 
 function updateProgressForFlow(data) {
-    function getRow(flowId) {
-        return document.getElementById(flowId);
+    function duration(millis) {
+        return new Date(millis).toISOString().substring(11, 19);
     }
 
     function updateProgress(row, percent) {
         row.querySelector('.progress-bar').style.width = percent + '%';
         row.querySelector('.progress-bar').innerText = percent + '%';
+        if (percent === 100) {
+            const end = new Date();
+            row.querySelector('.end').innerText = end.toLocaleTimeString();
+            const start = new Date(parseInt(row.querySelector('.start').dataset.start));
+            row.querySelector('.duration').innerText = duration(end.getTime() - start.getTime());
+        }
     }
 
     const {flowId, sources, categories, percent} = JSON.parse(data);

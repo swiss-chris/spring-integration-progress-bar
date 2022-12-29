@@ -1,5 +1,6 @@
 # spring-integration-progress-bar
-A progress bar that can be controlled from a Spring Integration (Java DSL) Flow. The progress is communicated via WebSocket.
+A progress bar that can be controlled from a Spring Integration (Java DSL) Flow.  
+The progress is communicated via WebSocket.
 
 ![progress-bar.gif](progress-bar.gif)
 

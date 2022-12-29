@@ -3,22 +3,26 @@ let flowId = 0;
 
 function addRow(flowId, sources, categories) {
     function createRowFromTemplate(flowId, sources, categories) {
-        const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.row-from-template').id = flowId;
-        row.querySelector('.sources').innerText = sources;
-        row.querySelector('.categories').innerText = categories;
-        const startDiv = row.querySelector('.start');
-        const start = Date.now();
-        startDiv.dataset.start = start;
-        startDiv.innerText = new Date(start).toLocaleTimeString();
-        return row;
+        if ('content' in document.createElement('template')) {
+            const row = document.getElementById('progress-row').content.cloneNode(true);
+            row.querySelector('.row-from-template').id = flowId;
+            row.querySelector('.sources').innerText = sources;
+            row.querySelector('.categories').innerText = categories;
+            const startDiv = row.querySelector('.start');
+            const start = Date.now();
+            startDiv.dataset.start = start;
+            startDiv.innerText = new Date(start).toLocaleTimeString();
+            return row;
+        } else {
+            console.error("HTML Templates are not supported.");
+        }
     }
 
     const row = createRowFromTemplate(flowId, sources, categories);
     document.getElementById('root').appendChild(row);
 }
 
-function updateProgressForFlow(data) {
+function updateProgressForFlow({data}) {
     function getRow(flowId) {
         return document.getElementById(flowId);
     }
@@ -43,16 +47,10 @@ function updateProgressForFlow(data) {
 }
 
 function startflow() {
-    function reconnect() {
+    function reconnect(onMessageReceived) {
         function connect() {
             sock = new SockJS('http://localhost:8080/messages');
-            sock.onmessage = function ({data}) {
-                if ('content' in document.createElement('template')) {
-                    updateProgressForFlow(data);
-                } else {
-                    console.error("HTML Templates are not supported.");
-                }
-            };
+            sock.onmessage = onMessageReceived;
         }
 
         const isSocketClosed = () => sock.readyState === 3;
@@ -64,7 +62,7 @@ function startflow() {
 
     const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
     addRow(flowId, params.get('sources'), params.get('categories'));
-    reconnect();
+    reconnect(updateProgressForFlow);
     fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
     flowId++
     return false; // prevent form submit & page refresh

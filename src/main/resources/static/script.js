@@ -3,23 +3,23 @@ let flowId = 0;
 
 function addRow(flowId, sources, categories) {
     function createRowFromTemplate(flowId, sources, categories) {
-        if ('content' in document.createElement('template')) {
-            const row = document.getElementById('progress-row').content.cloneNode(true);
-            row.querySelector('.row-from-template').id = flowId;
-            row.querySelector('.sources').innerText = sources;
-            row.querySelector('.categories').innerText = categories;
-            const startDiv = row.querySelector('.start');
-            const start = Date.now();
-            startDiv.dataset.start = start;
-            startDiv.innerText = new Date(start).toLocaleTimeString();
-            return row;
-        } else {
-            console.error("HTML Templates are not supported.");
-        }
+        const row = document.getElementById('progress-row').content.cloneNode(true);
+        row.querySelector('.row-from-template').id = flowId;
+        row.querySelector('.sources').innerText = sources;
+        row.querySelector('.categories').innerText = categories;
+        const startDiv = row.querySelector('.start');
+        const start = Date.now();
+        startDiv.dataset.start = start;
+        startDiv.innerText = new Date(start).toLocaleTimeString();
+        return row;
     }
 
-    const row = createRowFromTemplate(flowId, sources, categories);
-    document.getElementById('root').appendChild(row);
+    if ('content' in document.createElement('template')) {
+        const row = createRowFromTemplate(flowId, sources, categories);
+        document.getElementById('root').appendChild(row);
+    } else {
+        console.error("HTML Templates are not supported.");
+    }
 }
 
 function updateProgressForFlow({data}) {

@@ -1,34 +1,47 @@
 let sock;
-const flowIds = [];
-let latestFlowId;
 
-const connect = () => {
-    sock = new SockJS('http://localhost:8080/messages');
-    sock.onmessage = function ({data}) {
-        const {flowId, percent, sources, categories} = JSON.parse(data);
-        if (!flowIds.includes(flowId)) {
-            flowIds.push(flowId);
-            latestFlowId = flowId;
-            document.getElementById('sources').innerText = sources;
-            document.getElementById('categories').innerText = categories;
-        }
-        if (flowId === latestFlowId) {
-            // only show the progress of the most recently started flow
-            document.getElementById('progress-bar').style.width = percent + '%';
-            document.getElementById('progress-bar').innerText = percent + '%';
-        }
-    };
-}
-
-const reconnect = () => {
-    const isSocketClosed = () => sock.readyState === 3;
-    if (!sock || isSocketClosed()) {
-        // reconnects if the server was restarted
-        connect();
+function updateProgressForFlow(data) {
+    function getRow(flowId) {
+        return document.getElementById(flowId);
     }
+
+    function createRowFromTemplate(flowId, sources, categories) {
+        const clone = document.getElementById('progress-row').content.cloneNode(true);
+        clone.querySelector('.row-from-template').id = flowId;
+        clone.querySelector('.sources').innerText = sources;
+        clone.querySelector('.categories').innerText = categories;
+        document.getElementById('root').appendChild(clone);
+    }
+
+    const {flowId, sources, categories, percent} = JSON.parse(data);
+    if (!getRow(flowId)) {
+        createRowFromTemplate(flowId, sources, categories);
+    }
+    const row = getRow(flowId);
+    row.querySelector('.progress-bar').style.width = percent + '%';
+    row.querySelector('.progress-bar').innerText = percent + '%';
 }
 
-const startflow = () => {
+function startflow() {
+    function reconnect() {
+        function connect() {
+            sock = new SockJS('http://localhost:8080/messages');
+            sock.onmessage = function ({data}) {
+                if ('content' in document.createElement('template')) {
+                    updateProgressForFlow(data);
+                } else {
+                    console.error("HTML Templates are not supported.");
+                }
+            };
+        }
+
+        const isSocketClosed = () => sock.readyState === 3;
+        if (!sock || isSocketClosed()) {
+            // reconnects if the server was restarted
+            connect();
+        }
+    }
+
     reconnect();
     const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
     fetch(`flow?${params}`, {method: "post"});

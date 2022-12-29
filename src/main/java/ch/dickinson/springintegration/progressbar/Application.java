@@ -32,7 +32,7 @@ public class Application {
 
     private static final String HTTP_PATH = "/flow";
 
-    private static final int PERCENT_PER_SECOND = 10;
+    private static final int PERCENT_PER_SECOND = 5;
 
     private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
     private static final String HTTP_PARAM_SOURCES = "sources";

@@ -1,8 +1,5 @@
 let sock;
-
-function getRow(flowId) {
-    return document.getElementById(flowId);
-}
+let flowId = 0;
 
 function addRow(flowId, sources, categories) {
     function createRowFromTemplate(flowId, sources, categories) {
@@ -19,10 +16,13 @@ function addRow(flowId, sources, categories) {
 
     const row = createRowFromTemplate(flowId, sources, categories);
     document.getElementById('root').appendChild(row);
-    return getRow(flowId); // returning 'row' here causes an error later on 'row.querySelector('.progress-bar').style'
 }
 
 function updateProgressForFlow(data) {
+    function getRow(flowId) {
+        return document.getElementById(flowId);
+    }
+
     function duration(millis) {
         return new Date(millis).toISOString().substring(11, 19);
     }
@@ -38,9 +38,8 @@ function updateProgressForFlow(data) {
         }
     }
 
-    const {flowId, sources, categories, percent} = JSON.parse(data);
-    const row = getRow(flowId) || addRow(flowId, sources, categories);
-    updateProgress(row, percent);
+    const {flowId, percent} = JSON.parse(data);
+    updateProgress(getRow(flowId), percent);
 }
 
 function startflow() {
@@ -63,8 +62,10 @@ function startflow() {
         }
     }
 
-    reconnect();
     const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
-    fetch(`flow?${params}`, {method: "post"});
+    addRow(flowId, params.get('sources'), params.get('categories'));
+    reconnect();
+    fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
+    flowId++
     return false; // prevent form submit & page refresh
 }

@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import static java.util.Objects.requireNonNull;
-import static org.springframework.integration.IntegrationMessageHeaderAccessor.CORRELATION_ID;
 import static org.springframework.integration.handler.LoggingHandler.Level.DEBUG;
 import static org.springframework.integration.handler.LoggingHandler.Level.TRACE;
 import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSION_ID_HEADER;
@@ -37,6 +36,7 @@ public class Application {
     private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
     private static final String HTTP_PARAM_SOURCES = "sources";
     private static final String HTTP_PARAM_CATEGORIES = "categories";
+    private static final String HTTP_PARAM_FLOW_ID = "flowId";
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -50,12 +50,14 @@ public class Application {
                         .requestMapping(mapping -> mapping.methods(HttpMethod.POST))
                         .headerExpression(HTTP_PARAM_SOURCES, "#requestParams['%s']".formatted(HTTP_PARAM_SOURCES))
                         .headerExpression(HTTP_PARAM_CATEGORIES, "#requestParams['%s']".formatted(HTTP_PARAM_CATEGORIES))
+                        .headerExpression(HTTP_PARAM_FLOW_ID, "#requestParams['%s']".formatted(HTTP_PARAM_FLOW_ID))
                         .get())
                 .transform(Message.class, m -> MessageBuilder
                         .withPayload(PERCENTAGES)
                         // keep only these http headers to prevent any interference with the WebSocketOutboundMessageHandler
                         .setHeader(HTTP_PARAM_SOURCES, m.getHeaders().get(HTTP_PARAM_SOURCES))
                         .setHeader(HTTP_PARAM_CATEGORIES, m.getHeaders().get(HTTP_PARAM_CATEGORIES))
+                        .setHeader(HTTP_PARAM_FLOW_ID, m.getHeaders().get(HTTP_PARAM_FLOW_ID))
                         .build())
                 .split()
                 .transform(Application::doSomeImportantWork) // pace the messages at 'PERCENT_PER_SECOND'
@@ -80,10 +82,10 @@ public class Application {
                         .stream()
                         .map(s -> MessageBuilder
                                 .withPayload(Map.of(
-                                        "flowId", requireNonNull(m.getHeaders().get(CORRELATION_ID)),
-                                        "percent", m.getPayload(),
                                         HTTP_PARAM_SOURCES, requireNonNull(m.getHeaders().get(HTTP_PARAM_SOURCES)),
-                                        HTTP_PARAM_CATEGORIES, requireNonNull(m.getHeaders().get(HTTP_PARAM_CATEGORIES))
+                                        HTTP_PARAM_CATEGORIES, requireNonNull(m.getHeaders().get(HTTP_PARAM_CATEGORIES)),
+                                        HTTP_PARAM_FLOW_ID, requireNonNull(m.getHeaders().get(HTTP_PARAM_FLOW_ID)),
+                                        "percent", m.getPayload()
                                 ))
                                 .setHeader(SESSION_ID_HEADER, s)
                                 .build()))

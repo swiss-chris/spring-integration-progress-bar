@@ -6,20 +6,26 @@ function updateProgressForFlow(data) {
     }
 
     function createRowFromTemplate(flowId, sources, categories) {
-        const clone = document.getElementById('progress-row').content.cloneNode(true);
-        clone.querySelector('.row-from-template').id = flowId;
-        clone.querySelector('.sources').innerText = sources;
-        clone.querySelector('.categories').innerText = categories;
-        document.getElementById('root').appendChild(clone);
+        const row = document.getElementById('progress-row').content.cloneNode(true);
+        row.querySelector('.row-from-template').id = flowId;
+        row.querySelector('.sources').innerText = sources;
+        row.querySelector('.categories').innerText = categories;
+        return row;
+    }
+
+    function addRow(flowId, sources, categories) {
+        const row = createRowFromTemplate(flowId, sources, categories);
+        document.getElementById('root').appendChild(row);
+        return row;
+    }
+    function updateProgress(row, percent) {
+        row.querySelector('.progress-bar').style.width = percent + '%';
+        row.querySelector('.progress-bar').innerText = percent + '%';
     }
 
     const {flowId, sources, categories, percent} = JSON.parse(data);
-    if (!getRow(flowId)) {
-        createRowFromTemplate(flowId, sources, categories);
-    }
-    const row = getRow(flowId);
-    row.querySelector('.progress-bar').style.width = percent + '%';
-    row.querySelector('.progress-bar').innerText = percent + '%';
+    const row = getRow(flowId) || addRow(flowId, sources, categories);
+    updateProgress(row, percent);
 }
 
 function startflow() {

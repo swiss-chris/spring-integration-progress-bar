@@ -17,17 +17,17 @@ class Row {
         row.querySelector('.categories').innerText = this.#categories;
         const startDiv = row.querySelector('.start');
         const start = Date.now();
-        startDiv.dataset.start = `start`;
+        startDiv.dataset.start = start.toString();
         startDiv.innerText = new Date(start).toLocaleTimeString();
         return row;
     }
 
-    static updateProgressForFlow({data}) {
-        const {flowId, percent} = JSON.parse(data);
-        Row.#updateProgress(Row.#getRow(flowId), percent);
+    getFlowId() {
+        return this.#flowId;
     }
 
-    static #updateProgress(row, percent) {
+    updateProgress(percent) {
+        const row = this.getRow();
         row.querySelector('.progress-bar').style.width = percent + '%';
         row.querySelector('.progress-bar').innerText = percent + '%';
         if (percent === 100) {
@@ -38,8 +38,8 @@ class Row {
         }
     }
 
-    static #getRow(flowId) {
-        return document.getElementById(flowId);
+    getRow() {
+        return document.getElementById(this.#flowId);
     }
 }
 

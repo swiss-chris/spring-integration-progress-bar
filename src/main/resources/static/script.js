@@ -1,6 +1,13 @@
 let sock;
 let flowId = 0;
-const rows = [];
+const rows = new Map();
+
+
+function updateProgressForFlow({data}) {
+    const {flowId, percent} = JSON.parse(data);
+    const row = rows.get(parseInt(flowId));
+    row.updateProgress(percent)
+}
 
 function startflow() {
     function reconnect(onMessageReceived) {
@@ -17,8 +24,8 @@ function startflow() {
     }
 
     const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
-    rows.push(new Row(flowId, params.get('sources'), params.get('categories')));
-    reconnect(Row.updateProgressForFlow);
+    rows.set(flowId, new Row(flowId, params.get('sources'), params.get('categories')));
+    reconnect(updateProgressForFlow);
     fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
     flowId++
     return false; // prevent form submit & page refresh

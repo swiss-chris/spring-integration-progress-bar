@@ -1,7 +1,22 @@
+class Rows {
+    static #rows = new Map();
+
+    static createRow(flowId, sources, categories) {
+        Rows.#rows.set(flowId, new Row(flowId, sources, categories));
+    }
+
+    static updateProgressForFlow({data}) {
+        const {flowId, percent} = JSON.parse(data);
+        const row = Rows.#rows.get(parseInt(flowId));
+        row.updateProgress(percent);
+    }
+}
+
 class Row {
     #flowId;
     #sources;
     #categories;
+
     constructor(flowId, sources, categories) {
         this.#flowId = flowId;
         this.#sources = sources;
@@ -22,10 +37,6 @@ class Row {
         return row;
     }
 
-    getFlowId() {
-        return this.#flowId;
-    }
-
     updateProgress(percent) {
         const row = this.getRow();
         row.querySelector('.progress-bar').style.width = percent + '%';
@@ -38,6 +49,7 @@ class Row {
         }
     }
 
+    // can we save this in a local private field?
     getRow() {
         return document.getElementById(this.#flowId);
     }

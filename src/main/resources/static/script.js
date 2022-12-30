@@ -1,30 +1,32 @@
-let sock;
-let flowId = 0;
+class Flow {
+    static #flowId = 0;
 
-function startflow() {
-    function reconnect(onMessageReceived) {
-        function connect() {
-            sock = new SockJS('http://localhost:8080/messages');
-            sock.onmessage = onMessageReceived;
-        }
+    static startflow() {
+        const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
+        Rows.createRow(Flow.#flowId, params.get('sources'), params.get('categories'))
+        Connection.reconnect(Rows.updateProgressForFlow);
+        fetch(`flow?flowId=${Flow.#flowId}&${params}`, {method: "post"});
+        Flow.#flowId++
+        return false; // prevent form submit & page refresh
+    }
+}
 
-        const isSocketClosed = () => sock.readyState === 3;
-        if (!sock || isSocketClosed()) {
-            // reconnects if the server was restarted
-            connect();
+class Connection {
+    static #sock;
+    static reconnect(onMessageReceived) {
+        if (!Connection.#sock || Connection.#isSocketClosed()) {
+            Connection.#connect(onMessageReceived);
         }
     }
 
-    const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
-    Rows.createRow(flowId, params.get('sources'), params.get('categories'))
-    reconnect(Rows.updateProgressForFlow);
-    fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
-    flowId++
-    return false; // prevent form submit & page refresh
-}
+    static #isSocketClosed() {
+        return Connection.#sock.readyState === 3;
+    }
 
-function duration(millis) {
-    return new Date(millis).toISOString().substring(11, 19);
+    static #connect(onMessageReceived) {
+        Connection.#sock = new SockJS('http://localhost:8080/messages');
+        Connection.#sock.onmessage = onMessageReceived;
+    }
 }
 
 class Rows {
@@ -75,7 +77,13 @@ class Row {
             const end = new Date();
             this.#html.querySelector('.end').innerText = end.toLocaleTimeString();
             const start = new Date(parseInt(this.#html.querySelector('.start').dataset.start));
-            this.#html.querySelector('.duration').innerText = duration(end.getTime() - start.getTime());
+            this.#html.querySelector('.duration').innerText = Utils.duration(end.getTime() - start.getTime());
         }
+    }
+}
+
+class Utils {
+    static duration(millis) {
+        return new Date(millis).toISOString().substring(11, 19);
     }
 }

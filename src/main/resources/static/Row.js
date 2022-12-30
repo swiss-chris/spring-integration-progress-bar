@@ -16,6 +16,7 @@ class Row {
     #flowId;
     #sources;
     #categories;
+    #html;
 
     constructor(flowId, sources, categories) {
         this.#flowId = flowId;
@@ -23,6 +24,7 @@ class Row {
         this.#categories = categories;
         const row = this.#createRowFromTemplate();
         document.getElementById('root').appendChild(row);
+        this.#html = document.getElementById(this.#flowId);
     }
 
     #createRowFromTemplate() {
@@ -38,20 +40,14 @@ class Row {
     }
 
     updateProgress(percent) {
-        const row = this.getRow();
-        row.querySelector('.progress-bar').style.width = percent + '%';
-        row.querySelector('.progress-bar').innerText = percent + '%';
+        this.#html.querySelector('.progress-bar').style.width = percent + '%';
+        this.#html.querySelector('.progress-bar').innerText = percent + '%';
         if (percent === 100) {
             const end = new Date();
-            row.querySelector('.end').innerText = end.toLocaleTimeString();
-            const start = new Date(parseInt(row.querySelector('.start').dataset.start));
-            row.querySelector('.duration').innerText = duration(end.getTime() - start.getTime());
+            this.#html.querySelector('.end').innerText = end.toLocaleTimeString();
+            const start = new Date(parseInt(this.#html.querySelector('.start').dataset.start));
+            this.#html.querySelector('.duration').innerText = duration(end.getTime() - start.getTime());
         }
-    }
-
-    // can we save this in a local private field?
-    getRow() {
-        return document.getElementById(this.#flowId);
     }
 }
 

@@ -18,29 +18,44 @@ class FlowId {
 
 class Rows {
     static #rows = new Map();
+    static #intervalId;
+    static #ONE_SECOND = 1000;
 
     static createRow(flowId, sources, categories) {
-        Rows.#rows.set(flowId, new Row(sources, categories));
+        this.#rows.set(flowId, new Row(sources, categories));
+        this.#resetInterval();
     }
 
     static updateProgressForFlow({data}) {
         const {flowId, percent} = JSON.parse(data);
         const row = Rows.#rows.get(parseInt(flowId));
         row.updateProgress(percent);
+        if (Array.from(Rows.#rows.values()).every(row => row.isFinished())) {
+            clearInterval(Rows.#intervalId);
+        }
+    }
+
+    static #resetInterval() {
+        clearInterval(this.#intervalId);
+        this.#intervalId = setInterval(this.#updateRemaining, this.#ONE_SECOND);
+    }
+
+    static #updateRemaining() {
+        Array.from(Rows.#rows.values())
+            .filter(row => !row.isFinished())
+            .forEach(row => row.updateRemaining());
     }
 }
 
 class Row {
     #start;
     #row;
-    #intervalId;
     #percent = 0;
 
     constructor(sources, categories) {
         this.#start = Date.now();
         const row = this.#createRowFromTemplate(sources, categories);
         this.#row = this.#appendRow(row);
-        this.#intervalId = setInterval(this.#updateRemaining.bind(this), 1000);
     }
 
     #createRowFromTemplate(sources, categories) {
@@ -57,7 +72,7 @@ class Row {
         return root.lastElementChild; // we can't use 'row' as is empty after 'appendChild(row)'
     }
 
-    #updateRemaining() {
+    updateRemaining() {
         if (this.#percent > 0) {
             const now = Date.now();
             const elapsed = now - this.#start;
@@ -71,13 +86,16 @@ class Row {
         this.#percent = percent;
         this.#row.querySelector('.progress-bar').style.width = percent + '%';
         this.#row.querySelector('.progress-bar').innerText = percent + '%';
-        if (percent === 100) {
+        if (this.isFinished()) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
             this.#row.querySelector('.remaining').innerText = '';
-            clearInterval(this.#intervalId);
         }
+    }
+
+    isFinished() {
+        return this.#percent === 100;
     }
 }
 

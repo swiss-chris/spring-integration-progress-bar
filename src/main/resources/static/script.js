@@ -51,6 +51,7 @@ class Row {
     #start;
     #row;
     #percent = 0;
+    static #ONE_HUNDRED = 100;
 
     constructor(sources, categories) {
         this.#start = Date.now();
@@ -76,7 +77,7 @@ class Row {
         if (this.#percent > 0) {
             const now = Date.now();
             const elapsed = now - this.#start;
-            const remaining = elapsed * (100 - this.#percent) / this.#percent;
+            const remaining = elapsed * (Row.#ONE_HUNDRED - this.#percent) / this.#percent;
             const duration = new Duration(remaining);
             this.#row.querySelector('.remaining').innerText = duration.toString();
         }
@@ -95,7 +96,7 @@ class Row {
     }
 
     isFinished() {
-        return this.#percent === 100;
+        return this.#percent === Row.#ONE_HUNDRED;
     }
 }
 

@@ -17,20 +17,20 @@ class FlowId {
 }
 
 class Connection {
-    static #sock;
+    static #socket;
     static reconnect(onMessageReceived) {
-        if (!Connection.#sock || Connection.#isSocketClosed()) {
-            Connection.#connect(onMessageReceived);
+        if (!this.#socket || this.#isSocketClosed()) {
+            this.#connect(onMessageReceived);
         }
     }
 
     static #isSocketClosed() {
-        return Connection.#sock.readyState === 3;
+        return this.#socket.readyState === 3;
     }
 
     static #connect(onMessageReceived) {
-        Connection.#sock = new SockJS('http://localhost:8080/messages');
-        Connection.#sock.onmessage = onMessageReceived;
+        this.#socket = new SockJS('http://localhost:8080/messages');
+        this.#socket.onmessage = onMessageReceived;
     }
 }
 

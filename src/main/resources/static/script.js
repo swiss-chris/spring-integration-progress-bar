@@ -1,13 +1,18 @@
 class Flow {
-    static #flowId = 0;
-
     static startflow() {
+        const flowId = FlowId.next();
         const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
-        Rows.createRow(Flow.#flowId, params.get('sources'), params.get('categories'))
+        Rows.createRow(flowId, params.get('sources'), params.get('categories'))
         Connection.reconnect(Rows.updateProgressForFlow);
-        fetch(`flow?flowId=${Flow.#flowId}&${params}`, {method: "post"});
-        Flow.#flowId++
+        fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
         return false; // prevent form submit & page refresh
+    }
+}
+
+class FlowId {
+    static #flowId = 0;
+    static next() {
+        return this.#flowId++;
     }
 }
 

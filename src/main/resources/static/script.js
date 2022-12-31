@@ -31,18 +31,19 @@ class Rows {
 }
 
 class Row {
-    #row;
     #start;
+    #row;
+    #intervalId;
+    #percent = 0;
 
     constructor(sources, categories) {
+        this.#start = Date.now();
         const row = this.#createRowFromTemplate(sources, categories);
-        const root = document.getElementById('root');
-        root.appendChild(row);
-        this.#row = root.lastElementChild; // 'row' is empty after 'appendChild(row)'
+        this.#row = this.#appendRow(row);
+        this.#intervalId = setInterval(this.#updateRemaining.bind(this), 1000);
     }
 
     #createRowFromTemplate(sources, categories) {
-        this.#start = Date.now();
         const row = document.getElementById('progress-row').content.cloneNode(true);
         row.querySelector('.sources').innerText = sources;
         row.querySelector('.categories').innerText = categories;
@@ -50,13 +51,32 @@ class Row {
         return row;
     }
 
+    #appendRow(row) {
+        const root = document.getElementById('root');
+        root.appendChild(row);
+        return root.lastElementChild; // we can't use 'row' as is empty after 'appendChild(row)'
+    }
+
+    #updateRemaining() {
+        if (this.#percent > 0) {
+            const now = Date.now();
+            const elapsed = now - this.#start;
+            const remaining = elapsed * (100 - this.#percent) / this.#percent;
+            const duration = new Duration(remaining);
+            this.#row.querySelector('.remaining').innerText = duration.toString();
+        }
+    }
+
     updateProgress(percent) {
+        this.#percent = percent;
         this.#row.querySelector('.progress-bar').style.width = percent + '%';
         this.#row.querySelector('.progress-bar').innerText = percent + '%';
         if (percent === 100) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
+            this.#row.querySelector('.remaining').innerText = '';
+            clearInterval(this.#intervalId);
         }
     }
 }

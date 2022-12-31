@@ -38,7 +38,7 @@ class Rows {
     static #rows = new Map();
 
     static createRow(flowId, sources, categories) {
-        Rows.#rows.set(flowId, new Row(flowId, sources, categories));
+        Rows.#rows.set(flowId, new Row(sources, categories));
     }
 
     static updateProgressForFlow({data}) {
@@ -49,19 +49,19 @@ class Rows {
 }
 
 class Row {
-    #html;
+    #row;
     #start;
 
-    constructor(flowId, sources, categories) {
-        const row = this.#createRowFromTemplate(flowId, sources, categories);
-        document.getElementById('root').appendChild(row);
-        this.#html = document.getElementById(flowId); // TODO how can I get rid of this line and of 'flowId' for this class ?
+    constructor(sources, categories) {
+        const row = this.#createRowFromTemplate(sources, categories);
+        const root = document.getElementById('root');
+        root.appendChild(row);
+        this.#row = root.lastElementChild; // 'row' is empty after 'appendChild(row)'
     }
 
-    #createRowFromTemplate(flowId, sources, categories) {
+    #createRowFromTemplate(sources, categories) {
         this.#start = Date.now();
         const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.row-from-template').id = flowId;
         row.querySelector('.sources').innerText = sources;
         row.querySelector('.categories').innerText = categories;
         row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
@@ -69,12 +69,12 @@ class Row {
     }
 
     updateProgress(percent) {
-        this.#html.querySelector('.progress-bar').style.width = percent + '%';
-        this.#html.querySelector('.progress-bar').innerText = percent + '%';
+        this.#row.querySelector('.progress-bar').style.width = percent + '%';
+        this.#row.querySelector('.progress-bar').innerText = percent + '%';
         if (percent === 100) {
             const end = Date.now();
-            this.#html.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
-            this.#html.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
+            this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
+            this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
         }
     }
 }

@@ -1,5 +1,5 @@
-class Flow {
-    static startflow() {
+class Form {
+    static submit() {
         const flowId = FlowId.next();
         const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
         Rows.createRow(flowId, params.get('sources'), params.get('categories'))
@@ -13,24 +13,6 @@ class FlowId {
     static #flowId = 0;
     static next() {
         return this.#flowId++;
-    }
-}
-
-class Connection {
-    static #socket;
-    static reconnect(onMessageReceived) {
-        if (!this.#socket || this.#isSocketClosed()) {
-            this.#connect(onMessageReceived);
-        }
-    }
-
-    static #isSocketClosed() {
-        return this.#socket.readyState === 3;
-    }
-
-    static #connect(onMessageReceived) {
-        this.#socket = new SockJS('http://localhost:8080/messages');
-        this.#socket.onmessage = onMessageReceived;
     }
 }
 
@@ -85,6 +67,25 @@ class Duration {
         this.#millis = millis;
     }
     toString() {
+        // FIXME only works for durations <24h
         return new Date(this.#millis).toISOString().substring(11, 19);
+    }
+}
+
+class Connection {
+    static #socket;
+    static reconnect(onMessageReceived) {
+        if (!this.#socket || this.#isSocketClosed()) {
+            this.#connect(onMessageReceived);
+        }
+    }
+
+    static #isSocketClosed() {
+        return this.#socket.readyState === 3;
+    }
+
+    static #connect(onMessageReceived) {
+        this.#socket = new SockJS('http://localhost:8080/messages');
+        this.#socket.onmessage = onMessageReceived;
     }
 }

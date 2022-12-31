@@ -74,13 +74,17 @@ class Row {
         if (percent === 100) {
             const end = Date.now();
             this.#html.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
-            this.#html.querySelector('.duration').innerText = Utils.duration(end - this.#start);
+            this.#html.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
         }
     }
 }
 
-class Utils {
-    static duration(millis) {
-        return new Date(millis).toISOString().substring(11, 19);
+class Duration {
+    #millis;
+    constructor(millis) {
+        this.#millis = millis;
+    }
+    toString() {
+        return new Date(this.#millis).toISOString().substring(11, 19);
     }
 }

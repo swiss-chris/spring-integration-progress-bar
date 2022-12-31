@@ -3,7 +3,7 @@ class Form {
         const flowId = FlowId.next();
         const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
         Rows.createRow(flowId, params.get('sources'), params.get('categories'))
-        Connection.reconnect(Rows.updateProgressForFlow);
+        Connection.reconnect(Rows.updateProgress);
         fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
         return false; // prevent form submit & page refresh
     }
@@ -18,7 +18,7 @@ class FlowId {
 
 class Rows {
     static #rows = new Map();
-    static #intervalId;
+    static #remainingTimerId;
     static #ONE_SECOND = 1000;
 
     static createRow(flowId, sources, categories) {
@@ -26,18 +26,22 @@ class Rows {
         this.#resetInterval();
     }
 
-    static updateProgressForFlow({data}) {
+    static updateProgress({data}) {
         const {flowId, percent} = JSON.parse(data);
         const row = Rows.#rows.get(parseInt(flowId));
         row.updateProgress(percent);
-        if (Array.from(Rows.#rows.values()).every(row => row.isFinished())) {
-            clearInterval(Rows.#intervalId);
+        if (Rows.#allFlowsAreFinished()) {
+            clearInterval(Rows.#remainingTimerId);
         }
     }
 
+    static #allFlowsAreFinished() {
+        return Array.from(Rows.#rows.values()).every(row => row.isFinished());
+    }
+
     static #resetInterval() {
-        clearInterval(this.#intervalId);
-        this.#intervalId = setInterval(this.#updateRemaining, this.#ONE_SECOND);
+        clearInterval(this.#remainingTimerId);
+        this.#remainingTimerId = setInterval(this.#updateRemaining, this.#ONE_SECOND);
     }
 
     static #updateRemaining() {
@@ -78,8 +82,7 @@ class Row {
             const now = Date.now();
             const elapsed = now - this.#start;
             const remaining = elapsed * (Row.#ONE_HUNDRED - this.#percent) / this.#percent;
-            const duration = new Duration(remaining);
-            this.#row.querySelector('.remaining').innerText = duration.toString();
+            this.#row.querySelector('.remaining').innerText = new Duration(remaining).toString();
         }
     }
 

@@ -49,29 +49,22 @@ class Rows {
 }
 
 class Row {
-    #flowId;
-    #sources;
-    #categories;
     #html;
+    #start;
 
     constructor(flowId, sources, categories) {
-        this.#flowId = flowId;
-        this.#sources = sources;
-        this.#categories = categories;
-        const row = this.#createRowFromTemplate();
+        const row = this.#createRowFromTemplate(flowId, sources, categories);
         document.getElementById('root').appendChild(row);
-        this.#html = document.getElementById(this.#flowId);
+        this.#html = document.getElementById(flowId); // TODO how can I get rid of this line and of 'flowId' for this class ?
     }
 
-    #createRowFromTemplate() {
+    #createRowFromTemplate(flowId, sources, categories) {
+        this.#start = Date.now();
         const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.row-from-template').id = this.#flowId;
-        row.querySelector('.sources').innerText = this.#sources;
-        row.querySelector('.categories').innerText = this.#categories;
-        const startDiv = row.querySelector('.start');
-        const start = Date.now();
-        startDiv.dataset.start = start.toString();
-        startDiv.innerText = new Date(start).toLocaleTimeString();
+        row.querySelector('.row-from-template').id = flowId;
+        row.querySelector('.sources').innerText = sources;
+        row.querySelector('.categories').innerText = categories;
+        row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
         return row;
     }
 
@@ -79,10 +72,9 @@ class Row {
         this.#html.querySelector('.progress-bar').style.width = percent + '%';
         this.#html.querySelector('.progress-bar').innerText = percent + '%';
         if (percent === 100) {
-            const end = new Date();
-            this.#html.querySelector('.end').innerText = end.toLocaleTimeString();
-            const start = new Date(parseInt(this.#html.querySelector('.start').dataset.start));
-            this.#html.querySelector('.duration').innerText = Utils.duration(end.getTime() - start.getTime());
+            const end = Date.now();
+            this.#html.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
+            this.#html.querySelector('.duration').innerText = Utils.duration(end - this.#start);
         }
     }
 }

@@ -71,9 +71,14 @@ class Rows {
     }
 
     static updateProgress({data}) {
-        const {flowId, percent} = JSON.parse(data);
-        Rows.#rowsMap.get(parseInt(flowId)).updateProgress(percent);
+        const {flowId, percent} = Rows.#deserialize(data);
+        Rows.#rowsMap.get(flowId).updateProgress(percent);
         Rows.#remainingUpdater.refreshTimer();
+    }
+
+    static #deserialize(data) {
+        const {flowId, percent} = JSON.parse(data);
+        return {flowId: parseInt(flowId), percent: new Percent(percent)};
     }
 
     static #updateRemaining() {
@@ -91,12 +96,12 @@ class Rows {
 
 class Row {
     #start;
+    #percent;
     #row;
-    #percent = 0;
-    static #ONE_HUNDRED = 100;
 
     constructor(sources, categories) {
         this.#start = Date.now();
+        this.#percent = new Percent(0);
         const row = this.#createRowFromTemplate(sources, categories);
         this.#row = this.#appendRow(row);
     }
@@ -119,15 +124,15 @@ class Row {
         if (this.isFlowStarted() && !this.isFlowFinished()) {
             const now = Date.now();
             const elapsed = now - this.#start;
-            const remaining = elapsed * (Row.#ONE_HUNDRED - this.#percent) / this.#percent;
+            const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
             this.#row.querySelector('.remaining').innerText = new Duration(remaining).toString();
         }
     }
 
     updateProgress(percent) {
         this.#percent = percent;
-        this.#row.querySelector('.progress-bar').style.width = percent + '%';
-        this.#row.querySelector('.progress-bar').innerText = percent + '%';
+        this.#row.querySelector('.progress-bar').style.width = percent.toString();
+        this.#row.querySelector('.progress-bar').innerText = percent.toString();
         if (this.isFlowFinished()) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
@@ -137,11 +142,41 @@ class Row {
     }
 
     isFlowStarted() {
-        return this.#percent > 0;
+        return !this.#percent.isZero();
     }
 
     isFlowFinished() {
-        return this.#percent === Row.#ONE_HUNDRED;
+        return this.#percent.isComplete();
+    }
+}
+
+class Percent {
+    static #ONE_HUNDRED = 100;
+
+    #percent
+
+    constructor(percent) {
+        this.#percent = percent;
+    }
+
+    isZero() {
+        return this.#percent === 0;
+    }
+
+    isComplete() {
+        return this.#percent === Percent.#ONE_HUNDRED
+    }
+
+    remaining() {
+        return new Percent(Percent.#ONE_HUNDRED - this.#percent);
+    }
+
+    divideBy(percent) {
+        return this.#percent / percent.#percent;
+    }
+
+    toString() {
+        return this.#percent + '%';
     }
 }
 

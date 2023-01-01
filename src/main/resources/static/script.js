@@ -1,11 +1,24 @@
 class Form {
     static submit() {
-        const flowId = FlowId.next();
-        const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
-        Rows.createRow(flowId, params.get('sources'), params.get('categories'))
-        Connection.reconnect(MessageHandler.handleMessage);
-        fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
-        return false; // prevent form submit & page refresh
+        const {flowId, sources, categories} = this.#getParams();
+        Rows.createRow(flowId, sources, categories)
+        this.#startFlow({flowId, sources, categories});
+        return false; // prevent regular form submit & page refresh
+    }
+
+    static #getParams() {
+        const formProps = Object.fromEntries(new FormData(document.getElementById("startflow")));
+        return {
+            flowId: FlowId.next(),
+            sources: formProps.sources,
+            categories: formProps.categories
+        };
+    }
+
+    static #startFlow({flowId, sources, categories}) {
+        Websocket.reconnect(MessageHandler.handleMessage);
+        const queryParams = new URLSearchParams({flowId, sources, categories});
+        fetch(`flow?${queryParams}`, {method: "post"});
     }
 }
 
@@ -17,7 +30,7 @@ class FlowId {
     }
 }
 
-class Connection {
+class Websocket {
     static #URL = 'http://localhost:8080/messages';
 
     static #socket;

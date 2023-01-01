@@ -240,7 +240,9 @@ class Duration {
     }
 
     toString() {
-        // FIXME only works for durations <24h
-        return new Date(this.#millis).toISOString().substring(11, 19);
+        const seconds = (this.#millis / 1000);
+        return (~~(seconds / 3600)).toString().padStart(2, '0') + ':' +
+            (~~(seconds % 3600 / 60)).toString().padStart(2, '0') + ':' +
+            (~~(seconds % 60)).toString().padStart(2, '0');
     }
 }

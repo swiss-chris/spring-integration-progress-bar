@@ -240,9 +240,13 @@ class Duration {
     }
 
     toString() {
-        const seconds = (this.#millis / 1000);
-        return (~~(seconds / 3600)).toString().padStart(2, '0') + ':' +
-            (~~(seconds % 3600 / 60)).toString().padStart(2, '0') + ':' +
-            (~~(seconds % 60)).toString().padStart(2, '0');
+        const s = ~~(this.#millis / 1000);
+        return this.#format(s / 3600) + ':'
+            + this.#format(s % 3600 / 60) + ':'
+            + this.#format(s % 60);
+    }
+
+    #format(n) {
+        return (~~n).toString().padStart(2, '0')
     }
 }

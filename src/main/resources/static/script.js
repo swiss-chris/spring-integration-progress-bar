@@ -157,7 +157,7 @@ class Row {
     #appendRow(row) {
         const root = document.getElementById('root');
         root.appendChild(row);
-        return root.lastElementChild; // we can't use 'row' as is empty after 'appendChild(row)'
+        return root.lastElementChild; // we can't use 'row' as it is empty after 'appendChild(row)'
     }
 
     updateRemaining() {

@@ -3,7 +3,7 @@ class Form {
         const flowId = FlowId.next();
         const params = new URLSearchParams(new FormData(document.getElementById("startflow")));
         Rows.createRow(flowId, params.get('sources'), params.get('categories'))
-        Connection.reconnect(Rows.updateProgress);
+        Connection.reconnect(MessageHandler.handleMessage);
         fetch(`flow?flowId=${flowId}&${params}`, {method: "post"});
         return false; // prevent form submit & page refresh
     }
@@ -14,6 +14,13 @@ class FlowId {
 
     static next() {
         return this.#flowId++;
+    }
+}
+
+class MessageHandler {
+    static handleMessage({data}) {
+        const {flowId, percent} = JSON.parse(data);
+        Rows.updateProgress(parseInt(flowId), new Percent(percent));
     }
 }
 
@@ -70,15 +77,9 @@ class Rows {
         this.#rowsMap.set(flowId, new Row(sources, categories));
     }
 
-    static updateProgress({data}) {
-        const {flowId, percent} = Rows.#deserialize(data);
+    static updateProgress(flowId, percent) {
         Rows.#rowsMap.get(flowId).updateProgress(percent);
         Rows.#remainingUpdater.refreshTimer();
-    }
-
-    static #deserialize(data) {
-        const {flowId, percent} = JSON.parse(data);
-        return {flowId: parseInt(flowId), percent: new Percent(percent)};
     }
 
     static #updateRemaining() {

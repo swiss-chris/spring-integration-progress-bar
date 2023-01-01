@@ -186,7 +186,7 @@ class Row {
     }
 
     isFlowFinished() {
-        return this.#percent.isComplete();
+        return this.#percent.isOneHundred();
     }
 }
 
@@ -203,7 +203,7 @@ class Percent {
         return this.#percent === 0;
     }
 
-    isComplete() {
+    isOneHundred() {
         return this.#percent === Percent.#ONE_HUNDRED
     }
 

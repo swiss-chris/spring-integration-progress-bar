@@ -17,6 +17,27 @@ class FlowId {
     }
 }
 
+class Connection {
+    static #URL = 'http://localhost:8080/messages';
+
+    static #socket;
+
+    static reconnect(onMessageReceived) {
+        if (!this.#socket || this.#isSocketClosed()) {
+            this.#connect(onMessageReceived);
+        }
+    }
+
+    static #isSocketClosed() {
+        return this.#socket.readyState === 3;
+    }
+
+    static #connect(onMessageReceived) {
+        this.#socket = new SockJS(this.#URL);
+        this.#socket.onmessage = onMessageReceived;
+    }
+}
+
 class MessageHandler {
     static handleMessage({data}) {
         const {flowId, percent} = JSON.parse(data);
@@ -51,7 +72,6 @@ class Timer {
 
     constructor(updateFunction) {
         this.#updateFunction = updateFunction;
-        this.keepActive();
     }
 
     keepActive() {
@@ -191,24 +211,5 @@ class Duration {
     toString() {
         // FIXME only works for durations <24h
         return new Date(this.#millis).toISOString().substring(11, 19);
-    }
-}
-
-class Connection {
-    static #socket;
-
-    static reconnect(onMessageReceived) {
-        if (!this.#socket || this.#isSocketClosed()) {
-            this.#connect(onMessageReceived);
-        }
-    }
-
-    static #isSocketClosed() {
-        return this.#socket.readyState === 3;
-    }
-
-    static #connect(onMessageReceived) {
-        this.#socket = new SockJS('http://localhost:8080/messages');
-        this.#socket.onmessage = onMessageReceived;
     }
 }

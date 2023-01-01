@@ -1,3 +1,5 @@
+////// -------- see the bottom of this file for code executed on page load -------- //////
+
 class Form {
     static submit() {
         Websocket.reconnect(MessageHandler.handleMessage);

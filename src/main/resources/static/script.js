@@ -102,9 +102,9 @@ class Timer {
 
 class Rows {
     static #rowsMap = new Map();
-    static #remainingTimer = new Timer(Rows.#updateRemaining);
+    // FIXME (ugly): not sure where else to put this timer initialization
     static #remainingTimerRefresher = new TimerRefresher(
-        Rows.#remainingTimer,
+        new Timer(Rows.#updateRemaining),
         Rows.#allFlowsAreFinished);
 
     static createRow(flowId, sources, categories) {

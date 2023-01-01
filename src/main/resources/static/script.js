@@ -16,38 +16,74 @@ class FlowId {
     }
 }
 
+class Timer {
+    #ONE_SECOND = 1000;
+
+    #updateFunction
+    #isActive = false;
+    #remainingTimerId;
+
+    constructor(updateFunction) {
+        this.#updateFunction = updateFunction;
+    }
+
+    keepActive() {
+        if (!this.#isActive) {
+            this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
+            this.#isActive = true;
+        }
+    }
+
+    deactivate() {
+        clearInterval(this.#remainingTimerId);
+        this.#isActive = false;
+    }
+}
+
+class RemainingUpdater {
+    #rows;
+    #remainingTimer = new Timer(this.#updateRemaining.bind(this));
+
+    constructor(rows) {
+        this.#rows = rows;
+    }
+
+    update() {
+        if (this.#allFlowsAreFinished()) {
+            this.#remainingTimer.deactivate();
+        } else {
+            this.#remainingTimer.keepActive();
+        }
+    }
+
+    #allFlowsAreFinished() {
+        return this.#values(this.#rows).every(row => row.isFlowFinished());
+    }
+
+    #updateRemaining() {
+        this.#values(this.#rows)
+            .filter(row => !row.isFlowFinished())
+            .forEach(row => row.updateRemaining());
+    }
+
+    // FIXME code smell...
+    #values(map) {
+        return Array.from(map.values());
+    }
+}
+
 class Rows {
     static #rows = new Map();
-    static #remainingTimerId;
-    static #ONE_SECOND = 1000;
+    static #remainingUpdater = new RemainingUpdater(Rows.#rows);
 
     static createRow(flowId, sources, categories) {
         this.#rows.set(flowId, new Row(sources, categories));
-        this.#resetInterval();
     }
 
     static updateProgress({data}) {
         const {flowId, percent} = JSON.parse(data);
-        const row = Rows.#rows.get(parseInt(flowId));
-        row.updateProgress(percent);
-        if (Rows.#allFlowsAreFinished()) {
-            clearInterval(Rows.#remainingTimerId);
-        }
-    }
-
-    static #allFlowsAreFinished() {
-        return Array.from(Rows.#rows.values()).every(row => row.isFinished());
-    }
-
-    static #resetInterval() {
-        clearInterval(this.#remainingTimerId);
-        this.#remainingTimerId = setInterval(this.#updateRemaining, this.#ONE_SECOND);
-    }
-
-    static #updateRemaining() {
-        Array.from(Rows.#rows.values())
-            .filter(row => !row.isFinished())
-            .forEach(row => row.updateRemaining());
+        Rows.#rows.get(parseInt(flowId)).updateProgress(percent);
+        Rows.#remainingUpdater.update();
     }
 }
 
@@ -90,7 +126,7 @@ class Row {
         this.#percent = percent;
         this.#row.querySelector('.progress-bar').style.width = percent + '%';
         this.#row.querySelector('.progress-bar').innerText = percent + '%';
-        if (this.isFinished()) {
+        if (this.isFlowFinished()) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
@@ -98,7 +134,7 @@ class Row {
         }
     }
 
-    isFinished() {
+    isFlowFinished() {
         return this.#percent === Row.#ONE_HUNDRED;
     }
 }

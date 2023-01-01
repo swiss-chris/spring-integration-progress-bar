@@ -58,25 +58,25 @@ class MessageHandler {
     }
 }
 
-class TimerRefresher {
-    #timer;
+class TimerDeActivator {
+    #onOffTimer;
     #deactivationPredicate;
 
-    constructor(timer, deactivationPredicate) {
-        this.#timer = timer;
+    constructor(onOffTimer, deactivationPredicate) {
+        this.#onOffTimer = onOffTimer;
         this.#deactivationPredicate = deactivationPredicate;
     }
 
-    refreshTimer() {
+    update() {
         if (this.#deactivationPredicate()) {
-            this.#timer.deactivate();
+            this.#onOffTimer.deactivate();
         } else {
-            this.#timer.keepActive();
+            this.#onOffTimer.keepActive();
         }
     }
 }
 
-class Timer {
+class OnOffTimer {
     #ONE_SECOND = 1000;
 
     #isActive = false;
@@ -108,8 +108,8 @@ class Timer {
 class Rows {
     static #rowsMap = new Map();
     // FIXME (ugly): not sure where else to put this timer initialization
-    static #remainingTimerRefresher = new TimerRefresher(
-        new Timer(Rows.#updateRemaining),
+    static #remainingTimerDeActivator = new TimerDeActivator(
+        new OnOffTimer(Rows.#updateRemaining),
         Rows.#allFlowsAreFinished);
 
     static createRow(flowId, sources, categories) {
@@ -118,7 +118,7 @@ class Rows {
 
     static updateProgress(flowId, percent) {
         Rows.#rowsMap.get(flowId).updateProgress(percent);
-        Rows.#remainingTimerRefresher.refreshTimer();
+        Rows.#remainingTimerDeActivator.update();
     }
 
     static #updateRemaining() {

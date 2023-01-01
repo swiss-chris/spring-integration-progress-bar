@@ -52,8 +52,7 @@ class Websocket {
 }
 
 class MessageHandler {
-    static handleMessage({data}) {
-        const {flowId, percent} = JSON.parse(data);
+    static handleMessage({data: {flowId, percent}}) {
         Rows.updateProgress(parseInt(flowId), new Percent(percent));
     }
 }

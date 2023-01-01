@@ -191,8 +191,8 @@ class Row {
 }
 
 class Percent {
-    static #ZERO = new Percent(0);
-    static #ONE_HUNDRED = new Percent(100);
+    static #ZERO_PERCENT = new Percent(0);
+    static #ONE_HUNDRED_PERCENT = new Percent(100);
 
     #percent
 
@@ -208,15 +208,15 @@ class Percent {
     }
 
     isZero() {
-        return this.equals(Percent.#ZERO);
+        return this.equals(Percent.#ZERO_PERCENT);
     }
 
     isOneHundred() {
-        return this.equals(Percent.#ONE_HUNDRED);
+        return this.equals(Percent.#ONE_HUNDRED_PERCENT);
     }
 
     remaining() {
-        return Percent.#ONE_HUNDRED.minus(this);
+        return Percent.#ONE_HUNDRED_PERCENT.minus(this);
     }
 
     minus(other) {

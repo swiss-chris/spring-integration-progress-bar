@@ -87,10 +87,15 @@ class Timer {
         this.#updateFunction = updateFunction;
     }
 
+    #activate() {
+        this.#updateFunction(); // the first time, execute it immediately without waiting for timeout/interval.
+        this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
+        this.#isActive = true;
+    }
+
     keepActive() {
         if (!this.#isActive) {
-            this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
-            this.#isActive = true;
+            this.#activate();
         }
     }
 

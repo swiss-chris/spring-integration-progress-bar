@@ -1,32 +1,30 @@
 class Form {
     static submit() {
         Websocket.reconnect(MessageHandler.handleMessage);
-        const {flowId, sources, categories} = this.#getParams();
-        Rows.createRow(flowId, sources, categories)
-        this.#startFlow({flowId, sources, categories});
+        this.#startFlow();
         return false; // prevent regular form submit & page refresh
+    }
+
+    static #startFlow() {
+        const queryParams = new URLSearchParams(this.#getParams());
+        fetch(`flow?${queryParams}`, {method: "post"});
     }
 
     static #getParams() {
         const {sources, categories} = Object.fromEntries(new FormData(document.getElementById("startflow")));
         return {
+            startedAt: Date.now(),
             flowId: FlowId.next(),
             sources,
             categories
         };
     }
-
-    static #startFlow({flowId, sources, categories}) {
-        const queryParams = new URLSearchParams({flowId, sources, categories});
-        fetch(`flow?${queryParams}`, {method: "post"});
-    }
 }
 
 class FlowId {
-    static #flowId = 0;
-
     static next() {
-        return this.#flowId++;
+        // I'm assuming this method isn't called more than once per millisecond.
+        return Date.now();
     }
 }
 
@@ -35,26 +33,27 @@ class Websocket {
 
     static #socket;
 
+    static connect(onMessageReceived) {
+        this.#socket = new SockJS(this.#URL);
+        this.#socket.onmessage = onMessageReceived;
+    }
+
     static reconnect(onMessageReceived) {
-        if (!this.#socket || this.#isSocketClosed()) {
-            this.#connect(onMessageReceived);
+        // e.g. if the server was restarted
+        if (this.#isSocketClosed()) {
+            this.connect(onMessageReceived);
         }
     }
 
     static #isSocketClosed() {
         return this.#socket.readyState === 3;
     }
-
-    static #connect(onMessageReceived) {
-        this.#socket = new SockJS(this.#URL);
-        this.#socket.onmessage = onMessageReceived;
-    }
 }
 
 class MessageHandler {
     static handleMessage({data}) {
-        const {flowId, percent} = JSON.parse(data);
-        Rows.updateProgress(parseInt(flowId), new Percent(percent));
+        const {startedAt, flowId, sources, categories, percent} = JSON.parse(data);
+        Rows.updateProgress(parseInt(startedAt), parseInt(flowId), sources, categories, new Percent(percent));
     }
 }
 
@@ -107,25 +106,25 @@ class OnOffTimer {
 
 class Rows {
     static #rowsMap = new Map();
-    // FIXME (ugly): not sure where else to put this timer initialization
-    static #remainingTimerDeActivator = new TimerDeActivator(
-        new OnOffTimer(Rows.#updateRemaining),
-        Rows.#allFlowsAreFinished);
 
-    static createRow(flowId, sources, categories) {
-        this.#rowsMap.set(flowId, new Row(sources, categories));
+    static createRow(startedAt, flowId, sources, categories) {
+        this.#rowsMap.set(flowId, new Row(startedAt, sources, categories));
     }
 
-    static updateProgress(flowId, percent) {
+    static updateProgress(startedAt, flowId, sources, categories, percent) {
+        if (!Rows.#rowsMap.has(flowId)) {
+            // e.g. if we refresh the page during a running flow
+            this.createRow(startedAt, flowId, sources, categories);
+        }
         Rows.#rowsMap.get(flowId).updateProgress(percent);
-        Rows.#remainingTimerDeActivator.update();
+        remainingTimerDeActivator.update();
     }
 
-    static #updateRemaining() {
+    static updateRemaining() {
         Rows.#rows().forEach(row => row.updateRemaining())
     }
 
-    static #allFlowsAreFinished() {
+    static allFlowsAreFinished() {
         return Rows.#rows().every(row => row.isFlowFinished());
     }
 
@@ -139,8 +138,8 @@ class Row {
     #percent;
     #row;
 
-    constructor(sources, categories) {
-        this.#start = Date.now();
+    constructor(startedAt, sources, categories) {
+        this.#start = startedAt;
         this.#percent = new Percent(0);
         const row = this.#createRowFromTemplate(sources, categories);
         this.#row = this.#appendRow(row);
@@ -250,3 +249,10 @@ class Duration {
         return (~~n).toString().padStart(2, '0')
     }
 }
+
+////// -------- ON PAGE LOAD -------- //////
+
+Websocket.connect(MessageHandler.handleMessage);
+const remainingTimerDeActivator = new TimerDeActivator(
+    new OnOffTimer(Rows.updateRemaining),
+    Rows.allFlowsAreFinished);

@@ -160,15 +160,6 @@ class Row {
         return root.lastElementChild; // we can't use 'row' as it is empty after 'appendChild(row)'
     }
 
-    updateRemaining() {
-        if (this.isFlowStarted() && !this.isFlowFinished()) {
-            const now = Date.now();
-            const elapsed = now - this.#start;
-            const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
-            this.#row.querySelector('.remaining').innerText = new Duration(remaining).toString();
-        }
-    }
-
     updateProgress(percent) {
         this.#percent = percent;
         this.#row.querySelector('.progress-bar').style.width = percent.toString();
@@ -178,6 +169,15 @@ class Row {
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
             this.#row.querySelector('.remaining').innerText = '';
+        }
+    }
+
+    updateRemaining() {
+        if (this.isFlowStarted() && !this.isFlowFinished()) {
+            const now = Date.now();
+            const elapsed = now - this.#start;
+            const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
+            this.#row.querySelector('.remaining').innerText = new Duration(remaining).toString();
         }
     }
 

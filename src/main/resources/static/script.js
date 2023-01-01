@@ -2,6 +2,7 @@ class Form {
     static submit() {
         const {flowId, sources, categories} = this.#getParams();
         Rows.createRow(flowId, sources, categories)
+        Websocket.reconnect(MessageHandler.handleMessage);
         this.#startFlow({flowId, sources, categories});
         return false; // prevent regular form submit & page refresh
     }
@@ -16,7 +17,6 @@ class Form {
     }
 
     static #startFlow({flowId, sources, categories}) {
-        Websocket.reconnect(MessageHandler.handleMessage);
         const queryParams = new URLSearchParams({flowId, sources, categories});
         fetch(`flow?${queryParams}`, {method: "post"});
     }

@@ -57,18 +57,13 @@ class RemainingUpdater {
     }
 
     #allFlowsAreFinished() {
-        return this.#values(this.#rows).every(row => row.isFlowFinished());
+        return Array.from(this.#rows.values()).every(row => row.isFlowFinished());
     }
 
     #updateRemaining() {
-        this.#values(this.#rows)
+        Array.from(this.#rows.values())
             .filter(row => !row.isFlowFinished())
             .forEach(row => row.updateRemaining());
-    }
-
-    // FIXME code smell...
-    #values(map) {
-        return Array.from(map.values());
     }
 }
 

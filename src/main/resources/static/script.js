@@ -208,7 +208,11 @@ class Percent {
     }
 
     remaining() {
-        return new Percent(Percent.#ONE_HUNDRED - this.#percent);
+        return new Percent(Percent.#ONE_HUNDRED).minus(this);
+    }
+
+    minus(other) {
+        return new Percent(this.#percent - other.#percent);
     }
 
     divideBy(percent) {

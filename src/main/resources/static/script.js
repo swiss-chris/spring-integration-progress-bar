@@ -11,8 +11,27 @@ class Form {
 
 class FlowId {
     static #flowId = 0;
+
     static next() {
         return this.#flowId++;
+    }
+}
+
+class TimerRefresher {
+    #timer;
+    #deactivationPredicate;
+
+    constructor(timer, deactivationPredicate) {
+        this.#timer = timer;
+        this.#deactivationPredicate = deactivationPredicate;
+    }
+
+    refreshTimer() {
+        if (this.#deactivationPredicate()) {
+            this.#timer.deactivate();
+        } else {
+            this.#timer.keepActive();
+        }
     }
 }
 
@@ -25,6 +44,7 @@ class Timer {
 
     constructor(updateFunction) {
         this.#updateFunction = updateFunction;
+        this.keepActive();
     }
 
     keepActive() {
@@ -35,50 +55,39 @@ class Timer {
     }
 
     deactivate() {
-        clearInterval(this.#remainingTimerId);
-        this.#isActive = false;
-    }
-}
-
-class RemainingUpdater {
-    #rows;
-    #remainingTimer = new Timer(this.#updateRemaining.bind(this));
-
-    constructor(rows) {
-        this.#rows = rows;
-    }
-
-    update() {
-        if (this.#allFlowsAreFinished()) {
-            this.#remainingTimer.deactivate();
-        } else {
-            this.#remainingTimer.keepActive();
-        }
-    }
-
-    #allFlowsAreFinished() {
-        return Array.from(this.#rows.values()).every(row => row.isFlowFinished());
-    }
-
-    #updateRemaining() {
-        Array.from(this.#rows.values())
-            .filter(row => !row.isFlowFinished())
-            .forEach(row => row.updateRemaining());
+        setTimeout(() => {
+            clearInterval(this.#remainingTimerId)
+            this.#isActive = false;
+        }, this.#ONE_SECOND);
     }
 }
 
 class Rows {
-    static #rows = new Map();
-    static #remainingUpdater = new RemainingUpdater(Rows.#rows);
+    static #rowsMap = new Map();
+    static #remainingUpdater = new TimerRefresher(
+        new Timer(Rows.#updateRemaining.bind(this)),
+        Rows.#allFlowsAreFinished.bind(this));
 
     static createRow(flowId, sources, categories) {
-        this.#rows.set(flowId, new Row(sources, categories));
+        this.#rowsMap.set(flowId, new Row(sources, categories));
     }
 
     static updateProgress({data}) {
         const {flowId, percent} = JSON.parse(data);
-        Rows.#rows.get(parseInt(flowId)).updateProgress(percent);
-        Rows.#remainingUpdater.update();
+        Rows.#rowsMap.get(parseInt(flowId)).updateProgress(percent);
+        Rows.#remainingUpdater.refreshTimer();
+    }
+
+    static #updateRemaining() {
+        this.#rows().forEach(row => row.updateRemaining())
+    }
+
+    static #allFlowsAreFinished() {
+        return this.#rows().every(row => row.isFlowFinished());
+    }
+
+    static #rows() {
+        return Array.from(this.#rowsMap.values());
     }
 }
 
@@ -109,7 +118,9 @@ class Row {
     }
 
     updateRemaining() {
-        if (this.#percent > 0) {
+        if (this.#percent === 0 || this.#percent === Row.#ONE_HUNDRED) {
+            this.#row.querySelector('.remaining').innerText = '';
+        } else {
             const now = Date.now();
             const elapsed = now - this.#start;
             const remaining = elapsed * (Row.#ONE_HUNDRED - this.#percent) / this.#percent;
@@ -121,11 +132,10 @@ class Row {
         this.#percent = percent;
         this.#row.querySelector('.progress-bar').style.width = percent + '%';
         this.#row.querySelector('.progress-bar').innerText = percent + '%';
-        if (this.isFlowFinished()) {
+        if (percent === Row.#ONE_HUNDRED) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
-            this.#row.querySelector('.remaining').innerText = '';
         }
     }
 
@@ -136,9 +146,11 @@ class Row {
 
 class Duration {
     #millis;
+
     constructor(millis) {
         this.#millis = millis;
     }
+
     toString() {
         // FIXME only works for durations <24h
         return new Date(this.#millis).toISOString().substring(11, 19);
@@ -147,6 +159,7 @@ class Duration {
 
 class Connection {
     static #socket;
+
     static reconnect(onMessageReceived) {
         if (!this.#socket || this.#isSocketClosed()) {
             this.#connect(onMessageReceived);

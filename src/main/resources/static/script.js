@@ -102,9 +102,10 @@ class Timer {
 
 class Rows {
     static #rowsMap = new Map();
-    static #remainingUpdater = new TimerRefresher(
-        new Timer(Rows.#updateRemaining.bind(this)),
-        Rows.#allFlowsAreFinished.bind(this));
+    static #remainingTimer = new Timer(Rows.#updateRemaining);
+    static #remainingTimerRefresher = new TimerRefresher(
+        Rows.#remainingTimer,
+        Rows.#allFlowsAreFinished);
 
     static createRow(flowId, sources, categories) {
         this.#rowsMap.set(flowId, new Row(sources, categories));
@@ -112,15 +113,15 @@ class Rows {
 
     static updateProgress(flowId, percent) {
         Rows.#rowsMap.get(flowId).updateProgress(percent);
-        Rows.#remainingUpdater.refreshTimer();
+        Rows.#remainingTimerRefresher.refreshTimer();
     }
 
     static #updateRemaining() {
-        this.#rows().forEach(row => row.updateRemaining())
+        Rows.#rows().forEach(row => row.updateRemaining())
     }
 
     static #allFlowsAreFinished() {
-        return this.#rows().every(row => row.isFlowFinished());
+        return Rows.#rows().every(row => row.isFlowFinished());
     }
 
     static #rows() {

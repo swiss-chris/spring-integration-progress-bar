@@ -60,12 +60,12 @@ class MessageHandler {
 }
 
 class TimerDeActivator {
-    #onOffTimer;
     #deactivationPredicate;
+    #onOffTimer;
 
-    constructor(onOffTimer, deactivationPredicate) {
-        this.#onOffTimer = onOffTimer;
+    constructor(deactivationPredicate, onOffTimer) {
         this.#deactivationPredicate = deactivationPredicate;
+        this.#onOffTimer = onOffTimer;
     }
 
     update() {
@@ -256,5 +256,6 @@ class Duration {
 
 Websocket.connect(MessageHandler.handleMessage);
 const remainingTimerDeActivator = new TimerDeActivator(
-    new OnOffTimer(Rows.updateRemaining),
-    Rows.allFlowsAreFinished);
+    Rows.allFlowsAreFinished,
+    new OnOffTimer(Rows.updateRemaining)
+);

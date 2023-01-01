@@ -55,10 +55,8 @@ class Timer {
     }
 
     deactivate() {
-        setTimeout(() => {
-            clearInterval(this.#remainingTimerId)
-            this.#isActive = false;
-        }, this.#ONE_SECOND);
+        clearInterval(this.#remainingTimerId)
+        this.#isActive = false;
     }
 }
 
@@ -118,9 +116,7 @@ class Row {
     }
 
     updateRemaining() {
-        if (this.#percent === 0 || this.#percent === Row.#ONE_HUNDRED) {
-            this.#row.querySelector('.remaining').innerText = '';
-        } else {
+        if (this.isFlowStarted() && !this.isFlowFinished()) {
             const now = Date.now();
             const elapsed = now - this.#start;
             const remaining = elapsed * (Row.#ONE_HUNDRED - this.#percent) / this.#percent;
@@ -132,11 +128,16 @@ class Row {
         this.#percent = percent;
         this.#row.querySelector('.progress-bar').style.width = percent + '%';
         this.#row.querySelector('.progress-bar').innerText = percent + '%';
-        if (percent === Row.#ONE_HUNDRED) {
+        if (this.isFlowFinished()) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
+            this.#row.querySelector('.remaining').innerText = '';
         }
+    }
+
+    isFlowStarted() {
+        return this.#percent > 0;
     }
 
     isFlowFinished() {

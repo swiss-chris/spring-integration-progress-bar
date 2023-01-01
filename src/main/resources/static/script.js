@@ -197,6 +197,9 @@ class Percent {
     #percent
 
     constructor(percent) {
+        if (percent < 0 || percent > 100) {
+            throw new Error('the parameter "percent" must be between 0 and 100');
+        }
         this.#percent = percent;
     }
 

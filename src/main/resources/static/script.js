@@ -7,11 +7,11 @@ class Form {
     }
 
     static #getParams() {
-        const formProps = Object.fromEntries(new FormData(document.getElementById("startflow")));
+        const {sources, categories} = Object.fromEntries(new FormData(document.getElementById("startflow")));
         return {
             flowId: FlowId.next(),
-            sources: formProps.sources,
-            categories: formProps.categories
+            sources,
+            categories
         };
     }
 

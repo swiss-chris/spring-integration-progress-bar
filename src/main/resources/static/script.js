@@ -79,8 +79,8 @@ class TimerRefresher {
 class Timer {
     #ONE_SECOND = 1000;
 
-    #updateFunction
     #isActive = false;
+    #updateFunction
     #remainingTimerId;
 
     constructor(updateFunction) {

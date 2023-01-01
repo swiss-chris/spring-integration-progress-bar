@@ -1,8 +1,8 @@
 class Form {
     static submit() {
+        Websocket.reconnect(MessageHandler.handleMessage);
         const {flowId, sources, categories} = this.#getParams();
         Rows.createRow(flowId, sources, categories)
-        Websocket.reconnect(MessageHandler.handleMessage);
         this.#startFlow({flowId, sources, categories});
         return false; // prevent regular form submit & page refresh
     }
@@ -88,7 +88,7 @@ class Timer {
     }
 
     #activate() {
-        this.#updateFunction(); // the first time, execute it immediately without waiting for timeout/interval.
+        this.#updateFunction(); // the first time, execute immediately without waiting for timeout/interval.
         this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
         this.#isActive = true;
     }

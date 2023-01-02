@@ -2,7 +2,7 @@
 
 class Form {
     static submit() {
-        Websocket.reconnect(MessageHandler.handleMessage);
+        websocketConnector.reconnect();
         const {startedAt, flowId, sources, categories} = this.#getParams();
         Rows.createRow(startedAt, flowId, sources, categories)
         this.#startFlow({startedAt, flowId, sources, categories});
@@ -123,141 +123,13 @@ class Row {
     }
 }
 
-class Percent {
-    static #ZERO_PERCENT = new Percent(0);
-    static #ONE_HUNDRED_PERCENT = new Percent(100);
-
-    #percent
-
-    constructor(percent) {
-        if (percent < 0 || percent > 100) {
-            throw new Error('the parameter "percent" must be between 0 and 100');
-        }
-        this.#percent = percent;
-    }
-
-    equals(other) {
-        return this.#percent === other.#percent;
-    }
-
-    isZero() {
-        return this.equals(Percent.#ZERO_PERCENT);
-    }
-
-    isOneHundred() {
-        return this.equals(Percent.#ONE_HUNDRED_PERCENT);
-    }
-
-    remaining() {
-        return Percent.#ONE_HUNDRED_PERCENT.minus(this);
-    }
-
-    minus(other) {
-        return new Percent(this.#percent - other.#percent);
-    }
-
-    divideBy(percent) {
-        return this.#percent / percent.#percent;
-    }
-
-    toString() {
-        return this.#percent + '%';
-    }
-}
-
-class Duration {
-    #millis;
-
-    constructor(millis) {
-        this.#millis = millis;
-    }
-
-    toString() {
-        const s = ~~(this.#millis / 1000);
-        return this.#format(s / 3600) + ':'
-            + this.#format(s % 3600 / 60) + ':'
-            + this.#format(s % 60);
-    }
-
-    #format(n) {
-        return (~~n).toString().padStart(2, '0')
-    }
-}
-
-////// -------- ON PAGE LOAD AND ON FORM SUBMIT -------- //////
-
-class Websocket {
-    static #URL = 'http://localhost:8080/messages';
-
-    static #socket;
-
-    static connect(onMessageReceived) {
-        this.#socket = new SockJS(this.#URL);
-        this.#socket.onmessage = onMessageReceived;
-    }
-
-    static reconnect(onMessageReceived) {
-        // e.g. if the server was restarted
-        if (this.#isSocketClosed()) {
-            this.connect(onMessageReceived);
-        }
-    }
-
-    static #isSocketClosed() {
-        return this.#socket.readyState === 3;
-    }
-}
-
-class TimerDeActivator {
-    #deactivationPredicate;
-    #onOffTimer;
-
-    constructor(deactivationPredicate, onOffTimer) {
-        this.#deactivationPredicate = deactivationPredicate;
-        this.#onOffTimer = onOffTimer;
-    }
-
-    update() {
-        if (this.#deactivationPredicate()) {
-            this.#onOffTimer.deactivate();
-        } else {
-            this.#onOffTimer.keepActive();
-        }
-    }
-}
-
-class OnOffTimer {
-    #ONE_SECOND = 1000;
-
-    #callback
-    #intervalId;
-    #isActive = false;
-
-    constructor(callback) {
-        this.#callback = callback;
-    }
-
-    keepActive() {
-        if (!this.#isActive) {
-            this.#activate();
-        }
-    }
-
-    deactivate() {
-        clearInterval(this.#intervalId)
-        this.#isActive = false;
-    }
-
-    #activate() {
-        this.#callback(); // the first time, execute immediately without waiting for timeout/interval.
-        this.#intervalId = setInterval(this.#callback, this.#ONE_SECOND);
-        this.#isActive = true;
-    }
-}
-
 ////// -------- ON PAGE LOAD -------- //////
 
-Websocket.connect(MessageHandler.handleMessage);
+const websocketConnector = new WebsocketConnector(
+    'http://localhost:8080/messages',
+    MessageHandler.handleMessage
+).connect();
+
 const remainingTimerDeActivator = new TimerDeActivator(
     Rows.allFlowsAreFinished,
     new OnOffTimer(Rows.updateRemaining)

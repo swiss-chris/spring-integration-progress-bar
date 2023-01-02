@@ -109,7 +109,7 @@ class Row {
 
     #createRowFromTemplate(start, sources, categories) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.row-from-template').dataset.start = start;
+        row.querySelector('.flow-progress').dataset.start = start;
         row.querySelector('.sources').innerText = sources;
         row.querySelector('.categories').innerText = categories;
         row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
@@ -117,9 +117,21 @@ class Row {
     }
 
     #appendRow(row) {
-        const root = document.getElementById('root');
-        root.appendChild(row);
-        return root.lastElementChild; // we can't use 'row' as it is empty after 'appendChild(row)'
+        const parent = document.getElementById('root');
+        const children = [...parent.querySelectorAll('.flow-progress')]
+        const newIndex = Row.#getNewIndex(children.map(s => s.dataset.start), this.#start);
+        if (newIndex < children.length) {
+            parent.insertBefore(row, children[newIndex]);
+        } else {
+            parent.appendChild(row);
+        }
+        // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
+        return parent.querySelector(`[data-start="${this.#start}"]`);
+    }
+
+    static #getNewIndex(starts, start) {
+        // finds where to insert the element in descending order of start time
+        return starts.concat(start).sort().reverse().indexOf(start);
     }
 }
 

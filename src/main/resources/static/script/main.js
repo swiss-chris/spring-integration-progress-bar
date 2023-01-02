@@ -90,14 +90,8 @@ class Row {
     }
 
     updateRemaining() {
-        if (this.isFlowStarted() && !this.isFlowFinished()) {
-            const now = Date.now();
-            const elapsed = now - this.#start;
-            const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
-            this.#row.querySelector('.remaining').innerText = new Duration(remaining).toString();
-        }
-        if (this.isFlowFinished()) {
-            this.#row.querySelector('.remaining').innerText = '';
+        if (this.isFlowStarted()) {
+            this.#row.querySelector('.remaining').innerText = this.isFlowFinished() ? '' : new Duration(this.#calculateRemainingTime()).toString();
         }
     }
 
@@ -129,6 +123,12 @@ class Row {
         }
         // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
         return parent.querySelector(`[data-start="${this.#start}"]`);
+    }
+
+    #calculateRemainingTime() {
+        const now = Date.now();
+        const elapsed = now - this.#start;
+        return elapsed * this.#percent.remaining().divideBy(this.#percent);
     }
 }
 

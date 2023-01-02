@@ -126,10 +126,12 @@ class Duration {
     }
 
     toString() {
-        const s = ~~(this.#millis / 1000);
-        return this.#format(s / 3600) + ':'
-            + this.#format(s % 3600 / 60) + ':'
-            + this.#format(s % 60);
+        const s = Math.floor(this.#millis / 1000);
+        return [
+            this.#format(s / 60 / 60),
+            this.#format(s / 60 % 60),
+            this.#format(s % 60)
+        ].join(':');
     }
 
     #format(n) {

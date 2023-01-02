@@ -86,7 +86,6 @@ class Row {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
-            this.#row.querySelector('.remaining').innerText = '';
         }
     }
 
@@ -96,6 +95,9 @@ class Row {
             const elapsed = now - this.#start;
             const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
             this.#row.querySelector('.remaining').innerText = new Duration(remaining).toString();
+        }
+        if (this.isFlowFinished()) {
+            this.#row.querySelector('.remaining').innerText = '';
         }
     }
 

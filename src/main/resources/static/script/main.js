@@ -67,15 +67,15 @@ class Rows {
 }
 
 class Row {
+    #row;
     #start;
     #percent;
-    #row;
 
     constructor(start, sources, categories) {
-        this.#start = start;
-        this.#percent = new Percent(0);
         const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
+        this.#start = start;
+        this.#percent = new Percent(0);
     }
 
     updateProgress(percent) {
@@ -112,7 +112,7 @@ class Row {
         row.querySelector('.flow-progress').dataset.start = start;
         row.querySelector('.sources').innerText = sources;
         row.querySelector('.categories').innerText = categories;
-        row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
+        row.querySelector('.start').innerText = new Date(start).toLocaleTimeString();
         return row;
     }
 

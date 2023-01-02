@@ -1,4 +1,4 @@
-////// -------- see the bottom of this file for code executed on page load -------- //////
+////// -------- ON FORM SUBMIT -------- //////
 
 class Form {
     static submit() {
@@ -14,41 +14,13 @@ class Form {
 
     static #getParams() {
         const {sources, categories} = Object.fromEntries(new FormData(document.getElementById("startflow")));
+        const timestamp = Date.now();
         return {
-            startedAt: Date.now(),
-            flowId: FlowId.next(),
+            startedAt: timestamp,
+            flowId: timestamp,
             sources,
             categories
         };
-    }
-}
-
-class FlowId {
-    static next() {
-        // I'm assuming this method isn't called more than once per millisecond.
-        return Date.now();
-    }
-}
-
-class Websocket {
-    static #URL = 'http://localhost:8080/messages';
-
-    static #socket;
-
-    static connect(onMessageReceived) {
-        this.#socket = new SockJS(this.#URL);
-        this.#socket.onmessage = onMessageReceived;
-    }
-
-    static reconnect(onMessageReceived) {
-        // e.g. if the server was restarted
-        if (this.#isSocketClosed()) {
-            this.connect(onMessageReceived);
-        }
-    }
-
-    static #isSocketClosed() {
-        return this.#socket.readyState === 3;
     }
 }
 
@@ -59,67 +31,24 @@ class MessageHandler {
     }
 }
 
-class TimerDeActivator {
-    #deactivationPredicate;
-    #onOffTimer;
-
-    constructor(deactivationPredicate, onOffTimer) {
-        this.#deactivationPredicate = deactivationPredicate;
-        this.#onOffTimer = onOffTimer;
-    }
-
-    update() {
-        if (this.#deactivationPredicate()) {
-            this.#onOffTimer.deactivate();
-        } else {
-            this.#onOffTimer.keepActive();
-        }
-    }
-}
-
-class OnOffTimer {
-    #ONE_SECOND = 1000;
-
-    #isActive = false;
-    #updateFunction
-    #remainingTimerId;
-
-    constructor(updateFunction) {
-        this.#updateFunction = updateFunction;
-    }
-
-    #activate() {
-        this.#updateFunction(); // the first time, execute immediately without waiting for timeout/interval.
-        this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
-        this.#isActive = true;
-    }
-
-    keepActive() {
-        if (!this.#isActive) {
-            this.#activate();
-        }
-    }
-
-    deactivate() {
-        clearInterval(this.#remainingTimerId)
-        this.#isActive = false;
-    }
-}
-
 class Rows {
     static #rowsMap = new Map();
 
-    static createRow(startedAt, flowId, sources, categories) {
-        this.#rowsMap.set(flowId, new Row(startedAt, sources, categories));
-    }
-
-    static updateProgress(startedAt, flowId, sources, categories, percent) {
-        if (!Rows.#rowsMap.has(flowId)) {
-            // e.g. if we refresh the page during a running flow
-            this.createRow(startedAt, flowId, sources, categories);
-        }
+    static updateProgress(start, flowId, sources, categories, percent) {
+        Rows.#createNowIfNecessary(start, flowId, sources, categories);
         Rows.#rowsMap.get(flowId).updateProgress(percent);
         remainingTimerDeActivator.update();
+    }
+
+    static #createNowIfNecessary(start, flowId, sources, categories) {
+        // e.g. if we refresh the page during a running flow
+        if (!Rows.#rowsMap.has(flowId)) {
+            this.createRow(start, flowId, sources, categories);
+        }
+    }
+
+    static createRow(start, flowId, sources, categories) {
+        this.#rowsMap.set(flowId, new Row(start, sources, categories));
     }
 
     static updateRemaining() {
@@ -140,15 +69,16 @@ class Row {
     #percent;
     #row;
 
-    constructor(startedAt, sources, categories) {
-        this.#start = startedAt;
+    constructor(start, sources, categories) {
+        this.#start = start;
         this.#percent = new Percent(0);
-        const row = this.#createRowFromTemplate(sources, categories);
+        const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
     }
 
-    #createRowFromTemplate(sources, categories) {
+    #createRowFromTemplate(start, sources, categories) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
+        row.querySelector('.row-from-template').dataset.start = start;
         row.querySelector('.sources').innerText = sources;
         row.querySelector('.categories').innerText = categories;
         row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
@@ -249,6 +179,77 @@ class Duration {
 
     #format(n) {
         return (~~n).toString().padStart(2, '0')
+    }
+}
+
+////// -------- ON PAGE LOAD AND ON FORM SUBMIT -------- //////
+
+class Websocket {
+    static #URL = 'http://localhost:8080/messages';
+
+    static #socket;
+
+    static connect(onMessageReceived) {
+        this.#socket = new SockJS(this.#URL);
+        this.#socket.onmessage = onMessageReceived;
+    }
+
+    static reconnect(onMessageReceived) {
+        // e.g. if the server was restarted
+        if (this.#isSocketClosed()) {
+            this.connect(onMessageReceived);
+        }
+    }
+
+    static #isSocketClosed() {
+        return this.#socket.readyState === 3;
+    }
+}
+
+class TimerDeActivator {
+    #deactivationPredicate;
+    #onOffTimer;
+
+    constructor(deactivationPredicate, onOffTimer) {
+        this.#deactivationPredicate = deactivationPredicate;
+        this.#onOffTimer = onOffTimer;
+    }
+
+    update() {
+        if (this.#deactivationPredicate()) {
+            this.#onOffTimer.deactivate();
+        } else {
+            this.#onOffTimer.keepActive();
+        }
+    }
+}
+
+class OnOffTimer {
+    #ONE_SECOND = 1000;
+
+    #isActive = false;
+    #updateFunction
+    #remainingTimerId;
+
+    constructor(updateFunction) {
+        this.#updateFunction = updateFunction;
+    }
+
+    #activate() {
+        this.#updateFunction(); // the first time, execute immediately without waiting for timeout/interval.
+        this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
+        this.#isActive = true;
+    }
+
+    keepActive() {
+        if (!this.#isActive) {
+            this.#activate();
+        }
+    }
+
+    deactivate() {
+        clearInterval(this.#remainingTimerId)
+        this.#isActive = false;
     }
 }
 

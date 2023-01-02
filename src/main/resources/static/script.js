@@ -3,12 +3,14 @@
 class Form {
     static submit() {
         Websocket.reconnect(MessageHandler.handleMessage);
-        this.#startFlow();
+        const {startedAt, flowId, sources, categories} = this.#getParams();
+        Rows.createRow(startedAt, flowId, sources, categories)
+        this.#startFlow({startedAt, flowId, sources, categories});
         return false; // prevent regular form submit & page refresh
     }
 
-    static #startFlow() {
-        const queryParams = new URLSearchParams(this.#getParams());
+    static #startFlow({startedAt, flowId, sources, categories}) {
+        const queryParams = new URLSearchParams({startedAt, flowId, sources, categories});
         fetch(`flow?${queryParams}`, {method: "post"});
     }
 
@@ -34,6 +36,10 @@ class MessageHandler {
 class Rows {
     static #rowsMap = new Map();
 
+    static createRow(start, flowId, sources, categories) {
+        this.#rowsMap.set(flowId, new Row(start, sources, categories));
+    }
+
     static updateProgress(start, flowId, sources, categories, percent) {
         Rows.#createNowIfNecessary(start, flowId, sources, categories);
         Rows.#rowsMap.get(flowId).updateProgress(percent);
@@ -51,12 +57,8 @@ class Rows {
     static #createNowIfNecessary(start, flowId, sources, categories) {
         // e.g. if we refresh the page during a running flow
         if (!Rows.#rowsMap.has(flowId)) {
-            this.#createRow(start, flowId, sources, categories);
+            this.createRow(start, flowId, sources, categories);
         }
-    }
-
-    static #createRow(start, flowId, sources, categories) {
-        this.#rowsMap.set(flowId, new Row(start, sources, categories));
     }
 
     static #rows() {

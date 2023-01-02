@@ -153,4 +153,4 @@ class ArrayUtils {
 ////// -------- JEST (TESTS) -------- //////
 
 if (typeof module == 'undefined') { var module = {}; }
-module.exports = {Percent, Duration};
+module.exports = {Percent, Duration, ArrayUtils};

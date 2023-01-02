@@ -119,7 +119,7 @@ class Row {
     #appendRow(row) {
         const parent = document.getElementById('root');
         const children = [...parent.querySelectorAll('.flow-progress')]
-        const newIndex = Row.#getNewIndex(children.map(s => s.dataset.start), this.#start);
+        const newIndex = ArrayUtils.getNewIndex(children.map(s => s.dataset.start), this.#start);
         if (newIndex < children.length) {
             parent.insertBefore(row, children[newIndex]);
         } else {
@@ -127,11 +127,6 @@ class Row {
         }
         // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
         return parent.querySelector(`[data-start="${this.#start}"]`);
-    }
-
-    static #getNewIndex(starts, start) {
-        // finds where to insert the element in descending order of start time
-        return starts.concat(start).sort().reverse().indexOf(start);
     }
 }
 

@@ -136,3 +136,10 @@ class Duration {
         return (~~n).toString().padStart(2, '0')
     }
 }
+
+class ArrayUtils {
+    static getNewIndex(numbers, number, ascending = false) {
+        const compareFn = (a, b) => ascending ? (a - b) : (b - a);
+        return numbers.concat(number).sort(compareFn).indexOf(number);
+    }
+}

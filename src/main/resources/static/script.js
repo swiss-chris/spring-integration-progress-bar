@@ -40,23 +40,23 @@ class Rows {
         remainingTimerDeActivator.update();
     }
 
-    static #createNowIfNecessary(start, flowId, sources, categories) {
-        // e.g. if we refresh the page during a running flow
-        if (!Rows.#rowsMap.has(flowId)) {
-            this.createRow(start, flowId, sources, categories);
-        }
-    }
-
-    static createRow(start, flowId, sources, categories) {
-        this.#rowsMap.set(flowId, new Row(start, sources, categories));
+    static allFlowsAreFinished() {
+        return Rows.#rows().every(row => row.isFlowFinished());
     }
 
     static updateRemaining() {
         Rows.#rows().forEach(row => row.updateRemaining())
     }
 
-    static allFlowsAreFinished() {
-        return Rows.#rows().every(row => row.isFlowFinished());
+    static #createNowIfNecessary(start, flowId, sources, categories) {
+        // e.g. if we refresh the page during a running flow
+        if (!Rows.#rowsMap.has(flowId)) {
+            this.#createRow(start, flowId, sources, categories);
+        }
+    }
+
+    static #createRow(start, flowId, sources, categories) {
+        this.#rowsMap.set(flowId, new Row(start, sources, categories));
     }
 
     static #rows() {
@@ -74,21 +74,6 @@ class Row {
         this.#percent = new Percent(0);
         const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
-    }
-
-    #createRowFromTemplate(start, sources, categories) {
-        const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.row-from-template').dataset.start = start;
-        row.querySelector('.sources').innerText = sources;
-        row.querySelector('.categories').innerText = categories;
-        row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
-        return row;
-    }
-
-    #appendRow(row) {
-        const root = document.getElementById('root');
-        root.appendChild(row);
-        return root.lastElementChild; // we can't use 'row' as it is empty after 'appendChild(row)'
     }
 
     updateProgress(percent) {
@@ -118,6 +103,21 @@ class Row {
 
     isFlowFinished() {
         return this.#percent.isOneHundred();
+    }
+
+    #createRowFromTemplate(start, sources, categories) {
+        const row = document.getElementById('progress-row').content.cloneNode(true);
+        row.querySelector('.row-from-template').dataset.start = start;
+        row.querySelector('.sources').innerText = sources;
+        row.querySelector('.categories').innerText = categories;
+        row.querySelector('.start').innerText = new Date(this.#start).toLocaleTimeString();
+        return row;
+    }
+
+    #appendRow(row) {
+        const root = document.getElementById('root');
+        root.appendChild(row);
+        return root.lastElementChild; // we can't use 'row' as it is empty after 'appendChild(row)'
     }
 }
 
@@ -235,12 +235,6 @@ class OnOffTimer {
         this.#updateFunction = updateFunction;
     }
 
-    #activate() {
-        this.#updateFunction(); // the first time, execute immediately without waiting for timeout/interval.
-        this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
-        this.#isActive = true;
-    }
-
     keepActive() {
         if (!this.#isActive) {
             this.#activate();
@@ -250,6 +244,12 @@ class OnOffTimer {
     deactivate() {
         clearInterval(this.#remainingTimerId)
         this.#isActive = false;
+    }
+
+    #activate() {
+        this.#updateFunction(); // the first time, execute immediately without waiting for timeout/interval.
+        this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
+        this.#isActive = true;
     }
 }
 

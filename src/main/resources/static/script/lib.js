@@ -140,8 +140,9 @@ class Duration {
 }
 
 class ArrayUtils {
-    static getNewIndex(numbers, number, ascending = true) {
+    // returns the index where the new number should be inserted into the array to preserve sorting
+    static getInsertionIndex(numbers, newNumber, ascending = true) {
         const compareFn = (a, b) => ascending ? (a - b) : (b - a);
-        return numbers.concat(number).sort(compareFn).indexOf(number);
+        return numbers.concat(newNumber).sort(compareFn).indexOf(newNumber);
     }
 }

@@ -227,12 +227,12 @@ class TimerDeActivator {
 class OnOffTimer {
     #ONE_SECOND = 1000;
 
+    #callback
+    #intervalId;
     #isActive = false;
-    #updateFunction
-    #remainingTimerId;
 
-    constructor(updateFunction) {
-        this.#updateFunction = updateFunction;
+    constructor(callback) {
+        this.#callback = callback;
     }
 
     keepActive() {
@@ -242,13 +242,13 @@ class OnOffTimer {
     }
 
     deactivate() {
-        clearInterval(this.#remainingTimerId)
+        clearInterval(this.#intervalId)
         this.#isActive = false;
     }
 
     #activate() {
-        this.#updateFunction(); // the first time, execute immediately without waiting for timeout/interval.
-        this.#remainingTimerId = setInterval(this.#updateFunction, this.#ONE_SECOND);
+        this.#callback(); // the first time, execute immediately without waiting for timeout/interval.
+        this.#intervalId = setInterval(this.#callback, this.#ONE_SECOND);
         this.#isActive = true;
     }
 }

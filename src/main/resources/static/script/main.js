@@ -119,7 +119,7 @@ class Row {
     #appendRow(row) {
         const parent = document.getElementById('root');
         const children = [...parent.querySelectorAll('.flow-progress')]
-        const newIndex = ArrayUtils.getNewIndex(children.map(s => s.dataset.start), this.#start);
+        const newIndex = ArrayUtils.getNewIndex(children.map(s => s.dataset.start), this.#start, false);
         if (newIndex < children.length) {
             parent.insertBefore(row, children[newIndex]);
         } else {

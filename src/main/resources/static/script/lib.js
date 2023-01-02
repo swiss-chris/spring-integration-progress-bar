@@ -138,7 +138,7 @@ class Duration {
 }
 
 class ArrayUtils {
-    static getNewIndex(numbers, number, ascending = false) {
+    static getNewIndex(numbers, number, ascending = true) {
         const compareFn = (a, b) => ascending ? (a - b) : (b - a);
         return numbers.concat(number).sort(compareFn).indexOf(number);
     }

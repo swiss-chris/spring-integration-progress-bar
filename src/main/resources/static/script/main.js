@@ -36,7 +36,7 @@ class MessageHandler {
 class Rows {
     static #rowsMap = new Map();
 
-    static createRow(start, flowId, sources, categories, percent = new Percent(0)) {
+    static createRow(start, flowId, sources, categories, percent = Percent.ZERO_PERCENT) {
         this.#rowsMap.set(flowId, new Row(start, sources, categories, percent));
         this.#rowsMap.get(flowId).updateRemaining(); // in case percent > 0 we can set it immediately
     }

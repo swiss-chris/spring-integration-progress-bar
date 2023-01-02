@@ -57,15 +57,15 @@ class OnOffTimer {
         this.#callback = callback;
     }
 
+    deactivate() {
+        clearInterval(this.#intervalId)
+        this.#isActive = false;
+    }
+
     keepActive() {
         if (!this.#isActive) {
             this.#activate();
         }
-    }
-
-    deactivate() {
-        clearInterval(this.#intervalId)
-        this.#isActive = false;
     }
 
     #activate() {

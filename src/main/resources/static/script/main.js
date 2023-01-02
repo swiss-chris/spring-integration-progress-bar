@@ -72,10 +72,10 @@ class Row {
     #percent;
 
     constructor(start, sources, categories) {
-        this.#start = start;
-        this.#percent = new Percent(0);
         const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
+        this.#start = start;
+        this.#percent = new Percent(0);
     }
 
     updateProgress(percent) {

@@ -67,9 +67,9 @@ class Rows {
 }
 
 class Row {
+    #row;
     #start;
     #percent;
-    #row;
 
     constructor(start, sources, categories) {
         this.#start = start;

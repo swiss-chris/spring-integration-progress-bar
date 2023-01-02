@@ -135,7 +135,7 @@ class Duration {
     }
 
     #format(n) {
-        return (~~n).toString().padStart(2, '0')
+        return Math.floor(n).toString().padStart(2, '0')
     }
 }
 

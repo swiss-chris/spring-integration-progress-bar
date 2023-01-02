@@ -36,12 +36,13 @@ class MessageHandler {
 class Rows {
     static #rowsMap = new Map();
 
-    static createRow(start, flowId, sources, categories) {
-        this.#rowsMap.set(flowId, new Row(start, sources, categories));
+    static createRow(start, flowId, sources, categories, percent = new Percent(0)) {
+        this.#rowsMap.set(flowId, new Row(start, sources, categories, percent));
+        this.#rowsMap.get(flowId).updateRemaining(); // in case percent > 0 we can set it immediately
     }
 
     static updateProgress(start, flowId, sources, categories, percent) {
-        Rows.#createNowIfNecessary(start, flowId, sources, categories);
+        Rows.#createNowIfNecessary(start, flowId, sources, categories, percent);
         Rows.#rowsMap.get(flowId).updateProgress(percent);
         remainingTimerDeActivator.update();
     }
@@ -54,10 +55,10 @@ class Rows {
         Rows.#rows().forEach(row => row.updateRemaining())
     }
 
-    static #createNowIfNecessary(start, flowId, sources, categories) {
+    static #createNowIfNecessary(start, flowId, sources, categories, percent) {
         // e.g. if we refresh the page during a running flow
         if (!Rows.#rowsMap.has(flowId)) {
-            this.createRow(start, flowId, sources, categories);
+            this.createRow(start, flowId, sources, categories, percent);
         }
     }
 
@@ -71,9 +72,9 @@ class Row {
     #percent;
     #row;
 
-    constructor(start, sources, categories) {
+    constructor(start, sources, categories, percent) {
         this.#start = start;
-        this.#percent = new Percent(0);
+        this.#percent = percent;
         const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
     }

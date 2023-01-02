@@ -121,6 +121,9 @@ class Duration {
     #millis;
 
     constructor(millis) {
+        if (millis < 0) {
+            throw new Error('the parameter "millis" must be >= 0');
+        }
         this.#millis = millis;
     }
 
@@ -150,4 +153,4 @@ class ArrayUtils {
 ////// -------- JEST (TESTS) -------- //////
 
 if (typeof module == 'undefined') { var module = {}; }
-module.exports = [Percent];
+module.exports = {Percent, Duration};

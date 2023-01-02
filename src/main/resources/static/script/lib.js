@@ -58,10 +58,7 @@ class OnOffTimer {
     }
 
     deactivate() {
-        if (this.#isActive) {
-            this.#callback(); // one last time, assuming the timer was previously active
-        }
-        clearInterval(this.#intervalId);
+        clearInterval(this.#intervalId)
         this.#isActive = false;
     }
 

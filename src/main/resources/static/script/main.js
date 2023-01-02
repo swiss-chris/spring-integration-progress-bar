@@ -87,12 +87,13 @@ class Row {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
             this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
+            this.#row.querySelector('.remaining').innerText = '';
         }
     }
 
     updateRemaining() {
-        if (this.isFlowStarted()) {
-            this.#row.querySelector('.remaining').innerText = this.isFlowFinished() ? '' : new Duration(this.#calculateRemainingTime()).toString();
+        if (this.isFlowStarted() && !this.isFlowFinished()) {
+            this.#row.querySelector('.remaining').innerText = new Duration(this.#calculateRemainingTime()).toString();
         }
     }
 

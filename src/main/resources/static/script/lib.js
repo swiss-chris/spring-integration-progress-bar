@@ -8,7 +8,6 @@ class WebsocketConnector {
     constructor(url, onMessageReceived) {
         this.#url = url;
         this.#onMessageReceived = onMessageReceived;
-        this.connect();
     }
 
     connect() {

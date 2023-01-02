@@ -19,7 +19,7 @@ class Form {
         const timestamp = Date.now();
         return {
             startedAt: timestamp,
-            flowId: timestamp,
+            flowId: timestamp, // ideally we'd use a proper 'uuid' for 'flowId'
             sources,
             categories
         };

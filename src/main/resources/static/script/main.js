@@ -70,18 +70,17 @@ class Rows {
 }
 
 class Row {
+    #row;
     #start;
     #progress;
-    #row;
 
     constructor(start, sources, categories, percent) {
+        this.#row = this.#createRowFromTemplate(start);
         this.#start = start;
         this.#progress = new Progress(start, Date.now(), percent);
-        const row = this.#createRowFromTemplate(start, sources, categories);
-        this.#row = this.#appendRow(row);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
-        this.#startCell(new Date(start).toLocaleTimeString());
+        this.#startCell(start);
     }
 
     updateProgress(percent) {
@@ -105,19 +104,16 @@ class Row {
     #createRowFromTemplate(start) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
         row.querySelector('.flow-progress').dataset.start = start;
-        return row;
-    }
-    #appendRow(row) {
         const parent = document.getElementById('root');
         const children = [...parent.querySelectorAll('.flow-progress')]
-        const newIndex = ArrayUtils.getInsertionIndex(children.map(s => s.dataset.start), this.#start, false);
+        const newIndex = ArrayUtils.getInsertionIndex(children.map(s => s.dataset.start), start, false);
         if (newIndex < children.length) {
             parent.insertBefore(row, children[newIndex]);
         } else {
             parent.appendChild(row);
         }
         // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
-        return parent.querySelector(`[data-start="${this.#start}"]`);
+        return parent.querySelector(`[data-start="${start}"]`);
     }
 
     #sourcesCell(sources) {
@@ -129,7 +125,7 @@ class Row {
     }
 
     #startCell(start) {
-        this.#row.querySelector('.start').innerText = start;
+        this.#row.querySelector('.start').innerText = new Date(start).toLocaleTimeString();
     }
 
     #updateProgressBarCell() {

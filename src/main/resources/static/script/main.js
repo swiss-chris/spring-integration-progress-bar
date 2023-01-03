@@ -79,37 +79,34 @@ class Row {
         this.#progress = new Progress(start, Date.now(), percent);
         const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
+        this.#sourcesCell(sources);
+        this.#categoriesCell(categories);
+        this.#startCell(new Date(start).toLocaleTimeString());
     }
 
     updateProgress(percent) {
-        const now = Date.now();
-        this.#progress = new Progress(this.#start, now, percent);
-        this.#row.querySelector('.progress-bar').style.width = this.#progress.percentString();
-        this.#row.querySelector('.progress-bar').innerText = this.#progress.percentString();
+        this.#progress = new Progress(this.#start, Date.now(), percent);
+        this.#updateProgressBarCell();
         if (this.isFlowFinished()) {
-            this.#row.querySelector('.end').innerText = this.#progress.end();
-            this.#row.querySelector('.duration').innerText = this.#progress.duration();
-            this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
+            this.#endCell();
+            this.#durationCell();
+            this.#remainingCell();
         }
     }
 
     updateRemaining() {
-        this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
+        this.#remainingCell();
     }
 
     isFlowFinished() {
         return this.#progress.isFinished();
     }
 
-    #createRowFromTemplate(start, sources, categories) {
+    #createRowFromTemplate(start) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
         row.querySelector('.flow-progress').dataset.start = start;
-        row.querySelector('.sources').innerText = sources;
-        row.querySelector('.categories').innerText = categories;
-        row.querySelector('.start').innerText = new Date(start).toLocaleTimeString();
         return row;
     }
-
     #appendRow(row) {
         const parent = document.getElementById('root');
         const children = [...parent.querySelectorAll('.flow-progress')]
@@ -121,6 +118,35 @@ class Row {
         }
         // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
         return parent.querySelector(`[data-start="${this.#start}"]`);
+    }
+
+    #sourcesCell(sources) {
+        this.#row.querySelector('.sources').innerText = sources;
+    }
+
+    #categoriesCell(categories) {
+        this.#row.querySelector('.categories').innerText = categories;
+    }
+
+    #startCell(start) {
+        this.#row.querySelector('.start').innerText = start;
+    }
+
+    #updateProgressBarCell() {
+        this.#row.querySelector('.progress-bar').style.width = this.#progress.percentString();
+        this.#row.querySelector('.progress-bar').innerText = this.#progress.percentString();
+    }
+
+    #endCell() {
+        this.#row.querySelector('.end').innerText = this.#progress.end();
+    }
+
+    #durationCell() {
+        this.#row.querySelector('.duration').innerText = this.#progress.duration();
+    }
+
+    #remainingCell() {
+        this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
     }
 }
 

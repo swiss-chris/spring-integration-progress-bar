@@ -34,10 +34,11 @@ class MessageHandler {
 }
 
 class Rows {
+    // TODO consider replacing this map with a simple DOM lookup
     static #rowsMap = new Map();
 
     static createRow(start, flowId, sources, categories, percent = Percent.ZERO_PERCENT) {
-        this.#rowsMap.set(flowId, new Row(start, sources, categories, percent));
+        this.#rowsMap.set(flowId, new Row(flowId, start, sources, categories, percent));
         if (!percent.isZero()) {
             this.#rowsMap.get(flowId).updateRemaining(); // on page refresh
         }
@@ -73,8 +74,8 @@ class Row {
     #row;
     #progress;
 
-    constructor(start, sources, categories, percent) {
-        this.#row = this.#createRowFromTemplate(start);
+    constructor(flowId, start, sources, categories, percent) {
+        this.#row = this.#createRowFromTemplate(flowId, start);
         this.#progress = new Progress(start, Date.now(), percent);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
@@ -99,8 +100,9 @@ class Row {
         return this.#progress.isFinished();
     }
 
-    #createRowFromTemplate(start) {
+    #createRowFromTemplate(flowId, start) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
+        row.querySelector('.flow-progress').dataset.flowId = flowId;
         row.querySelector('.flow-progress').dataset.start = start;
         const parent = document.getElementById('root');
         const children = [...parent.querySelectorAll('.flow-progress')]
@@ -111,7 +113,7 @@ class Row {
             parent.appendChild(row);
         }
         // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
-        return parent.querySelector(`[data-start="${start}"]`);
+        return parent.querySelector(`[data-flow-id="${flowId}"]`);
     }
 
     #sourcesCell(sources) {

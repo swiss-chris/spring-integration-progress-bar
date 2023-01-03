@@ -71,12 +71,10 @@ class Rows {
 
 class Row {
     #row;
-    #start;
     #progress;
 
     constructor(start, sources, categories, percent) {
         this.#row = this.#createRowFromTemplate(start);
-        this.#start = start;
         this.#progress = new Progress(start, Date.now(), percent);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
@@ -84,7 +82,7 @@ class Row {
     }
 
     updateProgress(percent) {
-        this.#progress = new Progress(this.#start, Date.now(), percent);
+        this.#progress = this.#progress.update(Date.now(), percent)
         this.#updateProgressBarCell();
         if (this.isFlowFinished()) {
             this.#endCell();

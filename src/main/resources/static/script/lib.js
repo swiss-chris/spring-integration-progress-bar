@@ -87,6 +87,10 @@ class Progress {
         this.#percent = percent;
     }
 
+    update(now, percent) {
+        return new Progress(this.#start, now, percent);
+    }
+
     percentString() {
         return this.#percent.toString();
     }

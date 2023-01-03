@@ -75,6 +75,7 @@ class OnOffTimer {
     }
 }
 
+// TODO unit test
 class Progress {
     #start;
     #now;
@@ -90,17 +91,21 @@ class Progress {
         return this.#percent.toString();
     }
 
-    remainingDuration() {
-        const remaining = this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
-        return new Duration(remaining).toString();
-    }
-
     isStarted() {
         return !this.#percent.isZero();
     }
 
     isFinished() {
         return this.#percent.isOneHundred();
+    }
+
+    remainingDuration() {
+        if (this.#percent.isZero() || this.#percent.isOneHundred()) {
+            return '';
+        } else {
+            const remaining = this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
+            return new Duration(remaining).toString();
+        }
     }
 
     currentTime() {

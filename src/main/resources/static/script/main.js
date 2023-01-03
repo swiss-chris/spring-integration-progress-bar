@@ -38,7 +38,9 @@ class Rows {
 
     static createRow(start, flowId, sources, categories, percent = Percent.ZERO_PERCENT) {
         this.#rowsMap.set(flowId, new Row(start, sources, categories, percent));
-        this.#rowsMap.get(flowId).updateRemaining(); // in case percent > 0 we can set it immediately
+        if (!percent.isZero()) {
+            this.#rowsMap.get(flowId).updateRemaining(); // on page refresh
+        }
     }
 
     static updateProgress(start, flowId, sources, categories, percent) {
@@ -87,14 +89,12 @@ class Row {
         if (this.isFlowFinished()) {
             this.#row.querySelector('.end').innerText = this.#progress.currentTime();
             this.#row.querySelector('.duration').innerText = this.#progress.elapsedTime();
-            this.#row.querySelector('.remaining').innerText = '';
+            this.#row.querySelector('.remaining').innerText = this.#progress.remainingDuration();
         }
     }
 
     updateRemaining() {
-        if (this.isFlowStarted() && !this.isFlowFinished()) {
-            this.#row.querySelector('.remaining').innerText = this.#progress.remainingDuration();
-        }
+        this.#row.querySelector('.remaining').innerText = this.#progress.remainingDuration();
     }
 
     isFlowStarted() {

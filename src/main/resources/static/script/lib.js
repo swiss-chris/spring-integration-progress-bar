@@ -75,6 +75,36 @@ class OnOffTimer {
     }
 }
 
+class Progress {
+    #start;
+    #now;
+    #percent;
+
+    constructor(start, now, percent) {
+        this.#start = start;
+        this.#now = now;
+        this.#percent = percent;
+    }
+
+    percentAsString() {
+        return this.#percent.toString();
+    }
+
+    remainingDuration() {
+        const elapsed = this.#now - this.#start;
+        const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
+        return new Duration(remaining).toString();
+    }
+
+    isStarted() {
+        return !this.#percent.isZero();
+    }
+
+    isFinished() {
+        return this.#percent.isOneHundred();
+    }
+}
+
 class Percent {
     static ZERO_PERCENT = new Percent(0);
     static ONE_HUNDRED_PERCENT = new Percent(100);

@@ -69,20 +69,20 @@ class Rows {
 
 class Row {
     #start;
-    #percent;
+    #progress;
     #row;
 
     constructor(start, sources, categories, percent) {
         this.#start = start;
-        this.#percent = percent;
+        this.#progress = new Progress(start, Date.now(), percent);
         const row = this.#createRowFromTemplate(start, sources, categories);
         this.#row = this.#appendRow(row);
     }
 
     updateProgress(percent) {
-        this.#percent = percent;
-        this.#row.querySelector('.progress-bar').style.width = percent.toString();
-        this.#row.querySelector('.progress-bar').innerText = percent.toString();
+        this.#progress = new Progress(this.#start, Date.now(), percent);
+        this.#row.querySelector('.progress-bar').style.width = this.#progress.percentAsString();
+        this.#row.querySelector('.progress-bar').innerText = this.#progress.percentAsString();
         if (this.isFlowFinished()) {
             const end = Date.now();
             this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
@@ -93,16 +93,16 @@ class Row {
 
     updateRemaining() {
         if (this.isFlowStarted() && !this.isFlowFinished()) {
-            this.#row.querySelector('.remaining').innerText = new Duration(this.#calculateRemainingTime()).toString();
+            this.#row.querySelector('.remaining').innerText = this.#progress.remainingDuration();
         }
     }
 
     isFlowStarted() {
-        return !this.#percent.isZero();
+        return this.#progress.isStarted();
     }
 
     isFlowFinished() {
-        return this.#percent.isOneHundred();
+        return this.#progress.isFinished();
     }
 
     #createRowFromTemplate(start, sources, categories) {
@@ -125,12 +125,6 @@ class Row {
         }
         // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
         return parent.querySelector(`[data-start="${this.#start}"]`);
-    }
-
-    #calculateRemainingTime() {
-        const now = Date.now();
-        const elapsed = now - this.#start;
-        return elapsed * this.#percent.remaining().divideBy(this.#percent);
     }
 }
 

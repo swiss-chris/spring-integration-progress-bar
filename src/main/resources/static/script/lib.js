@@ -91,8 +91,7 @@ class Progress {
     }
 
     remainingDuration() {
-        const elapsed = this.#now - this.#start;
-        const remaining = elapsed * this.#percent.remaining().divideBy(this.#percent);
+        const remaining = this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
         return new Duration(remaining).toString();
     }
 
@@ -102,6 +101,18 @@ class Progress {
 
     isFinished() {
         return this.#percent.isOneHundred();
+    }
+
+    currentTime() {
+        return new Date(this.#now).toLocaleTimeString();
+    }
+
+    elapsedTime() {
+        return new Duration(this.#elapsed()).toString();
+    }
+
+    #elapsed() {
+        return this.#now - this.#start;
     }
 }
 

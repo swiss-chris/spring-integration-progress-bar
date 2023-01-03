@@ -80,13 +80,13 @@ class Row {
     }
 
     updateProgress(percent) {
-        this.#progress = new Progress(this.#start, Date.now(), percent);
+        const now = Date.now();
+        this.#progress = new Progress(this.#start, now, percent);
         this.#row.querySelector('.progress-bar').style.width = this.#progress.percentAsString();
         this.#row.querySelector('.progress-bar').innerText = this.#progress.percentAsString();
         if (this.isFlowFinished()) {
-            const end = Date.now();
-            this.#row.querySelector('.end').innerText = new Date(end).toLocaleTimeString();
-            this.#row.querySelector('.duration').innerText = new Duration(end - this.#start).toString();
+            this.#row.querySelector('.end').innerText = this.#progress.currentTime();
+            this.#row.querySelector('.duration').innerText = this.#progress.elapsedTime();
             this.#row.querySelector('.remaining').innerText = '';
         }
     }

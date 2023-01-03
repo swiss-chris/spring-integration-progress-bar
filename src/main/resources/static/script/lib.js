@@ -87,19 +87,15 @@ class Progress {
         this.#percent = percent;
     }
 
-    percentAsString() {
+    percentString() {
         return this.#percent.toString();
-    }
-
-    isStarted() {
-        return !this.#percent.isZero();
     }
 
     isFinished() {
         return this.#percent.isOneHundred();
     }
 
-    remainingDuration() {
+    remaining() {
         if (this.#percent.isZero() || this.#percent.isOneHundred()) {
             return '';
         } else {
@@ -108,11 +104,11 @@ class Progress {
         }
     }
 
-    currentTime() {
+    end() {
         return new Date(this.#now).toLocaleTimeString();
     }
 
-    elapsedTime() {
+    duration() {
         return new Duration(this.#elapsed()).toString();
     }
 

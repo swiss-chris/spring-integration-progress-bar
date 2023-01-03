@@ -84,21 +84,17 @@ class Row {
     updateProgress(percent) {
         const now = Date.now();
         this.#progress = new Progress(this.#start, now, percent);
-        this.#row.querySelector('.progress-bar').style.width = this.#progress.percentAsString();
-        this.#row.querySelector('.progress-bar').innerText = this.#progress.percentAsString();
+        this.#row.querySelector('.progress-bar').style.width = this.#progress.percentString();
+        this.#row.querySelector('.progress-bar').innerText = this.#progress.percentString();
         if (this.isFlowFinished()) {
-            this.#row.querySelector('.end').innerText = this.#progress.currentTime();
-            this.#row.querySelector('.duration').innerText = this.#progress.elapsedTime();
-            this.#row.querySelector('.remaining').innerText = this.#progress.remainingDuration();
+            this.#row.querySelector('.end').innerText = this.#progress.end();
+            this.#row.querySelector('.duration').innerText = this.#progress.duration();
+            this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
         }
     }
 
     updateRemaining() {
-        this.#row.querySelector('.remaining').innerText = this.#progress.remainingDuration();
-    }
-
-    isFlowStarted() {
-        return this.#progress.isStarted();
+        this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
     }
 
     isFlowFinished() {

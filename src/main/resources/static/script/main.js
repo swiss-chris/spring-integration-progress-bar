@@ -133,11 +133,11 @@ class Row {
 class RowCreator {
     static createRowFromTemplate(flowId, start) {
         const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.flow-progress').dataset.flowId = flowId;
-        row.querySelector('.flow-progress').dataset.start = start;
+        this.#setFlowId(row, flowId);
+        this.#setStart(row, start);
         this.#appendInOrder(row, start);
         // we can't return 'row' as it is empty after appending
-        return document.querySelector(`[data-flow-id="${flowId}"]`);
+        return this.#queryBy(flowId);
     }
 
     static #appendInOrder(row, start) {
@@ -149,6 +149,18 @@ class RowCreator {
         } else {
             parent.appendChild(row);
         }
+    }
+
+    static #setFlowId(row, flowId) {
+        row.querySelector('.flow-progress').dataset.flowId = flowId;
+    }
+
+    static #setStart(row, start) {
+        row.querySelector('.flow-progress').dataset.start = start;
+    }
+
+    static #queryBy(flowId) {
+        return document.querySelector(`[data-flow-id="${flowId}"]`);
     }
 }
 

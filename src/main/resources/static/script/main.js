@@ -82,10 +82,6 @@ class Row {
         this.#startCell(start);
     }
 
-    isFlowFinished() {
-        return this.#progress.isFinished();
-    }
-
     updateProgress(percent) {
         this.#progress = this.#progress.update(Date.now(), percent)
         this.#updateProgressBarCell();
@@ -98,6 +94,10 @@ class Row {
 
     updateRemaining() {
         this.#remainingCell();
+    }
+
+    isFlowFinished() {
+        return this.#progress.isFinished();
     }
 
     #sourcesCell(sources) {

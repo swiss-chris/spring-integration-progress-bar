@@ -119,6 +119,7 @@ class Row {
     }
 
     #endCell() {
+        this.#row.querySelector('.end').style.color = this.isFlowFinished() ? 'black' : 'gray';
         this.#row.querySelector('.end').innerText = this.#progress.end();
     }
 
@@ -127,7 +128,7 @@ class Row {
     }
 
     #remainingCell() {
-        this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
+        this.#row.querySelector('.remaining').innerText = this.isFlowFinished() ? '' : this.#progress.remaining();
     }
 }
 

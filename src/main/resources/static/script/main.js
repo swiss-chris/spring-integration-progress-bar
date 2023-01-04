@@ -75,14 +75,14 @@ class Row {
 
     constructor(flowId, start, sources, categories, percent) {
         this.#row = RowCreator.createRowFromTemplate(flowId, start);
-        this.#progress = new Progress(start, Date.now(), percent);
+        this.#progress = new Progress(new Time(start), percent);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
         this.#startCell();
     }
 
     updateProgress(percent) {
-        this.#progress = this.#progress.copy(Date.now(), percent)
+        this.#progress = this.#progress.copy(percent)
         this.#progressBarCell();
         if (this.isFlowFinished()) {
             this.#durationCell();

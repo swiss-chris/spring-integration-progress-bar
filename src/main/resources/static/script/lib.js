@@ -78,17 +78,17 @@ class OnOffTimer {
 // TODO unit test
 class Progress {
     #start;
-    #now;
     #percent;
+    #now;
 
-    constructor(start, now, percent) {
+    constructor(start, percent) {
         this.#start = start;
-        this.#now = now;
         this.#percent = percent;
+        this.#now = new Time();
     }
 
-    copy(now, percent) {
-        return new Progress(this.#start, now, percent);
+    copy(percent) {
+        return new Progress(this.#start, percent);
     }
 
     isFinished() {
@@ -100,30 +100,30 @@ class Progress {
     }
 
     start() {
-        return new Date(this.#start).toLocaleTimeString();
+        return this.#start.toString();
     }
 
     duration() {
-        return new Duration(this.#elapsed()).toString();
+        return this.#elapsed().toString();
     }
 
     remaining() {
-        return new Duration(this.#remaining()).toString();
+        return this.#remaining().toString();
     }
 
     end() {
-        return new Date(this.#now + this.#remaining()).toLocaleTimeString();
+        return this.#now.plus(this.#remaining()).toString();
     }
 
     #elapsed() {
-        return this.#now - this.#start;
+        return this.#start.difference(this.#now);
     }
 
     #remaining() {
         if (this.#percent.isZero()) {
             throw new Error('cannot calculate remaining time'); // can't divide by zero
         }
-        return this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
+        return this.#elapsed().times(this.#percent.remaining().divideBy(this.#percent));
     }
 }
 
@@ -169,18 +169,42 @@ class Percent {
     }
 }
 
-class Duration {
+class Time {
     #millis;
+
+    constructor(millis = Date.now()) {
+        this.#millis = millis;
+    }
+
+    plus(duration) {
+        return new Time(this.#millis + duration._millis);
+    }
+
+    difference(time) {
+        return new Duration(Math.abs(time.#millis - this.#millis));
+    }
+
+    toString() {
+        return new Date(this.#millis).toLocaleTimeString()
+    }
+}
+
+class Duration {
+    _millis; // access weakened (only) to allow adding Duration to Time
 
     constructor(millis) {
         if (millis < 0) {
             throw new Error('the parameter "millis" must be >= 0');
         }
-        this.#millis = millis;
+        this._millis = millis;
+    }
+
+    times(factor) {
+        return new Duration(this._millis * factor);
     }
 
     toString() {
-        const s = Math.floor(this.#millis / 1000);
+        const s = Math.floor(this._millis / 1000);
         return [
             this.#format(s / 60 / 60),
             this.#format(s / 60 % 60),

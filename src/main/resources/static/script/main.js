@@ -83,7 +83,7 @@ class Row {
     }
 
     updateProgress(percent) {
-        this.#progress = this.#progress.update(Date.now(), percent)
+        this.#progress = this.#progress.copy(Date.now(), percent)
         this.#updateProgressBarCell();
         if (this.isFlowFinished()) {
             this.#endCell();

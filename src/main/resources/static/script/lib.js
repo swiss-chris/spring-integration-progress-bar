@@ -91,10 +91,6 @@ class Progress {
         return new Progress(this.#start, now, percent);
     }
 
-    isStarted() {
-        return !this.#percent.isZero();
-    }
-
     isFinished() {
         return this.#percent.isOneHundred();
     }
@@ -124,7 +120,7 @@ class Progress {
     }
 
     #remaining() {
-        if (!this.isStarted()) {
+        if (this.#percent.isZero()) {
             throw new Error('cannot calculate remaining time'); // can't divide by zero
         }
         return this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);

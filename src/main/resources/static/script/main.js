@@ -142,11 +142,33 @@ class RowCreator {
     }
 
     static #appendInOrder(row, start) {
-        const parent = document.getElementById('root');
-        const children = [...parent.querySelectorAll('.flow-progress')]
-        const newIndex = ArrayUtils.getInsertionIndex(children.map(s => s.dataset.start), start, false);
-        if (newIndex < children.length) {
-            parent.insertBefore(row, children[newIndex]);
+        const parent = this.#getParent();
+        const children = this.#getChildren(parent)
+        const newIndex = this.#getNewIndex(children, start);
+        const nextSibling = this.#getNextSibling(children, newIndex);
+        this.#insertBeforeNextSibling(nextSibling, parent, row);
+    }
+
+    static #getParent() {
+        return document.getElementById('root');
+    }
+
+    static #getChildren(parent) {
+        return [...parent.querySelectorAll('.flow-progress')];
+    }
+
+    static #getNewIndex(children, start) {
+        const startValues = children.map(s => s.dataset.start);
+        return ArrayUtils.getInsertionIndex(startValues, start, false);
+    }
+
+    static #getNextSibling(children, newIndex) {
+        return (newIndex < children.length) ? children[newIndex] : null;
+    }
+
+    static #insertBeforeNextSibling(nextSibling, parent, row) {
+        if (nextSibling != null) {
+            parent.insertBefore(row, nextSibling);
         } else {
             parent.appendChild(row);
         }

@@ -79,7 +79,7 @@ class Row {
         this.#progress = new Progress(start, Date.now(), percent);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
-        this.#startCell(start);
+        this.#startCell();
     }
 
     updateProgress(percent) {
@@ -108,8 +108,8 @@ class Row {
         this.#row.querySelector('.categories').innerText = categories;
     }
 
-    #startCell(start) {
-        this.#row.querySelector('.start').innerText = new Date(start).toLocaleTimeString();
+    #startCell() {
+        this.#row.querySelector('.start').innerText = this.#progress.start();
     }
 
     #progressBarCell() {

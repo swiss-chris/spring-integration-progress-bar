@@ -99,6 +99,10 @@ class Progress {
         return this.#percent.toString();
     }
 
+    start() {
+        return new Date(this.#start).toLocaleTimeString();
+    }
+
     remaining() {
         if (this.#percent.isZero() || this.#percent.isOneHundred()) {
             return '';

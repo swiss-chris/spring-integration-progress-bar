@@ -93,6 +93,7 @@ class Row {
 
     updateRemaining() {
         this.#remainingCell();
+        this.#endCell();
     }
 
     isFlowFinished() {

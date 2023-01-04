@@ -107,13 +107,15 @@ class Progress {
         if (this.#percent.isZero() || this.#percent.isOneHundred()) {
             return '';
         } else {
-            const remaining = this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
-            return new Duration(remaining).toString();
+            return new Duration(this.#remaining()).toString();
         }
     }
 
     end() {
-        return new Date(this.#now).toLocaleTimeString();
+        return new Date(this.#percent.isOneHundred()
+            ? this.#now
+            : this.#now + this.#remaining()
+        ).toLocaleTimeString();
     }
 
     duration() {
@@ -122,6 +124,10 @@ class Progress {
 
     #elapsed() {
         return this.#now - this.#start;
+    }
+
+    #remaining() {
+        return this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
     }
 }
 

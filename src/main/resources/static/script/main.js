@@ -85,15 +85,16 @@ class Row {
         this.#progress = this.#progress.copy(Date.now(), percent)
         this.#progressBarCell();
         if (this.isFlowFinished()) {
+            this.#remainingCell();
             this.#endCell();
             this.#durationCell();
-            this.#remainingCell();
         }
     }
 
     updateRemaining() {
         this.#remainingCell();
         this.#endCell();
+        this.#durationCell();
     }
 
     isFlowFinished() {

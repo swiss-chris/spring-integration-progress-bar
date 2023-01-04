@@ -91,6 +91,10 @@ class Progress {
         return new Progress(this.#start, now, percent);
     }
 
+    isStarted() {
+        return !this.#percent.isZero();
+    }
+
     isFinished() {
         return this.#percent.isOneHundred();
     }
@@ -104,18 +108,11 @@ class Progress {
     }
 
     remaining() {
-        if (this.#percent.isZero() || this.#percent.isOneHundred()) {
-            return '';
-        } else {
-            return new Duration(this.#remaining()).toString();
-        }
+        return new Duration(this.#remaining()).toString();
     }
 
     end() {
-        return new Date(this.#percent.isOneHundred()
-            ? this.#now
-            : this.#now + this.#remaining()
-        ).toLocaleTimeString();
+        return new Date(this.#now + this.#remaining()).toLocaleTimeString();
     }
 
     duration() {
@@ -127,6 +124,9 @@ class Progress {
     }
 
     #remaining() {
+        if (!this.isStarted()) {
+            throw new Error('cannot calculate remaining time'); // can't divide by zero
+        }
         return this.#elapsed() * this.#percent.remaining().divideBy(this.#percent);
     }
 }

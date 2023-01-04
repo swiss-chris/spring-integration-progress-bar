@@ -104,6 +104,12 @@ class Row {
         const row = document.getElementById('progress-row').content.cloneNode(true);
         row.querySelector('.flow-progress').dataset.flowId = flowId;
         row.querySelector('.flow-progress').dataset.start = start;
+        this.#appendInOrder(row, start);
+        // we can't return 'row' as it is empty after appending
+        return document.querySelector(`[data-flow-id="${flowId}"]`);
+    }
+
+    #appendInOrder(row, start) {
         const parent = document.getElementById('root');
         const children = [...parent.querySelectorAll('.flow-progress')]
         const newIndex = ArrayUtils.getInsertionIndex(children.map(s => s.dataset.start), start, false);
@@ -112,8 +118,6 @@ class Row {
         } else {
             parent.appendChild(row);
         }
-        // we can't return 'row' as it is empty after 'appendChild(row)'/'insertBefore(row)'
-        return parent.querySelector(`[data-flow-id="${flowId}"]`);
     }
 
     #sourcesCell(sources) {

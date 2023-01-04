@@ -84,7 +84,7 @@ class Row {
 
     updateProgress(percent) {
         this.#progress = this.#progress.copy(Date.now(), percent)
-        this.#updateProgressBarCell();
+        this.#progressBarCell();
         if (this.isFlowFinished()) {
             this.#endCell();
             this.#durationCell();
@@ -112,7 +112,7 @@ class Row {
         this.#row.querySelector('.start').innerText = new Date(start).toLocaleTimeString();
     }
 
-    #updateProgressBarCell() {
+    #progressBarCell() {
         this.#row.querySelector('.progress-bar').style.width = this.#progress.percentString();
         this.#row.querySelector('.progress-bar').innerText = this.#progress.percentString();
     }

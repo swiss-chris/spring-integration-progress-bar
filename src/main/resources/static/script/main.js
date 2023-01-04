@@ -75,7 +75,7 @@ class Row {
     #progress;
 
     constructor(flowId, start, sources, categories, percent) {
-        this.#row = this.#createRowFromTemplate(flowId, start);
+        this.#row = RowCreator.createRowFromTemplate(flowId, start);
         this.#progress = new Progress(start, Date.now(), percent);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
@@ -98,26 +98,6 @@ class Row {
 
     isFlowFinished() {
         return this.#progress.isFinished();
-    }
-
-    #createRowFromTemplate(flowId, start) {
-        const row = document.getElementById('progress-row').content.cloneNode(true);
-        row.querySelector('.flow-progress').dataset.flowId = flowId;
-        row.querySelector('.flow-progress').dataset.start = start;
-        this.#appendInOrder(row, start);
-        // we can't return 'row' as it is empty after appending
-        return document.querySelector(`[data-flow-id="${flowId}"]`);
-    }
-
-    #appendInOrder(row, start) {
-        const parent = document.getElementById('root');
-        const children = [...parent.querySelectorAll('.flow-progress')]
-        const newIndex = ArrayUtils.getInsertionIndex(children.map(s => s.dataset.start), start, false);
-        if (newIndex < children.length) {
-            parent.insertBefore(row, children[newIndex]);
-        } else {
-            parent.appendChild(row);
-        }
     }
 
     #sourcesCell(sources) {
@@ -147,6 +127,28 @@ class Row {
 
     #remainingCell() {
         this.#row.querySelector('.remaining').innerText = this.#progress.remaining();
+    }
+}
+
+class RowCreator {
+    static createRowFromTemplate(flowId, start) {
+        const row = document.getElementById('progress-row').content.cloneNode(true);
+        row.querySelector('.flow-progress').dataset.flowId = flowId;
+        row.querySelector('.flow-progress').dataset.start = start;
+        this.#appendInOrder(row, start);
+        // we can't return 'row' as it is empty after appending
+        return document.querySelector(`[data-flow-id="${flowId}"]`);
+    }
+
+    static #appendInOrder(row, start) {
+        const parent = document.getElementById('root');
+        const children = [...parent.querySelectorAll('.flow-progress')]
+        const newIndex = ArrayUtils.getInsertionIndex(children.map(s => s.dataset.start), start, false);
+        if (newIndex < children.length) {
+            parent.insertBefore(row, children[newIndex]);
+        } else {
+            parent.appendChild(row);
+        }
     }
 }
 

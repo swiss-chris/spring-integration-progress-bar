@@ -103,16 +103,16 @@ class Progress {
         return new Date(this.#start).toLocaleTimeString();
     }
 
+    duration() {
+        return new Duration(this.#elapsed()).toString();
+    }
+
     remaining() {
         return new Duration(this.#remaining()).toString();
     }
 
     end() {
         return new Date(this.#now + this.#remaining()).toLocaleTimeString();
-    }
-
-    duration() {
-        return new Duration(this.#elapsed()).toString();
     }
 
     #elapsed() {

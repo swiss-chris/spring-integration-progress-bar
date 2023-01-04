@@ -34,7 +34,6 @@ class MessageHandler {
 }
 
 class Rows {
-    // TODO consider replacing this map with a simple DOM lookup
     static #rowsMap = new Map();
 
     static createRow(start, flowId, sources, categories, percent = Percent.ZERO_PERCENT) {

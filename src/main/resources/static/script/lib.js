@@ -91,12 +91,12 @@ class Progress {
         return new Progress(this.#start, now, percent);
     }
 
-    percentString() {
-        return this.#percent.toString();
-    }
-
     isFinished() {
         return this.#percent.isOneHundred();
+    }
+
+    percentString() {
+        return this.#percent.toString();
     }
 
     remaining() {

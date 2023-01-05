@@ -1,11 +1,12 @@
-const {Progress, Percent, Time} = require('../static/script/lib');
+const {Progress, Percent, Time, Duration} = require('../static/script/lib');
 
 describe('Progress', () => {
     const start = new Time(1672866000000); // 22:00:00
     const plus30 = new Time(1672867800000); // 22:30:00
     const plus60 = new Time(1672956000000); // 23:00:00
     const plus120 = new Time(1672959600000); // 00:00:00
-    const percent = new Percent(50); // 30 minutes
+    const percent = new Percent(50);
+    const duration = new Duration(30 * 60 * 1000); // 30 minutes
     const progress = new Progress(start, plus30, percent);
 
     test('Progress.copy()', () => {
@@ -33,11 +34,11 @@ describe('Progress', () => {
     });
 
     test('Progress.duration()', () => {
-        expect(progress.duration().toString()).toBe('00:30:00');
+        expect(progress.duration().toString()).toBe(duration.toString());
     });
 
     test('Progress.remaining()', () => {
-        expect(progress.remaining().toString()).toBe('00:30:00');
+        expect(progress.remaining().toString()).toBe(duration.toString());
     });
 
     test('Progress.end()', () => {

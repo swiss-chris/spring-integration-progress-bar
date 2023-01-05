@@ -29,7 +29,7 @@ describe('Progress', () => {
     });
 
     test('Progress.start()', () => {
-        expect(progress.start().toString()).toBe('22:00:00');
+        expect(progress.start().toString()).toBe(start.toString());
     });
 
     test('Progress.duration()', () => {
@@ -41,6 +41,6 @@ describe('Progress', () => {
     });
 
     test('Progress.end()', () => {
-        expect(progress.end().toString()).toBe('23:00:00');
+        expect(progress.end().toString()).toBe(plus60.toString());
     });
 });

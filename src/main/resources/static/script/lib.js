@@ -181,11 +181,12 @@ class Time {
     }
 
     toString() {
-        return new Intl.DateTimeFormat('de-CH', {
+        return new Intl.DateTimeFormat('en-US', {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
             hour12: false,
+            timeZone: 'Europe/Zurich'
         }).format(new Date(this.#millis));
     }
 }

@@ -75,44 +75,43 @@ class OnOffTimer {
     }
 }
 
-// TODO unit test
 class Progress {
     #start;
-    #percent;
     #now;
+    #percent;
 
-    constructor(start, percent) {
+    constructor(start, now, percent) {
         this.#start = start;
+        this.#now = now;
         this.#percent = percent;
-        this.#now = new Time();
     }
 
-    copy(percent) {
-        return new Progress(this.#start, percent);
+    copy(percent, now) {
+        return new Progress(this.#start, now, percent);
     }
 
     isFinished() {
         return this.#percent.isOneHundred();
     }
 
-    percentString() {
-        return this.#percent.toString();
+    percent() {
+        return this.#percent;
     }
 
     start() {
-        return this.#start.toString();
+        return this.#start;
     }
 
     duration() {
-        return this.#elapsed().toString();
+        return this.#elapsed();
     }
 
     remaining() {
-        return this.#remaining().toString();
+        return this.#remaining();
     }
 
     end() {
-        return this.#now.plus(this.#remaining()).toString();
+        return this.#now.plus(this.#remaining());
     }
 
     #elapsed() {
@@ -120,10 +119,7 @@ class Progress {
     }
 
     #remaining() {
-        if (this.#percent.isZero()) {
-            throw new Error('cannot calculate remaining time'); // can't divide by zero
-        }
-        return this.#elapsed().times(this.#percent.remaining().divideBy(this.#percent));
+        return this.#percent.isZero() ? undefined : this.#elapsed().times(this.#percent.remaining().divideBy(this.#percent));
     }
 }
 
@@ -172,7 +168,7 @@ class Percent {
 class Time {
     #millis;
 
-    constructor(millis = Date.now()) {
+    constructor(millis) {
         this.#millis = millis;
     }
 
@@ -185,7 +181,12 @@ class Time {
     }
 
     toString() {
-        return new Date(this.#millis).toLocaleTimeString()
+        return new Intl.DateTimeFormat('de-CH', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+        }).format(new Date(this.#millis));
     }
 }
 
@@ -229,4 +230,4 @@ class ArrayUtils {
 ////// -------- JEST (TESTS) -------- //////
 
 if (typeof module == 'undefined') { var module = {}; }
-module.exports = {Percent, Duration, ArrayUtils};
+module.exports = {Progress, Percent, Time, Duration, ArrayUtils};

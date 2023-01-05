@@ -75,14 +75,14 @@ class Row {
 
     constructor(flowId, start, sources, categories, percent) {
         this.#row = RowCreator.createRowFromTemplate(flowId, start);
-        this.#progress = new Progress(new Time(start), percent);
+        this.#progress = new Progress(new Time(start), new Time(Date.now()), percent);
         this.#sourcesCell(sources);
         this.#categoriesCell(categories);
         this.#startCell();
     }
 
     updateProgress(percent) {
-        this.#progress = this.#progress.copy(percent)
+        this.#progress = this.#progress.copy(percent, new Time(Date.now()))
         this.#progressBarCell();
         if (this.isFlowFinished()) {
             this.#durationCell();
@@ -110,25 +110,25 @@ class Row {
     }
 
     #startCell() {
-        this.#row.querySelector('.start').innerText = this.#progress.start();
+        this.#row.querySelector('.start').innerText = this.#progress.start().toString();
     }
 
     #progressBarCell() {
-        this.#row.querySelector('.progress-bar').style.width = this.#progress.percentString();
-        this.#row.querySelector('.progress-bar').innerText = this.#progress.percentString();
+        this.#row.querySelector('.progress-bar').style.width = this.#progress.percent().toString();
+        this.#row.querySelector('.progress-bar').innerText = this.#progress.percent().toString();
     }
 
     #endCell() {
-        this.#row.querySelector('.end').style.color = this.isFlowFinished() ? 'black' : 'gray';
-        this.#row.querySelector('.end').innerText = this.#progress.end();
+        this.#row.querySelector('.end').style.color = this.isFlowFinished() ? 'black' : 'lightgray';
+        this.#row.querySelector('.end').innerText = this.#progress.end().toString();
     }
 
     #durationCell() {
-        this.#row.querySelector('.duration').innerText = this.#progress.duration();
+        this.#row.querySelector('.duration').innerText = this.#progress.duration().toString();
     }
 
     #remainingCell() {
-        this.#row.querySelector('.remaining').innerText = this.isFlowFinished() ? '' : this.#progress.remaining();
+        this.#row.querySelector('.remaining').innerText = this.isFlowFinished() ? '' : this.#progress.remaining().toString();
     }
 }
 

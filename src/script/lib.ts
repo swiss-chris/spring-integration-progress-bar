@@ -5,9 +5,9 @@ import SockJS from 'sockjs-client';
 export class WebsocketConnector {
     private readonly url;
     private readonly onMessageReceived;
-    private socket;
+    private socket: WebSocket | undefined;
 
-    constructor(url, onMessageReceived) {
+    constructor(url: string, onMessageReceived: (_: any) => void) {
         this.url = url;
         this.onMessageReceived = onMessageReceived;
     }
@@ -26,7 +26,7 @@ export class WebsocketConnector {
     }
 
     private isSocketClosed() {
-        return this.socket.readyState === 3;
+        return !this.socket || this.socket.readyState === 3;
     }
 }
 
@@ -34,7 +34,7 @@ export class TimerDeActivator {
     private readonly deactivationPredicate;
     private onOffTimer;
 
-    constructor(deactivationPredicate, onOffTimer) {
+    constructor(deactivationPredicate: () => boolean, onOffTimer: OnOffTimer) {
         this.deactivationPredicate = deactivationPredicate;
         this.onOffTimer = onOffTimer;
     }
@@ -51,11 +51,11 @@ export class TimerDeActivator {
 export class OnOffTimer {
     private static readonly ONE_SECOND = 1000;
 
-    private readonly callback
-    private intervalId;
+    private readonly callback;
+    private intervalId: NodeJS.Timer | undefined;
     private isActive = false;
 
-    constructor(callback) {
+    constructor(callback: () => void) {
         this.callback = callback;
     }
 
@@ -115,7 +115,7 @@ export class Progress {
     }
 
     end(): Time {
-        return this.now.plus(this.remaining());
+        return this.now.plus(this.remaining()!);
     }
 
     private elapsed(): Duration {
@@ -129,14 +129,14 @@ export class Percent {
 
     private readonly percent
 
-    constructor(percent) {
+    constructor(percent: number) {
         if (percent < 0 || percent > 100) {
             throw new Error('the parameter "percent" must be between 0 and 100');
         }
         this.percent = percent;
     }
 
-    equals(other) {
+    equals(other: Percent) {
         return this.percent === other.percent;
     }
 
@@ -152,11 +152,11 @@ export class Percent {
         return Percent.ONE_HUNDRED_PERCENT.minus(this);
     }
 
-    minus(other) {
+    minus(other: Percent) {
         return new Percent(this.percent - other.percent);
     }
 
-    divideBy(percent) {
+    divideBy(percent: Percent) {
         return this.percent / percent.percent;
     }
 
@@ -172,7 +172,7 @@ export class Time {
         this.millis = millis;
     }
 
-    plus(duration) {
+    plus(duration: Duration) {
         return new Time(this.millis + duration._millis);
     }
 
@@ -194,7 +194,7 @@ export class Time {
 export class Duration {
     _millis: number; // access weakened (only) to allow adding Duration to Time
 
-    constructor(millis) {
+    constructor(millis: number) {
         if (millis < 0) {
             throw new Error('the parameter "millis" must be >= 0');
         }
@@ -214,7 +214,7 @@ export class Duration {
         ].join(':');
     }
 
-    private format(n) {
+    private format(n: number) {
         return Math.floor(n).toString().padStart(2, '0')
     }
 }
@@ -222,8 +222,8 @@ export class Duration {
 export class ArrayUtils {
     // returns the index where the new number should be inserted into the array to preserve sorting (ascending
     // or descending, depending on the last parameter)
-    static getInsertionIndex(numbers, newNumber, ascending = true) {
-        const compareFn = (a, b) => ascending ? (a - b) : (b - a);
+    static getInsertionIndex(numbers: number[], newNumber: number, ascending = true) {
+        const compareFn = (a: number, b: number) => ascending ? (a - b) : (b - a);
         return numbers.concat(newNumber).sort(compareFn).indexOf(newNumber);
     }
 }

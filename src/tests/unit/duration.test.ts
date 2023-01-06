@@ -20,4 +20,4 @@ describe('Duration', () => {
     });
 });
 
-const toMillis = (hours, minutes, seconds) => ((hours * 60 + minutes) * 60 + seconds) * 1000;
+const toMillis = (hours: number, minutes: number, seconds: number) => ((hours * 60 + minutes) * 60 + seconds) * 1000;

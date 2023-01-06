@@ -34,7 +34,7 @@ export class Form {
 }
 
 class MessageHandler {
-    static handleMessage({data}) {
+    static handleMessage({data} : {data: string}) {
         const {startedAt, flowId, sources, categories, percent} = JSON.parse(data);
         Rows.updateProgress(parseInt(startedAt), flowId, sources, categories, new Percent(percent));
     }
@@ -88,7 +88,7 @@ class Row {
         this.startCell();
     }
 
-    updateProgress(percent): void {
+    updateProgress(percent: Percent): void {
         this.progress = this.progress.copy(percent, new Time(Date.now()))
         this.progressBarCell();
         if (this.isFlowFinished()) {
@@ -108,41 +108,41 @@ class Row {
         return this.progress.isFinished();
     }
 
-    private sourcesCell(sources): void {
-        this.row.querySelector('.sources').innerText = sources;
+    private sourcesCell(sources: string): void {
+        this.row.querySelector<HTMLElement>('.sources')!.innerText = sources;
     }
 
-    private categoriesCell(categories): void {
-        this.row.querySelector('.categories').innerText = categories;
+    private categoriesCell(categories: string): void {
+        this.row.querySelector<HTMLElement>('.categories')!.innerText = categories;
     }
 
     private startCell(): void {
-        this.row.querySelector('.start').innerText = this.progress.start().toString();
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().toString();
     }
 
     private progressBarCell(): void {
-        this.row.querySelector('.progress-bar').style.width = this.progress.percent().toString();
-        this.row.querySelector('.progress-bar').innerText = this.progress.percent().toString();
+        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().toString();
+        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().toString();
     }
 
     private endCell(): void {
-        this.row.querySelector('.end').style.color = this.isFlowFinished() ? 'black' : 'lightgray';
-        this.row.querySelector('.end').innerText = this.progress.end().toString();
+        this.row.querySelector<HTMLElement>('.end')!.style.color = this.isFlowFinished() ? 'black' : 'lightgray';
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().toString();
     }
 
     private durationCell(): void {
-        this.row.querySelector('.duration').innerText = this.progress.duration().toString();
+        this.row.querySelector<HTMLElement>('.duration')!.innerText = this.progress.duration().toString();
     }
 
     private remainingCell(): void {
-        this.row.querySelector('.remaining').innerText = this.isFlowFinished() ? '' : this.progress.remaining()!.toString();
+        this.row.querySelector<HTMLElement>('.remaining')!.innerText = this.isFlowFinished() ? '' : this.progress.remaining()!.toString();
     }
 }
 
 class RowCreator {
-    static createRowFromTemplate(flowId, start) {
+    static createRowFromTemplate(flowId: string, start: number) {
         // @ts-ignore
-        const row = document.getElementById('progress-row').content.cloneNode(true);
+        const row: HTMLElement = document.getElementById('progress-row').content.cloneNode(true);
         this.setFlowId(row, flowId);
         this.setStart(row, start);
         this.appendInOrder(row, start);
@@ -150,32 +150,32 @@ class RowCreator {
         return this.queryBy(flowId);
     }
 
-    private static appendInOrder(row, start) {
-        const parent = this.#getParent();
-        const children = this.#getChildren(parent)
-        const newIndex = this.#getNewIndex(children, start);
-        const nextSibling = this.#getNextSibling(children, newIndex);
-        this.#insertBeforeNextSibling(nextSibling, parent, row);
+    private static appendInOrder(row: HTMLElement, start: number) {
+        const parent = this.getParent();
+        const children = this.getChildren(parent)
+        const newIndex = this.getNewIndex(children, start);
+        const nextSibling = this.getNextSibling(children, newIndex);
+        this.insertBeforeNextSibling(nextSibling, parent, row);
     }
 
-    static #getParent() {
-        return document.getElementById('root');
+    private static getParent(): HTMLElement {
+        return document.getElementById('root')!;
     }
 
-    static #getChildren(parent) {
-        return [...parent.querySelectorAll('.flow-progress')];
+    private static getChildren(parent: HTMLElement): HTMLElement[] {
+        return [...parent.querySelectorAll('.flow-progress')] as HTMLElement[];
     }
 
-    static #getNewIndex(children, start) {
-        const startValues = children.map(s => s.dataset.start);
+    private static getNewIndex(children: HTMLElement[], start: number) {
+        const startValues: number[] = children.map(s => parseInt(s.dataset.start as string));
         return ArrayUtils.getInsertionIndex(startValues, start, false);
     }
 
-    static #getNextSibling(children, newIndex) {
+    private static getNextSibling(children: HTMLElement[], newIndex: number): HTMLElement | null {
         return (newIndex < children.length) ? children[newIndex] : null;
     }
 
-    static #insertBeforeNextSibling(nextSibling, parent, row) {
+    private static insertBeforeNextSibling(nextSibling: HTMLElement | null, parent: HTMLElement, row: any) {
         if (nextSibling != null) {
             parent.insertBefore(row, nextSibling);
         } else {
@@ -183,16 +183,16 @@ class RowCreator {
         }
     }
 
-    private static setFlowId(row, flowId) {
-        row.querySelector('.flow-progress').dataset.flowId = flowId;
+    private static setFlowId(row: HTMLElement, flowId: string) {
+        row.querySelector<HTMLElement>('.flow-progress')!.dataset.flowId = flowId;
     }
 
-    private static setStart(row, start) {
-        row.querySelector('.flow-progress').dataset.start = start;
+    private static setStart(row: HTMLElement, start: number) {
+        row.querySelector<HTMLElement>('.flow-progress')!.dataset.start = String(start);
     }
 
-    private static queryBy(flowId) {
-        return document.querySelector(`[data-flow-id="${flowId}"]`);
+    private static queryBy(flowId: string): Element {
+        return document.querySelector(`[data-flow-id="${flowId}"]`)!;
     }
 }
 

@@ -1,6 +1,7 @@
-.idea
-**/target
-*.iml
 /node_modules/
+**/target/
+/.idea/
 /dist/
-**.js
+
+/src/**/*.js
+**.js.map

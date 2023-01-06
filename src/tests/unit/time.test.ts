@@ -1,4 +1,4 @@
-const {Time, Duration} = require('../../static/script/lib');
+import {Duration, Time} from "../../script/lib";
 
 describe('Time', () => {
     const start = new Time(1672866000000); // 22:00:00

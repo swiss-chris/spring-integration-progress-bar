@@ -1,4 +1,4 @@
-const {ArrayUtils} = require('../../static/script/lib');
+import {ArrayUtils} from "../../script/lib";
 
 describe('ArrayUtils', () => {
     test('ArrayUtils.getInsertionIndex()', () => {

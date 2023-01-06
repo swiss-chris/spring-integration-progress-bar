@@ -1,4 +1,4 @@
-const {Percent} = require('../../static/script/lib');
+import {Percent} from '../../script/lib';
 
 describe('Percent', () => {
     test('Initializing Percent objects', () => {

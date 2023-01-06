@@ -1,4 +1,4 @@
-const {Duration} = require('../../static/script/lib');
+import {Duration} from '../../script/lib';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {

@@ -1,4 +1,4 @@
-const {ArrayUtils} = require('../static/script/lib');
+const {ArrayUtils} = require('../../static/script/lib');
 
 describe('ArrayUtils', () => {
     test('ArrayUtils.getInsertionIndex()', () => {

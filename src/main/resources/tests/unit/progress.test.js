@@ -1,4 +1,4 @@
-const {Progress, Percent, Time, Duration} = require('../static/script/lib');
+const {Progress, Percent, Time, Duration} = require('../../static/script/lib');
 
 describe('Progress', () => {
     const start = new Time(1672866000000); // 22:00:00

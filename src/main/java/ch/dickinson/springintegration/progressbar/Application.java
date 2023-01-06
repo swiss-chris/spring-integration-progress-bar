@@ -41,7 +41,6 @@ public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        log.info("Open: http://localhost:8080");
     }
 
     @Bean
@@ -49,10 +48,10 @@ public class Application {
         return IntegrationFlow
                 .from(Http.inboundChannelAdapter(HTTP_PATH)
                         .requestMapping(mapping -> mapping.methods(HttpMethod.POST))
-                        .headerExpression(HTTP_PARAM_STARTED_AT, "#requestParams['%s']".formatted(HTTP_PARAM_STARTED_AT))
-                        .headerExpression(HTTP_PARAM_FLOW_ID, "#requestParams['%s']".formatted(HTTP_PARAM_FLOW_ID))
-                        .headerExpression(HTTP_PARAM_SOURCES, "#requestParams['%s']".formatted(HTTP_PARAM_SOURCES))
-                        .headerExpression(HTTP_PARAM_CATEGORIES, "#requestParams['%s']".formatted(HTTP_PARAM_CATEGORIES))
+                        .headerExpression(HTTP_PARAM_STARTED_AT, "#requestParams['%s'][0]".formatted(HTTP_PARAM_STARTED_AT))
+                        .headerExpression(HTTP_PARAM_FLOW_ID, "#requestParams['%s'][0]".formatted(HTTP_PARAM_FLOW_ID))
+                        .headerExpression(HTTP_PARAM_SOURCES, "#requestParams['%s'][0]".formatted(HTTP_PARAM_SOURCES))
+                        .headerExpression(HTTP_PARAM_CATEGORIES, "#requestParams['%s'][0]".formatted(HTTP_PARAM_CATEGORIES))
                         .get())
                 .transform(Message.class, m -> MessageBuilder
                         .withPayload(PERCENTAGES)
@@ -100,7 +99,9 @@ public class Application {
 
     @Bean
     ServerWebSocketContainer serverWebSocketContainer() {
-        return new ServerWebSocketContainer("/messages").withSockJs();
+        return new ServerWebSocketContainer("/messages")
+                .setAllowedOrigins("http://localhost:9000/")
+                .withSockJs();
     }
 
     private static String getLogCat(Object anonymousInstance) {

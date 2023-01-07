@@ -1,4 +1,4 @@
 import {Form} from './page'
 
 // @ts-ignore
-window.flowSubmit = () => Form.submit();
+window.formSubmit = () => Form.submit();

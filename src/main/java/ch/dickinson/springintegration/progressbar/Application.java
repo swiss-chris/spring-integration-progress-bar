@@ -2,6 +2,7 @@ package ch.dickinson.springintegration.progressbar;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,9 @@ public class Application {
     private static final String HTTP_PARAM_FLOW_ID = "flowId";
     private static final String HTTP_PARAM_SOURCES = "sources";
     private static final String HTTP_PARAM_CATEGORIES = "categories";
+
+    @Value("${websocket.url}")
+    private String websocketUrl;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -100,7 +104,7 @@ public class Application {
     @Bean
     ServerWebSocketContainer serverWebSocketContainer() {
         return new ServerWebSocketContainer("/messages")
-                .setAllowedOrigins("http://localhost:9000/")
+                .setAllowedOrigins(websocketUrl)
                 .withSockJs();
     }
 

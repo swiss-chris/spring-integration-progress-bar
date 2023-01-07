@@ -1,2 +1,5 @@
 server.port: 8080
+
 logging.level.ch.dickinson: DEBUG
+
+websocket.url: http://localhost:9000

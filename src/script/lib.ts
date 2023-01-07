@@ -166,7 +166,7 @@ export class Time {
     }
 
     plus(duration: Duration) {
-        return new Time(this.millis + duration._millis);
+        return new Time(this.millis + duration['millis']); // we would need a C++-style 'friend' class
     }
 
     differenceTo(time: Time) {
@@ -185,21 +185,21 @@ export class Time {
 }
 
 export class Duration {
-    _millis: number; // access weakened (only) to allow adding Duration to Time
+    private millis: number;
 
     constructor(millis: number) {
         if (millis < 0) {
             throw new Error('the parameter "millis" must be >= 0');
         }
-        this._millis = millis;
+        this.millis = millis;
     }
 
     times(factor: number) {
-        return new Duration(this._millis * factor);
+        return new Duration(this.millis * factor);
     }
 
     toString() {
-        const s = Math.floor(this._millis / 1000);
+        const s = Math.floor(this.millis / 1000);
         return [
             this.format(s / 60 / 60),
             this.format(s / 60 % 60),

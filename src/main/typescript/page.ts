@@ -1,5 +1,3 @@
-////// -------- ON FORM SUBMIT -------- //////
-
 import {ArrayUtils, OnOffTimer, Percent, Progress, Time, TimerDeActivator, WebsocketConnector} from './lib';
 
 interface StartFlowParams {
@@ -8,6 +6,8 @@ interface StartFlowParams {
     sources: string;
     categories: string;
 }
+
+////// -------- ON FORM SUBMIT -------- //////
 
 export class Form {
     static submit() {

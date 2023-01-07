@@ -90,72 +90,62 @@ class Row {
     constructor(row: HTMLElement, start: Time, sources: string, categories: string, percent: Percent) {
         this.row = row;
         this.progress = new Progress(start, Time.now(), percent);
-        RowUpdater.initializeRow(this.row, sources, categories, start);
-    }
-
-    updateProgress(percent: Percent): void {
-        this.progress = this.progress.copy(percent, Time.now())
-        RowUpdater.updateProgress(this.row, this.progress);
-    }
-
-    updateRemaining(): void {
-        RowUpdater.updateRemaining(this.row, this.progress)
+        this.initializeRow(sources, categories, start);
     }
 
     isFlowFinished(): boolean {
         return !!this.progress && this.progress.isFinished();
     }
-}
 
-class RowUpdater {
-    static initializeRow(row: HTMLElement, sources: string, categories: string, start: Time) {
-        this.sources(row, sources);
-        this.categories(row, categories);
-        this.start(row, start);
+    private initializeRow(sources: string, categories: string, start: Time) {
+        this.sources(sources);
+        this.categories(categories);
+        this.start(start);
     }
 
-    static updateProgress(row: HTMLElement, progress: Progress): void {
-        this.progressBar(row, progress);
-        if (progress.isFinished()) {
-            this.updateRemaining(row, progress);
+    updateProgress(percent: Percent): void {
+        this.progress = this.progress.copy(percent, Time.now())
+        this.progressBar();
+        if (this.progress.isFinished()) {
+            this.updateRemaining();
         }
     }
 
-    static updateRemaining(row: HTMLElement, progress: Progress): void {
-        if (progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
-        this.duration(row, progress);
-        this.remaining(row, progress);
-        this.end(row, progress);
+    updateRemaining(): void {
+        if (this.progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
+        this.duration();
+        this.remaining();
+        this.end();
     }
 
-    private static sources(row: HTMLElement, sources: string): void {
-        row.querySelector<HTMLElement>('.sources')!.innerText = sources;
+    private sources(sources: string): void {
+        this.row.querySelector<HTMLElement>('.sources')!.innerText = sources;
     }
 
-    private static categories(row: HTMLElement, categories: string): void {
-        row.querySelector<HTMLElement>('.categories')!.innerText = categories;
+    private categories(categories: string): void {
+        this.row.querySelector<HTMLElement>('.categories')!.innerText = categories;
     }
 
-    private static start(row: HTMLElement, start: Time): void {
-        row.querySelector<HTMLElement>('.start')!.innerText = start.toString();
+    private start(start: Time): void {
+        this.row.querySelector<HTMLElement>('.start')!.innerText = start.toString();
     }
 
-    private static progressBar(row: HTMLElement, progress: Progress): void {
-        row.querySelector<HTMLElement>('.progress-bar')!.style.width = progress.percent().toString();
-        row.querySelector<HTMLElement>('.progress-bar')!.innerText = progress.percent().toString();
+    private progressBar(): void {
+        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().toString();
+        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().toString();
     }
 
-    private static end(row: HTMLElement, progress: Progress): void {
-        row.querySelector<HTMLElement>('.end')!.style.color = progress.isFinished() ? 'black' : 'lightgray';
-        row.querySelector<HTMLElement>('.end')!.innerText = progress.end().toString();
+    private duration(): void {
+        this.row.querySelector<HTMLElement>('.duration')!.innerText = this.progress.duration().toString();
     }
 
-    private static duration(row: HTMLElement, progress: Progress): void {
-        row.querySelector<HTMLElement>('.duration')!.innerText = progress.duration().toString();
+    private remaining(): void {
+        this.row.querySelector<HTMLElement>('.remaining')!.innerText = this.progress.isFinished() ? '' : this.progress.remaining()!.toString();
     }
 
-    private static remaining(row: HTMLElement, progress: Progress): void {
-        row.querySelector<HTMLElement>('.remaining')!.innerText = progress.isFinished() ? '' : progress.remaining()!.toString();
+    private end(): void {
+        this.row.querySelector<HTMLElement>('.end')!.style.color = this.progress.isFinished() ? 'black' : 'lightgray';
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().toString();
     }
 }
 

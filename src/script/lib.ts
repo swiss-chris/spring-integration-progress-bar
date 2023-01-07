@@ -79,10 +79,13 @@ export class OnOffTimer {
 
 export class Progress {
 
-    constructor(private _percent: Percent, private _duration: Duration, private _now: Time) {
+    private _duration: Duration;
+
+    constructor(private _percent: Percent, private start: Time, private _now: Time) {
         if (_percent.isZero()) {
             throw new Error('To initialize a Progress object, "percent" must be > 0')
         }
+        this._duration = start.differenceTo(_now);
     }
 
     isFinished() {

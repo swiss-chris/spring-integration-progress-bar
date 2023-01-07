@@ -7,19 +7,18 @@ describe('Progress', () => {
     const plus120 = new Time(1672959600000); // 00:00:00
     const percent50 = new Percent(50);
     const duration30 = new Duration(30 * 60 * 1000); // 30 minutes
-    const duration60 = new Duration(60 * 60 * 1000); // 30 minutes
-    const progress50Percent30Minutes = new Progress(percent50, duration30, plus30);
+    const progress50Percent30Minutes = new Progress(percent50, start, plus30);
 
     test('Initializing Progress objects', () => {
-        expect(() => new Progress(new Percent(0), duration30, start)).toThrowError();
-        expect(() => new Progress(percent50, duration30, plus30)).not.toThrowError();
+        expect(() => new Progress(new Percent(0), start, start)).toThrowError();
+        expect(() => new Progress(percent50, start, plus30)).not.toThrowError();
     });
 
     test('Progress.isFinished()', () => {
-        expect(new Progress(new Percent(0.001), duration30, plus30).isFinished()).toBeFalsy();
-        expect(new Progress(new Percent(50), duration30, plus30).isFinished()).toBeFalsy();
-        expect(new Progress(new Percent(99), duration30, plus30).isFinished()).toBeFalsy();
-        expect(new Progress(new Percent(100), duration30, plus30).isFinished()).toBeTruthy();
+        expect(new Progress(new Percent(0.001), start, plus30).isFinished()).toBeFalsy();
+        expect(new Progress(new Percent(50), start, plus30).isFinished()).toBeFalsy();
+        expect(new Progress(new Percent(99), start, plus30).isFinished()).toBeFalsy();
+        expect(new Progress(new Percent(100), start, plus30).isFinished()).toBeTruthy();
     });
 
     test('Progress.percentNotZero()', () => {
@@ -36,6 +35,6 @@ describe('Progress', () => {
 
     test('Progress.end()', () => {
         expect(progress50Percent30Minutes.end().toString()).toBe(plus60.toString());
-        expect(new Progress(percent50, duration60, plus60).end().toString()).toBe(plus120.toString());
+        expect(new Progress(percent50, start, plus60).end().toString()).toBe(plus120.toString());
     });
 });

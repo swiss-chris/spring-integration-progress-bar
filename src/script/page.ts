@@ -68,83 +68,91 @@ class Rows {
         }
     }
 
-    private static rows() {
+    private static rows(): Row[] {
         return Array.from(this.rowsMap.values());
     }
 }
 
 class Row {
-    private row;
-    private start: Time;
+    private readonly row: HTMLElement;
+    private readonly start: Time;
     private progress: Progress | undefined;
 
     constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent | null) {
         this.row = RowCreator.createRowFromTemplate(flowId, start);
         this.start = new Time(start);
-        const now = Time.now();
-        this.sourcesCell(sources);
-        this.categoriesCell(categories);
-        this.startCell();
+        RowUpdater.sources(this.row, sources);
+        RowUpdater.categories(this.row, categories);
+        RowUpdater.start(this.row, this.start);
         if (percent) {
-            this.progress = percent && new Progress(percent, this.start.differenceTo(now), now);
+            this.progress = percent && new Progress(percent, this.start, Time.now());
             this.updateRemaining(); // on page refresh
         }
     }
 
     updateProgress(percent: Percent): void {
-        const now = Time.now();
-        this.progress = new Progress(percent, this.start.differenceTo(now), now)
-        this.progressBarCell();
-        if (this.isFlowFinished()) {
-            this.durationCell();
-            this.remainingCell();
-            this.endCell();
-        }
+        this.progress = new Progress(percent, this.start, Time.now())
+        RowUpdater.updateProgress(this.row, this.progress);
     }
 
     updateRemaining(): void {
-        this.durationCell();
-        this.remainingCell();
-        this.endCell();
+        RowUpdater.updateRemaining(this.row, this.progress!)
     }
 
     isFlowFinished(): boolean {
         return this.progress!.isFinished();
     }
+}
 
-    private sourcesCell(sources: string): void {
-        this.row.querySelector<HTMLElement>('.sources')!.innerText = sources;
+class RowUpdater {
+    static updateProgress(row: HTMLElement, progress: Progress): void {
+        this.progressBar(row, progress);
+        if (progress.isFinished()) {
+            this.duration(row, progress);
+            this.remaining(row, progress);
+            this.end(row, progress);
+        }
     }
 
-    private categoriesCell(categories: string): void {
-        this.row.querySelector<HTMLElement>('.categories')!.innerText = categories;
+    static updateRemaining(row: HTMLElement, progress: Progress): void {
+        this.duration(row, progress);
+        this.remaining(row, progress);
+        this.end(row, progress);
     }
 
-    private startCell(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.start.toString();
+    static sources(row: HTMLElement, sources: string): void {
+        row.querySelector<HTMLElement>('.sources')!.innerText = sources;
     }
 
-    private progressBarCell(): void {
-        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress!.percent().toString();
-        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress!.percent().toString();
+    static categories(row: HTMLElement, categories: string): void {
+        row.querySelector<HTMLElement>('.categories')!.innerText = categories;
     }
 
-    private endCell(): void {
-        this.row.querySelector<HTMLElement>('.end')!.style.color = this.isFlowFinished() ? 'black' : 'lightgray';
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress!.end().toString();
+    static start(row: HTMLElement, start: Time): void {
+        row.querySelector<HTMLElement>('.start')!.innerText = start.toString();
     }
 
-    private durationCell(): void {
-        this.row.querySelector<HTMLElement>('.duration')!.innerText = this.progress!.duration().toString() || '';
+    static progressBar(row: HTMLElement, progress: Progress): void {
+        row.querySelector<HTMLElement>('.progress-bar')!.style.width = progress.percent().toString();
+        row.querySelector<HTMLElement>('.progress-bar')!.innerText = progress.percent().toString();
     }
 
-    private remainingCell(): void {
-        this.row.querySelector<HTMLElement>('.remaining')!.innerText = this.isFlowFinished() ? '' : this.progress!.remaining().toString();
+    static end(row: HTMLElement, progress: Progress): void {
+        row.querySelector<HTMLElement>('.end')!.style.color = progress.isFinished() ? 'black' : 'lightgray';
+        row.querySelector<HTMLElement>('.end')!.innerText = progress.end().toString();
+    }
+
+    static duration(row: HTMLElement, progress: Progress): void {
+        row.querySelector<HTMLElement>('.duration')!.innerText = progress.duration().toString() || '';
+    }
+
+    static remaining(row: HTMLElement, progress: Progress): void {
+        row.querySelector<HTMLElement>('.remaining')!.innerText = progress.isFinished() ? '' : progress.remaining().toString();
     }
 }
 
 class RowCreator {
-    static createRowFromTemplate(flowId: string, start: number) {
+    static createRowFromTemplate(flowId: string, start: number): HTMLElement {
         // @ts-ignore
         const row: HTMLElement = document.getElementById('progress-row').content.cloneNode(true);
         this.setFlowId(row, flowId);
@@ -195,8 +203,8 @@ class RowCreator {
         row.querySelector<HTMLElement>('.flow-progress')!.dataset.start = String(start);
     }
 
-    private static queryBy(flowId: string): Element {
-        return document.querySelector(`[data-flow-id="${flowId}"]`)!;
+    private static queryBy(flowId: string): HTMLElement {
+        return document.querySelector(`[data-flow-id="${flowId}"]`)! as HTMLElement;
     }
 }
 

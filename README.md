@@ -14,7 +14,7 @@ To use live-reloading through webpack:
 - run the Spring Boot Application in your favorite IDE
 - run `npm run dev` and then visit http://localhost:9000
 
-You can also do both and run the web app on two different ports at the same time. The websocket will update both pages.
+You can also open the web app in two different tabs at the same time. The same progress will be displayed in both.
 
 Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example

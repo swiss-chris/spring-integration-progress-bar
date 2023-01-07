@@ -79,13 +79,10 @@ export class OnOffTimer {
 
 export class Progress {
 
-    private _duration: Duration;
+    constructor(private _start: Time, private _now: Time, private _percent: Percent) {}
 
-    constructor(private _percent: Percent, private start: Time, private _now: Time) {
-        if (_percent.isZero()) {
-            throw new Error('To initialize a Progress object, "percent" must be > 0')
-        }
-        this._duration = start.differenceTo(_now);
+    copy(percent: Percent, now: Time) {
+        return new Progress(this._start, now, percent);
     }
 
     isFinished() {
@@ -100,16 +97,18 @@ export class Progress {
         return this.elapsed();
     }
 
-    remaining(): Duration {
-        return this.elapsed().times(this._percent.remaining().divideBy(this._percent));
+    remaining(): Duration | undefined {
+        return this._percent.isZero()
+            ? undefined
+            : this.elapsed().times(this._percent.remaining().divideBy(this._percent));
     }
 
     end(): Time {
-        return this._now.plus(this.remaining());
+        return this._now.plus(this.remaining()!);
     }
 
     private elapsed(): Duration {
-        return this._duration;
+        return this._start.differenceTo(this._now);
     }
 }
 
@@ -221,8 +220,3 @@ export class ArrayUtils {
         return numbers.concat(newNumber).sort(compareFn).indexOf(newNumber);
     }
 }
-
-// ////// -------- JEST (TESTS) -------- //////
-//
-// if (typeof module == 'undefined') { var module = {}; }
-// module.exports = {Progress, Percent, Time, Duration, ArrayUtils};

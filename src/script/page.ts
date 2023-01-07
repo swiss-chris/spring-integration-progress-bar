@@ -50,7 +50,7 @@ class MessageHandler {
 class Rows {
     private static rowsMap = new Map<string, Row>();
 
-    static createRow(flowId: string, start: number, sources: string, categories: string, percent: Percent | null = null) {
+    static createRow(flowId: string, start: number, sources: string, categories: string, percent?: Percent) {
         this.rowsMap.set(flowId, new Row(flowId, start, sources, categories, percent));
     }
 
@@ -82,20 +82,20 @@ class Rows {
 
 class Row {
     private readonly row: HTMLElement;
-    private readonly start: Time;
-    private progress: Progress | undefined;
+    private progress: Progress;
 
-    constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent | null) {
+    constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent = Percent.ZERO_PERCENT) {
         this.row = RowCreator.createRowFromTemplate(flowId, start);
-        this.start = new Time(start);
-        RowUpdater.initializeRow(this.row, sources, categories, this.start);
-        if (percent) {
-            RowUpdater.updateRemaining(this.row, new Progress(percent, this.start, Time.now())); // on page refresh
+        const startTime = new Time(start);
+        this.progress = new Progress(startTime, Time.now(), percent);
+        RowUpdater.initializeRow(this.row, sources, categories, startTime);
+        if (!percent.isZero()) {
+            RowUpdater.updateRemaining(this.row, this.progress); // on page refresh
         }
     }
 
     updateProgress(percent: Percent): void {
-        this.progress = new Progress(percent, this.start, Time.now())
+        this.progress = this.progress.copy(percent, Time.now())
         RowUpdater.updateProgress(this.row, this.progress);
     }
 
@@ -118,14 +118,12 @@ class RowUpdater {
     static updateProgress(row: HTMLElement, progress: Progress): void {
         this.progressBar(row, progress);
         if (progress.isFinished()) {
-            this.duration(row, progress);
-            this.remaining(row, progress);
-            this.end(row, progress);
+            this.updateRemaining(row, progress);
         }
     }
 
-    static updateRemaining(row: HTMLElement, progress: Progress | undefined): void {
-        if (!progress) return; // can happen if called by timer before the first update arrived for this row
+    static updateRemaining(row: HTMLElement, progress: Progress): void {
+        if (progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
         this.duration(row, progress);
         this.remaining(row, progress);
         this.end(row, progress);
@@ -154,11 +152,11 @@ class RowUpdater {
     }
 
     private static duration(row: HTMLElement, progress: Progress): void {
-        row.querySelector<HTMLElement>('.duration')!.innerText = progress.duration().toString() || '';
+        row.querySelector<HTMLElement>('.duration')!.innerText = progress.duration().toString();
     }
 
     private static remaining(row: HTMLElement, progress: Progress): void {
-        row.querySelector<HTMLElement>('.remaining')!.innerText = progress.isFinished() ? '' : progress.remaining().toString();
+        row.querySelector<HTMLElement>('.remaining')!.innerText = progress.isFinished() ? '' : progress.remaining()!.toString();
     }
 }
 

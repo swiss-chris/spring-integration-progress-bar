@@ -7,18 +7,19 @@ describe('Progress', () => {
     const plus120 = new Time(1672959600000); // 00:00:00
     const percent50 = new Percent(50);
     const duration30 = new Duration(30 * 60 * 1000); // 30 minutes
-    const progress50Percent30Minutes = new Progress(percent50, start, plus30);
+    const progress50Percent30Minutes = new Progress(start, plus30, percent50);
 
-    test('Initializing Progress objects', () => {
-        expect(() => new Progress(new Percent(0), start, start)).toThrowError();
-        expect(() => new Progress(percent50, start, plus30)).not.toThrowError();
+    test('Progress.copy()', () => {
+        expect(progress50Percent30Minutes.copy(percent50, plus30).end().toString()).toBe(plus60.toString());
+        expect(progress50Percent30Minutes.copy(percent50, plus60).end().toString()).toBe(plus120.toString());
+        expect(progress50Percent30Minutes.copy(new Percent(25), plus30).end().toString()).toBe(plus120.toString());
     });
 
     test('Progress.isFinished()', () => {
-        expect(new Progress(new Percent(0.001), start, plus30).isFinished()).toBeFalsy();
-        expect(new Progress(new Percent(50), start, plus30).isFinished()).toBeFalsy();
-        expect(new Progress(new Percent(99), start, plus30).isFinished()).toBeFalsy();
-        expect(new Progress(new Percent(100), start, plus30).isFinished()).toBeTruthy();
+        expect(new Progress(start, plus30, new Percent(0)).isFinished()).toBeFalsy();
+        expect(new Progress(start, plus30, new Percent(50)).isFinished()).toBeFalsy();
+        expect(new Progress(start, plus30, new Percent(99)).isFinished()).toBeFalsy();
+        expect(new Progress(start, plus30, new Percent(100)).isFinished()).toBeTruthy();
     });
 
     test('Progress.percentNotZero()', () => {
@@ -30,11 +31,11 @@ describe('Progress', () => {
     });
 
     test('Progress.remaining()', () => {
-        expect(progress50Percent30Minutes.remaining().toString()).toBe(duration30.toString());
+        expect(progress50Percent30Minutes.remaining()!.toString()).toBe(duration30.toString());
     });
 
     test('Progress.end()', () => {
         expect(progress50Percent30Minutes.end().toString()).toBe(plus60.toString());
-        expect(new Progress(percent50, start, plus60).end().toString()).toBe(plus120.toString());
+        expect(new Progress(start, plus60, percent50).end().toString()).toBe(plus120.toString());
     });
 });

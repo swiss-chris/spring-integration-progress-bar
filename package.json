@@ -5,7 +5,8 @@
     "test": "jest",
     "watch": "jest --watch",
     "dev": "webpack-dev-server --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production && npm run build:cp-html",
+    "build:cp-html": "cp ./src/main/typescript/index.html ./dist"
   },
   "devDependencies": {
     "@types/jest": "^29.2.5",

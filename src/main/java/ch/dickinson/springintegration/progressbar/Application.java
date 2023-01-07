@@ -41,7 +41,7 @@ public class Application {
     private static final String HTTP_PARAM_CATEGORIES = "categories";
 
     @Value("${websocket.url}")
-    private String websocketUrl;
+    private String[] websocketUrl;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

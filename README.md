@@ -7,6 +7,7 @@ Recovers from page-refreshes on currently running flows.
 
 To see it work:
 - run the Spring Boot Application in your favorite IDE
+- copy `index.html` to the `dist` folder with `npm run build:cp-html`
 - run `npm run dev` in a terminal or in your favorite IDE
 - open the browser at http://localhost:9000
 

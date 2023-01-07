@@ -7,12 +7,13 @@ Recovers from page-refreshes on currently running flows.
 
 To run everything within Spring Boot:
 - run `npm run build` to bundle the typescript code into `bundle.js`.
-- run the Spring Boot Application in your favorite IDE
+- run the Spring Boot `Application` in your favorite IDE
 - open the browser at http://localhost:8080
 
 To use live-reloading through webpack:
 - run the Spring Boot Application in your favorite IDE
-- run `npm run dev` and then visit http://localhost:9000
+- run the `webpack-dev-server` with `npm run dev`
+- open the browser at http://localhost:9000
 
 You can also open the web app in two different tabs at the same time. The same progress will be displayed in both.
 

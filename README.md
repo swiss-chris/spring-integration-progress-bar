@@ -5,11 +5,16 @@ Recovers from page-refreshes on currently running flows.
 
 ![progress-bar.gif](progress-bar.gif)
 
-To see it work:
+To run everything within Spring Boot:
 - run `npm run build` to bundle the typescript code into `bundle.js`.
 - run the Spring Boot Application in your favorite IDE
 - open the browser at http://localhost:8080
-- alternatively, you can enable live-reloading through webpack with `npm run dev` and then visit http://localhost:9000
+
+To use live-reloading through webpack:
+- run the Spring Boot Application in your favorite IDE
+- run `npm run dev` and then visit http://localhost:9000
+
+You can also do both and run the web app on two different ports at the same time. The websocket will update both pages.
 
 Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example

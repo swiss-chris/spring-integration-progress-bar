@@ -6,10 +6,10 @@ Recovers from page-refreshes on currently running flows.
 ![progress-bar.gif](progress-bar.gif)
 
 To see it work:
+- run `npm run build` to bundle the typescript code into `bundle.js`.
 - run the Spring Boot Application in your favorite IDE
-- copy `index.html` to the `dist` folder with `npm run build:cp-html`
-- run `npm run dev` in a terminal or in your favorite IDE
-- open the browser at http://localhost:9000
+- open the browser at http://localhost:8080
+- alternatively, you can enable live-reloading through webpack with `npm run dev` and then visit http://localhost:9000
 
 Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example

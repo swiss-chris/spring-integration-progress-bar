@@ -1,4 +1,4 @@
-import {Duration} from '../../script/lib';
+import {Duration} from '../../lib';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {

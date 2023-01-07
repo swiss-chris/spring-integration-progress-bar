@@ -1,4 +1,4 @@
-import {Duration, Time} from "../../script/lib";
+import {Duration, Time} from "../../lib";
 
 describe('Time', () => {
     const start = new Time(1672866000000); // 22:00:00

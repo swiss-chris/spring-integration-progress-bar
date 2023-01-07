@@ -1,4 +1,4 @@
-import {ArrayUtils} from "../../script/lib";
+import {ArrayUtils} from "../../lib";
 
 describe('ArrayUtils', () => {
     test('ArrayUtils.getInsertionIndex()', () => {

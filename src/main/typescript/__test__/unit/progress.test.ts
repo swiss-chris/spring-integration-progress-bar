@@ -1,4 +1,4 @@
-import {Duration, Percent, Progress, Time} from "../../script/lib";
+import {Duration, Percent, Progress, Time} from "../../lib";
 
 describe('Progress', () => {
     const start = new Time(1672866000000); // 22:00:00

@@ -1,6 +1,6 @@
 const path = require("path");
 module.exports = {
-    entry: "./src/main.ts",
+    entry: "./src/main/typescript/main.ts",
     output: {
         filename: "bundle.js", // all js files are bundled into this single file
         path: path.resolve(__dirname, "dist"),

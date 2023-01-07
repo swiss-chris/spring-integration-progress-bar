@@ -43,11 +43,8 @@ class MessageHandler {
 class Rows {
     private static rowsMap = new Map<string, Row>();
 
-    static createRow(start: number, flowId: string, sources: string, categories: string, percent = Percent.ZERO_PERCENT) {
+    static createRow(start: number, flowId: string, sources: string, categories: string, percent: Percent | null = null) {
         this.rowsMap.set(flowId, new Row(flowId, start, sources, categories, percent));
-        if (!percent.isZero()) {
-            this.rowsMap.get(flowId)!.updateRemaining(); // on page refresh
-        }
     }
 
     static updateProgress(start: number, flowId: string, sources: string, categories: string, percent: Percent) {
@@ -78,18 +75,25 @@ class Rows {
 
 class Row {
     private row;
-    private progress: Progress;
+    private start: Time;
+    private progress: Progress | undefined;
 
-    constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent) {
+    constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent | null) {
         this.row = RowCreator.createRowFromTemplate(flowId, start);
-        this.progress = new Progress(new Time(+start), new Time(Date.now()), percent);
+        this.start = new Time(start);
+        const now = Time.now();
         this.sourcesCell(sources);
         this.categoriesCell(categories);
         this.startCell();
+        if (percent) {
+            this.progress = percent && new Progress(percent, this.start.differenceTo(now), now);
+            this.updateRemaining(); // on page refresh
+        }
     }
 
     updateProgress(percent: Percent): void {
-        this.progress = this.progress.copy(percent, new Time(Date.now()))
+        const now = Time.now();
+        this.progress = new Progress(percent, this.start.differenceTo(now), now)
         this.progressBarCell();
         if (this.isFlowFinished()) {
             this.durationCell();
@@ -105,7 +109,7 @@ class Row {
     }
 
     isFlowFinished(): boolean {
-        return this.progress.isFinished();
+        return this.progress!.isFinished();
     }
 
     private sourcesCell(sources: string): void {
@@ -117,25 +121,25 @@ class Row {
     }
 
     private startCell(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().toString();
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.start.toString();
     }
 
     private progressBarCell(): void {
-        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().toString();
-        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().toString();
+        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress!.percent().toString();
+        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress!.percent().toString();
     }
 
     private endCell(): void {
         this.row.querySelector<HTMLElement>('.end')!.style.color = this.isFlowFinished() ? 'black' : 'lightgray';
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().toString();
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress!.end().toString();
     }
 
     private durationCell(): void {
-        this.row.querySelector<HTMLElement>('.duration')!.innerText = this.progress.duration().toString();
+        this.row.querySelector<HTMLElement>('.duration')!.innerText = this.progress!.duration().toString() || '';
     }
 
     private remainingCell(): void {
-        this.row.querySelector<HTMLElement>('.remaining')!.innerText = this.isFlowFinished() ? '' : this.progress.remaining()!.toString();
+        this.row.querySelector<HTMLElement>('.remaining')!.innerText = this.isFlowFinished() ? '' : this.progress!.remaining().toString();
     }
 }
 

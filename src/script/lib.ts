@@ -78,18 +78,11 @@ export class OnOffTimer {
 }
 
 export class Progress {
-    private readonly _start: Time;
-    private readonly now: Time;
-    private readonly _percent: Percent;
 
-    constructor(start: Time, now: Time, percent: Percent) {
-        this._start = start;
-        this.now = now;
-        this._percent = percent;
-    }
-
-    copy(percent: Percent, now: Time) {
-        return new Progress(this._start, now, percent);
+    constructor(private _percent: Percent, private _duration: Duration, private _now: Time) {
+        if (_percent.isZero()) {
+            throw new Error('To initialize a Progress object, "percent" must be > 0')
+        }
     }
 
     isFinished() {
@@ -100,26 +93,20 @@ export class Progress {
         return this._percent;
     }
 
-    start(): Time {
-        return this._start;
-    }
-
     duration(): Duration {
         return this.elapsed();
     }
 
-    remaining(): Duration | undefined {
-        return this._percent.isZero()
-            ? undefined
-            : this.elapsed().times(this._percent.remaining().divideBy(this._percent));
+    remaining(): Duration {
+        return this.elapsed().times(this._percent.remaining().divideBy(this._percent));
     }
 
     end(): Time {
-        return this.now.plus(this.remaining()!);
+        return this._now.plus(this.remaining());
     }
 
     private elapsed(): Duration {
-        return this._start.difference(this.now);
+        return this._duration;
     }
 }
 
@@ -172,11 +159,15 @@ export class Time {
         this.millis = millis;
     }
 
+    static now() {
+        return new Time(Date.now());
+    }
+
     plus(duration: Duration) {
         return new Time(this.millis + duration._millis);
     }
 
-    difference(time: Time) {
+    differenceTo(time: Time) {
         return new Duration(Math.abs(time.millis - this.millis));
     }
 

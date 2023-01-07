@@ -13,8 +13,8 @@ describe('Time', () => {
         expect(start.plus(duration).toString()).toBe('22:30:00');
     });
 
-    test('Time.difference()', () => {
-        expect(start.difference(now).toString()).toBe('00:30:00');
-        expect(now.difference(start).toString()).toBe('00:30:00');
+    test('Time.differenceTo()', () => {
+        expect(start.differenceTo(now).toString()).toBe('00:30:00');
+        expect(now.differenceTo(start).toString()).toBe('00:30:00');
     });
 });

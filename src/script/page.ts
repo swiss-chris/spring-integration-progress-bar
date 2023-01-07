@@ -30,9 +30,9 @@ export class Form {
     private static getParams() {
         // @ts-ignore
         const {sources, categories} = Object.fromEntries(new FormData(document.getElementById("startflow")));
-        const timestamp = +Date.now();
+        const timestamp = Date.now();
         return {
-            startedAt: +timestamp,
+            startedAt: timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
             sources: sources as string,
             categories: categories as string,

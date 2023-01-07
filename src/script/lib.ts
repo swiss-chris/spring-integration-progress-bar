@@ -180,7 +180,7 @@ export class Time {
             second: '2-digit',
             timeZone: 'Europe/Zurich',
             hour12: false,
-        }).format(new Date(+this.millis)); // TODO prevent millis from being a string here
+        }).format(new Date(this.millis));
     }
 }
 

@@ -2,17 +2,24 @@
 
 import {ArrayUtils, OnOffTimer, Percent, Progress, Time, TimerDeActivator, WebsocketConnector} from './lib';
 
+interface StartFlowParams {
+    flowId: string;
+    startedAt: number;
+    sources: string;
+    categories: string;
+}
+
 export class Form {
     static submit() {
         websocketConnector.reconnect();
-        const {startedAt, flowId, sources, categories}: {startedAt: number, flowId: string, sources: string, categories: string} = this.getParams();
-        Rows.createRow(startedAt, flowId, sources, categories)
-        this.startFlow({startedAt: startedAt.toString(), flowId, sources, categories});
+        const {flowId, startedAt, sources, categories}: StartFlowParams = this.getParams();
+        Rows.createRow(flowId, startedAt, sources, categories)
+        this.startFlow({flowId, startedAt, sources, categories});
         return false; // prevent regular form submit & page refresh
     }
 
-    private static startFlow({startedAt, flowId, sources, categories}: {startedAt: string, flowId: string, sources: string, categories: string}) {
-        const queryParams = new URLSearchParams({startedAt, flowId, sources, categories});
+    private static startFlow({startedAt, flowId, sources, categories}: StartFlowParams) {
+        const queryParams = new URLSearchParams({flowId, startedAt: startedAt.toString(), sources, categories});
         const toString = queryParams.toString();
         fetch(`http://localhost:8080/flow?${toString}`, {
             method: 'post',
@@ -28,13 +35,13 @@ export class Form {
             startedAt: +timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
             sources: sources as string,
-            categories: categories as string
+            categories: categories as string,
         };
     }
 }
 
 class MessageHandler {
-    static handleMessage({data} : {data: string}) {
+    static handleMessage({data}: { data: string }) {
         const {startedAt, flowId, sources, categories, percent} = JSON.parse(data);
         Rows.updateProgress(parseInt(startedAt), flowId, sources, categories, new Percent(percent));
     }
@@ -43,7 +50,7 @@ class MessageHandler {
 class Rows {
     private static rowsMap = new Map<string, Row>();
 
-    static createRow(start: number, flowId: string, sources: string, categories: string, percent: Percent | null = null) {
+    static createRow(flowId: string, start: number, sources: string, categories: string, percent: Percent | null = null) {
         this.rowsMap.set(flowId, new Row(flowId, start, sources, categories, percent));
     }
 
@@ -64,7 +71,7 @@ class Rows {
     private static createNowIfNecessary(start: number, flowId: string, sources: string, categories: string, percent: Percent) {
         // e.g. if we refresh the page during a running flow
         if (!Rows.rowsMap.has(flowId)) {
-            this.createRow(start, flowId, sources, categories, percent);
+            this.createRow(flowId, start, sources, categories, percent);
         }
     }
 
@@ -81,12 +88,9 @@ class Row {
     constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent | null) {
         this.row = RowCreator.createRowFromTemplate(flowId, start);
         this.start = new Time(start);
-        RowUpdater.sources(this.row, sources);
-        RowUpdater.categories(this.row, categories);
-        RowUpdater.start(this.row, this.start);
+        RowUpdater.initializeRow(this.row, sources, categories, this.start);
         if (percent) {
-            this.progress = percent && new Progress(percent, this.start, Time.now());
-            this.updateRemaining(); // on page refresh
+            RowUpdater.updateRemaining(this.row, new Progress(percent, this.start, Time.now())); // on page refresh
         }
     }
 
@@ -96,15 +100,21 @@ class Row {
     }
 
     updateRemaining(): void {
-        RowUpdater.updateRemaining(this.row, this.progress!)
+        RowUpdater.updateRemaining(this.row, this.progress)
     }
 
     isFlowFinished(): boolean {
-        return this.progress!.isFinished();
+        return !!this.progress && this.progress.isFinished();
     }
 }
 
 class RowUpdater {
+    static initializeRow(row: HTMLElement, sources: string, categories: string, start: Time) {
+        this.sources(row, sources);
+        this.categories(row, categories);
+        this.start(row, start);
+    }
+
     static updateProgress(row: HTMLElement, progress: Progress): void {
         this.progressBar(row, progress);
         if (progress.isFinished()) {
@@ -114,39 +124,40 @@ class RowUpdater {
         }
     }
 
-    static updateRemaining(row: HTMLElement, progress: Progress): void {
+    static updateRemaining(row: HTMLElement, progress: Progress | undefined): void {
+        if (!progress) return; // can happen if called by timer before the first update arrived for this row
         this.duration(row, progress);
         this.remaining(row, progress);
         this.end(row, progress);
     }
 
-    static sources(row: HTMLElement, sources: string): void {
+    private static sources(row: HTMLElement, sources: string): void {
         row.querySelector<HTMLElement>('.sources')!.innerText = sources;
     }
 
-    static categories(row: HTMLElement, categories: string): void {
+    private static categories(row: HTMLElement, categories: string): void {
         row.querySelector<HTMLElement>('.categories')!.innerText = categories;
     }
 
-    static start(row: HTMLElement, start: Time): void {
+    private static start(row: HTMLElement, start: Time): void {
         row.querySelector<HTMLElement>('.start')!.innerText = start.toString();
     }
 
-    static progressBar(row: HTMLElement, progress: Progress): void {
+    private static progressBar(row: HTMLElement, progress: Progress): void {
         row.querySelector<HTMLElement>('.progress-bar')!.style.width = progress.percent().toString();
         row.querySelector<HTMLElement>('.progress-bar')!.innerText = progress.percent().toString();
     }
 
-    static end(row: HTMLElement, progress: Progress): void {
+    private static end(row: HTMLElement, progress: Progress): void {
         row.querySelector<HTMLElement>('.end')!.style.color = progress.isFinished() ? 'black' : 'lightgray';
         row.querySelector<HTMLElement>('.end')!.innerText = progress.end().toString();
     }
 
-    static duration(row: HTMLElement, progress: Progress): void {
+    private static duration(row: HTMLElement, progress: Progress): void {
         row.querySelector<HTMLElement>('.duration')!.innerText = progress.duration().toString() || '';
     }
 
-    static remaining(row: HTMLElement, progress: Progress): void {
+    private static remaining(row: HTMLElement, progress: Progress): void {
         row.querySelector<HTMLElement>('.remaining')!.innerText = progress.isFinished() ? '' : progress.remaining().toString();
     }
 }
@@ -212,10 +223,10 @@ class RowCreator {
 
 const websocketConnector = new WebsocketConnector(
     'http://localhost:8080/messages',
-    MessageHandler.handleMessage
+    MessageHandler.handleMessage,
 ).connect();
 
 const remainingTimerDeActivator = new TimerDeActivator(
     Rows.allFlowsAreFinished,
-    new OnOffTimer(Rows.updateRemaining)
+    new OnOffTimer(Rows.updateRemaining),
 );

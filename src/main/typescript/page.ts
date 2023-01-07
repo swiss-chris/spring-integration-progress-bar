@@ -50,8 +50,11 @@ class MessageHandler {
 class Rows {
     private static rowsMap = new Map<string, Row>();
 
-    static createRow(flowId: string, start: number, sources: string, categories: string, percent?: Percent) {
-        this.rowsMap.set(flowId, new Row(flowId, start, sources, categories, percent));
+    static createRow(flowId: string, start: number, sources: string, categories: string, percent: Percent = Percent.ZERO_PERCENT) {
+        this.rowsMap.set(flowId, new Row(RowCreator.createRowFromTemplate(flowId, start), new Time(start), sources, categories, percent));
+        if (!percent.isZero()) {
+            this.rowsMap.get(flowId)!.updateRemaining(); // on page refresh
+        }
     }
 
     static updateProgress(start: number, flowId: string, sources: string, categories: string, percent: Percent) {
@@ -84,14 +87,10 @@ class Row {
     private readonly row: HTMLElement;
     private progress: Progress;
 
-    constructor(flowId: string, start: number, sources: string, categories: string, percent: Percent = Percent.ZERO_PERCENT) {
-        this.row = RowCreator.createRowFromTemplate(flowId, start);
-        const startTime = new Time(start);
-        this.progress = new Progress(startTime, Time.now(), percent);
-        RowUpdater.initializeRow(this.row, sources, categories, startTime);
-        if (!percent.isZero()) {
-            RowUpdater.updateRemaining(this.row, this.progress); // on page refresh
-        }
+    constructor(row: HTMLElement, start: Time, sources: string, categories: string, percent: Percent) {
+        this.row = row;
+        this.progress = new Progress(start, Time.now(), percent);
+        RowUpdater.initializeRow(this.row, sources, categories, start);
     }
 
     updateProgress(percent: Percent): void {

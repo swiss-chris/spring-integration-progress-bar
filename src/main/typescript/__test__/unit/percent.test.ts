@@ -1,4 +1,4 @@
-import {Percent} from '../../lib';
+import {Percent} from '../../progress/percent';
 
 describe('Percent', () => {
     test('Initializing Percent objects', () => {

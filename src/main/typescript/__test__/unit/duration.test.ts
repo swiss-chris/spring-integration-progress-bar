@@ -1,4 +1,4 @@
-import {Duration} from '../../lib';
+import {Duration} from '../../progress/duration';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {

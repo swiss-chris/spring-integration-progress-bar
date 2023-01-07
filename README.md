@@ -5,7 +5,10 @@ Recovers from page-refreshes on currently running flows.
 
 ![progress-bar.gif](progress-bar.gif)
 
-To see it work, run the Application and open http://localhost:8080/ in the browser.
+To see it work:
+- run the Spring Boot Application in your favorite IDE
+- run `npm run dev` in a terminal or in your favorite IDE
+- open the browser at http://localhost:9000
 
 Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example

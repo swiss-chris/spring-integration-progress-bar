@@ -186,7 +186,7 @@ class Row {
     }
 
     private start(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(Formatter.time);
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().date().toLocaleTimeString();
     }
 
     private progressBar(): void {
@@ -204,19 +204,10 @@ class Row {
 
     private end(): void {
         this.row.querySelector<HTMLElement>('.end')!.style.color = this.progress.isFinished() ? 'black' : 'lightgray';
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().format(Formatter.time);
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().date().toLocaleTimeString();
     }
 }
 
 class Formatter {
     static percent = (percent: number) => `${percent}%`;
-
-    static time = (date: Date) =>
-        new Intl.DateTimeFormat('de-CH', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'Europe/Zurich',
-            hour12: false,
-        }).format(date);
 }

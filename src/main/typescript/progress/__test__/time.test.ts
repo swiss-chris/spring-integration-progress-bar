@@ -7,7 +7,7 @@ describe('Time', () => {
     const now = new Time(1672867800000); // 21:30:00 UTC
     const duration = new Duration(30 * 60 * 1000); // 30 minutes
 
-    test('Time.toString()', () => {
+    test('Time.format()', () => {
         expect(start.format(timeFormatter)).toBe('21:00:00');
     });
 

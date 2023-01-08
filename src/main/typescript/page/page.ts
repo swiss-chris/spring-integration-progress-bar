@@ -1,4 +1,4 @@
-import {ArrayUtils} from '../lib';
+import {ArrayUtils} from '../util';
 import {Progress} from '../progress';
 import {remainingTimerDeActivator, websocketConnector} from '../main';
 

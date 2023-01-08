@@ -1,6 +1,7 @@
 import {Form, MessageHandler, Rows} from './page'
 import {DarkModeSwitcher} from './dark-mode';
-import {OnOffTimer, TimerDeActivator, WebsocketConnector} from './lib';
+import {WebsocketConnector} from './websocket-connector';
+import {OnOffTimer, TimerDeActivator} from './timer';
 
 ////// -------- FORM -------- //////
 

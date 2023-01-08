@@ -1,4 +1,4 @@
-import {Duration} from '../../progress/duration';
+import {Duration} from '../duration';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {

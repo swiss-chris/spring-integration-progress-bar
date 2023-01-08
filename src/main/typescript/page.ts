@@ -1,5 +1,6 @@
-import {ArrayUtils, OnOffTimer, TimerDeActivator, WebsocketConnector} from './lib';
+import {ArrayUtils} from './lib';
 import {Progress} from './progress';
+import {remainingTimerDeActivator, websocketConnector} from './main';
 
 interface StartFlowParams {
     flowId: string;
@@ -41,14 +42,14 @@ export class Form {
     }
 }
 
-class MessageHandler {
+export class MessageHandler {
     static handleMessage({data}: { data: string }) {
         const {startedAt: start, flowId, sources, categories, percent} = JSON.parse(data);
         Rows.updateProgress(new Date(parseInt(start)), flowId, sources, categories, percent);
     }
 }
 
-class Rows {
+export class Rows {
     private static rowsMap = new Map<string, Row>();
 
     static createRow(flowId: string, start: Date, sources: string, categories: string, percent: number = 0) {
@@ -206,15 +207,3 @@ class RowCreator {
         return document.querySelector(`[data-flow-id="${flowId}"]`)! as HTMLElement;
     }
 }
-
-////// -------- ON PAGE LOAD -------- //////
-
-const websocketConnector = new WebsocketConnector(
-    'http://localhost:8080/messages',
-    MessageHandler.handleMessage,
-).connect();
-
-const remainingTimerDeActivator = new TimerDeActivator(
-    Rows.allFlowsAreFinished,
-    new OnOffTimer(Rows.updateRemaining),
-);

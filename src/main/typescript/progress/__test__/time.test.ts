@@ -1,5 +1,5 @@
-import {Duration} from "../../progress/duration";
-import {Time} from "../../progress/time";
+import {Duration} from "../duration";
+import {Time} from "../time";
 
 describe('Time', () => {
     const start = new Time(1672866000000); // 22:00:00

@@ -1,5 +1,5 @@
-import {Progress} from "../../progress";
-import {Time} from '../../progress/time';
+import {Progress} from "../progress";
+import {Time} from '../time';
 
 describe('Progress', () => {
     const start = new Date(1672866000000); // 22:00:00

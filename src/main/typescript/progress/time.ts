@@ -1,6 +1,6 @@
 import {Duration} from './duration';
 
-export class Time {
+export class Time implements Formattable<Date> {
     private readonly millis: number;
 
     constructor(millis: number) {
@@ -19,13 +19,11 @@ export class Time {
         return new Duration(Math.abs(time.millis - this.millis));
     }
 
-    toString() {
-        return new Intl.DateTimeFormat('de-CH', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'Europe/Zurich',
-            hour12: false,
-        }).format(new Date(this.millis));
+    date() {
+        return new Date(this.millis);
+    }
+
+    format(callback: (date: Date) => string) {
+        return callback(new Date(this.millis));
     }
 }

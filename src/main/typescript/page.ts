@@ -142,7 +142,6 @@ class RowCreator {
     }
 }
 
-
 class Row {
     private readonly row: HTMLElement;
     private progress: Progress;
@@ -187,12 +186,12 @@ class Row {
     }
 
     private start(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().toString();
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(Formatter.time);
     }
 
     private progressBar(): void {
-        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().toString();
-        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().toString();
+        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().format(Formatter.percent);
+        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().format(Formatter.percent);
     }
 
     private duration(): void {
@@ -205,6 +204,19 @@ class Row {
 
     private end(): void {
         this.row.querySelector<HTMLElement>('.end')!.style.color = this.progress.isFinished() ? 'black' : 'lightgray';
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().toString();
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().format(Formatter.time);
     }
+}
+
+class Formatter {
+    static percent = (percent: number) => `${percent}%`;
+
+    static time = (date: Date) =>
+        new Intl.DateTimeFormat('de-CH', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Europe/Zurich',
+            hour12: false,
+        }).format(date);
 }

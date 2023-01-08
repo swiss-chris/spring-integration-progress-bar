@@ -18,6 +18,12 @@ describe('Duration', () => {
         expect(new Duration(toMillis(60, 0, 0)).toString()).toBe('60:00:00');
         expect(new Duration(toMillis(1234, 59, 59)).toString()).toBe('1234:59:59');
     });
+
+    test('Duration.format()', () => {
+        expect(new Duration(1234).format(durationFormatter)).toBe('some custom format: 1234');
+    });
 });
 
 const toMillis = (hours: number, minutes: number, seconds: number) => ((hours * 60 + minutes) * 60 + seconds) * 1000;
+
+const durationFormatter = (millis: number) => `some custom format: ${millis}`;

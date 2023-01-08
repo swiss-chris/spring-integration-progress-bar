@@ -18,7 +18,7 @@ export class Progress {
     }
 
     start(): Time {
-        return this._start
+        return this._start;
     }
 
     percent(): Percent {

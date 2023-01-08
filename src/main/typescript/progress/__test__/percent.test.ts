@@ -25,7 +25,15 @@ describe('Percent', () => {
         expect(new Percent(100).divideBy(new Percent(25))).toBe(4);
     });
 
-    test('Percent.toString()', () => {
-        expect(new Percent(42.5).toString()).toBe('42.5%');
+    test('Percent.value()', () => {
+        expect(new Percent(42).value()).toBe(42);
+    });
+
+    test('Percent.format()', () => {
+        expect(new Percent(42.5).format(percentFormatter)).toBe('42.5%');
     });
 });
+
+const percentFormatter = (percent: number) => {
+    return percent + '%';
+}

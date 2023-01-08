@@ -1,4 +1,4 @@
-export class Percent {
+export class Percent implements Formattable<number> {
     static ZERO_PERCENT = new Percent(0);
     static ONE_HUNDRED_PERCENT = new Percent(100);
 
@@ -35,7 +35,11 @@ export class Percent {
         return this.percent / percent.percent;
     }
 
-    toString() {
-        return this.percent + '%';
+    value() {
+        return this.percent;
+    }
+
+    format(callback: (percent: number) => string) {
+        return callback(this.percent);
     }
 }

@@ -1,4 +1,4 @@
-export class Duration {
+export class Duration implements Formattable<number>{
     private readonly millis: number;
 
     constructor(millis: number) {
@@ -13,15 +13,17 @@ export class Duration {
     }
 
     toString() {
-        const s = Math.floor(this.millis / 1000);
+        const format = (n: number) => Math.floor(n).toString().padStart(2, '0');
+
+        const seconds = Math.floor(this.millis / 1000);
         return [
-            this.format(s / 60 / 60),
-            this.format(s / 60 % 60),
-            this.format(s % 60)
+            format(seconds / 60 / 60),
+            format(seconds / 60 % 60),
+            format(seconds % 60)
         ].join(':');
     }
 
-    private format(n: number) {
-        return Math.floor(n).toString().padStart(2, '0')
+    format(formatter: (millis: number) => string) {
+        return formatter(this.millis);
     }
 }

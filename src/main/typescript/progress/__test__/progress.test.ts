@@ -1,5 +1,6 @@
 import {Progress} from "../progress";
 import {Time} from '../time';
+import {timeFormatter} from './time.test';
 
 describe('Progress', () => {
     const start = new Date(1672866000000); // 22:00:00
@@ -17,24 +18,24 @@ describe('Progress', () => {
         expect(new Progress(start, plus30, 100).isFinished()).toBeTruthy();
     });
 
-    test('Progress.percentNotZero()', () => {
-        expect(progress50Percent30Minutes.percent().toString()).toBe('50%');
+    test('Progress.percent()', () => {
+        expect(progress50Percent30Minutes.percent().value()).toBe(50);
     });
 
     test('Progress.start()', () => {
-        expect(progress50Percent30Minutes.start().toString()).toBe(new Time(start.getTime()).toString());
+        expect(progress50Percent30Minutes.start().format(timeFormatter)).toBe(new Time(start.getTime()).format(timeFormatter));
     });
 
     test('Progress.duration()', () => {
-        expect(progress50Percent30Minutes.duration().toString()).toBe(duration30.toString());
+        expect(progress50Percent30Minutes.duration().toString()).toBe(duration30);
     });
 
     test('Progress.remaining()', () => {
-        expect(progress50Percent30Minutes.remaining()!.toString()).toBe(duration30.toString());
+        expect(progress50Percent30Minutes.remaining()!.toString()).toBe(duration30);
     });
 
     test('Progress.end()', () => {
-        expect(progress50Percent30Minutes.end().toString()).toBe(new Time(plus60.getTime()).toString());
-        expect(new Progress(start, plus60, percent50).end().toString()).toBe(new Time(plus120.getTime()).toString());
+        expect(progress50Percent30Minutes.end().format(timeFormatter)).toBe(new Time(plus60.getTime()).format(timeFormatter));
+        expect(new Progress(start, plus60, percent50).end().format(timeFormatter)).toBe(new Time(plus120.getTime()).format(timeFormatter));
     });
 });

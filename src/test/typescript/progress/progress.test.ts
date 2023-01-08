@@ -1,4 +1,4 @@
-import {Progress} from "../progress";
+import {Progress} from "../../../main/typescript/progress";
 import {percentFormatter} from './percent.test';
 
 describe('Progress', () => {

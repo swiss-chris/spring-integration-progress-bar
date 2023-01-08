@@ -1,4 +1,4 @@
-import {Duration} from '../duration';
+import {Duration} from '../../../main/typescript/progress/duration';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {

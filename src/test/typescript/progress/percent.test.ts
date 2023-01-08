@@ -1,4 +1,4 @@
-import {Percent} from '../percent';
+import {Percent} from '../../../main/typescript/progress/percent';
 
 describe('Percent', () => {
     test('Initializing Percent objects', () => {

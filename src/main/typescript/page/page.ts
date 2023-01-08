@@ -1,6 +1,6 @@
-import {ArrayUtils} from './lib';
-import {Progress} from './progress';
-import {remainingTimerDeActivator, websocketConnector} from './main';
+import {ArrayUtils} from '../lib';
+import {Progress} from '../progress';
+import {remainingTimerDeActivator, websocketConnector} from '../main';
 
 interface StartFlowParams {
     flowId: string;

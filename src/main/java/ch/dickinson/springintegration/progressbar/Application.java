@@ -35,7 +35,7 @@ public class Application {
     private static final int PERCENT_PER_SECOND = 10;
 
     private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
-    private static final String HTTP_PARAM_STARTED_AT = "startedAt";
+    private static final String HTTP_PARAM_STARTED_AT = "start";
     private static final String HTTP_PARAM_FLOW_ID = "flowId";
     private static final String HTTP_PARAM_SOURCES = "sources";
     private static final String HTTP_PARAM_CATEGORIES = "categories";

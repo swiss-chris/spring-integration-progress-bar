@@ -4,7 +4,7 @@ import {remainingTimerDeActivator, websocketConnector} from './main';
 
 interface StartFlowParams {
     flowId: string;
-    startedAt: number;
+    start: number;
     sources: string;
     categories: string;
 }
@@ -14,14 +14,14 @@ interface StartFlowParams {
 export class Form {
     static submit() {
         websocketConnector.reconnect();
-        const {flowId, startedAt, sources, categories}: StartFlowParams = this.getParams();
-        Rows.createRow(flowId, new Date(startedAt), sources, categories);
-        this.startFlow({flowId, startedAt, sources, categories});
+        const {flowId, start, sources, categories}: StartFlowParams = this.getParams();
+        Rows.createRow(flowId, new Date(start), sources, categories);
+        this.startFlow({flowId, start, sources, categories});
         return false; // prevent regular form submit & page refresh
     }
 
-    private static startFlow({startedAt, flowId, sources, categories}: StartFlowParams) {
-        const queryParams = new URLSearchParams({flowId, startedAt: startedAt.toString(), sources, categories});
+    private static startFlow({start, flowId, sources, categories}: StartFlowParams) {
+        const queryParams = new URLSearchParams({flowId, start: start.toString(), sources, categories});
         const toString = queryParams.toString();
         fetch(`http://localhost:8080/flow?${toString}`, {
             method: 'post',
@@ -34,7 +34,7 @@ export class Form {
         const {sources, categories} = Object.fromEntries(new FormData(document.getElementById("startflow")));
         const timestamp = Date.now();
         return {
-            startedAt: timestamp,
+            start: timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
             sources: sources as string,
             categories: categories as string,
@@ -44,7 +44,7 @@ export class Form {
 
 export class MessageHandler {
     static handleMessage({data}: { data: string }) {
-        const {startedAt: start, flowId, sources, categories, percent} = JSON.parse(data);
+        const {start: start, flowId, sources, categories, percent} = JSON.parse(data);
         Rows.updateProgress(new Date(parseInt(start)), flowId, sources, categories, percent);
     }
 }

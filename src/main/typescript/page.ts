@@ -85,6 +85,64 @@ export class Rows {
     }
 }
 
+class RowCreator {
+    static createRowFromTemplate(flowId: string, start: number): HTMLElement {
+        // @ts-ignore
+        const row: HTMLElement = document.getElementById('progress-row').content.cloneNode(true);
+        this.setFlowId(row, flowId);
+        this.setStart(row, start);
+        this.appendInOrder(row, start);
+        // we can't return 'row' as it is empty after appending
+        return this.queryBy(flowId);
+    }
+
+    private static appendInOrder(row: HTMLElement, start: number) {
+        const parent = this.getParent();
+        const children = this.getChildren(parent)
+        const newIndex = this.getNewIndex(children, start);
+        const nextSibling = this.getNextSibling(children, newIndex);
+        this.insertBeforeNextSibling(nextSibling, parent, row);
+    }
+
+    private static getParent(): HTMLElement {
+        return document.getElementById('root')!;
+    }
+
+    private static getChildren(parent: HTMLElement): HTMLElement[] {
+        return [...parent.querySelectorAll('.flow-progress')] as HTMLElement[];
+    }
+
+    private static getNewIndex(children: HTMLElement[], start: number) {
+        const startValues: number[] = children.map(s => parseInt(s.dataset.start as string));
+        return ArrayUtils.getInsertionIndex(startValues, start, false);
+    }
+
+    private static getNextSibling(children: HTMLElement[], newIndex: number): HTMLElement | null {
+        return (newIndex < children.length) ? children[newIndex] : null;
+    }
+
+    private static insertBeforeNextSibling(nextSibling: HTMLElement | null, parent: HTMLElement, row: any) {
+        if (nextSibling != null) {
+            parent.insertBefore(row, nextSibling);
+        } else {
+            parent.appendChild(row);
+        }
+    }
+
+    private static setFlowId(row: HTMLElement, flowId: string) {
+        row.querySelector<HTMLElement>('.flow-progress')!.dataset.flowId = flowId;
+    }
+
+    private static setStart(row: HTMLElement, start: number) {
+        row.querySelector<HTMLElement>('.flow-progress')!.dataset.start = String(start);
+    }
+
+    private static queryBy(flowId: string): HTMLElement {
+        return document.querySelector(`[data-flow-id="${flowId}"]`)! as HTMLElement;
+    }
+}
+
+
 class Row {
     private readonly row: HTMLElement;
     private progress: Progress;
@@ -148,62 +206,5 @@ class Row {
     private end(): void {
         this.row.querySelector<HTMLElement>('.end')!.style.color = this.progress.isFinished() ? 'black' : 'lightgray';
         this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().toString();
-    }
-}
-
-class RowCreator {
-    static createRowFromTemplate(flowId: string, start: number): HTMLElement {
-        // @ts-ignore
-        const row: HTMLElement = document.getElementById('progress-row').content.cloneNode(true);
-        this.setFlowId(row, flowId);
-        this.setStart(row, start);
-        this.appendInOrder(row, start);
-        // we can't return 'row' as it is empty after appending
-        return this.queryBy(flowId);
-    }
-
-    private static appendInOrder(row: HTMLElement, start: number) {
-        const parent = this.getParent();
-        const children = this.getChildren(parent)
-        const newIndex = this.getNewIndex(children, start);
-        const nextSibling = this.getNextSibling(children, newIndex);
-        this.insertBeforeNextSibling(nextSibling, parent, row);
-    }
-
-    private static getParent(): HTMLElement {
-        return document.getElementById('root')!;
-    }
-
-    private static getChildren(parent: HTMLElement): HTMLElement[] {
-        return [...parent.querySelectorAll('.flow-progress')] as HTMLElement[];
-    }
-
-    private static getNewIndex(children: HTMLElement[], start: number) {
-        const startValues: number[] = children.map(s => parseInt(s.dataset.start as string));
-        return ArrayUtils.getInsertionIndex(startValues, start, false);
-    }
-
-    private static getNextSibling(children: HTMLElement[], newIndex: number): HTMLElement | null {
-        return (newIndex < children.length) ? children[newIndex] : null;
-    }
-
-    private static insertBeforeNextSibling(nextSibling: HTMLElement | null, parent: HTMLElement, row: any) {
-        if (nextSibling != null) {
-            parent.insertBefore(row, nextSibling);
-        } else {
-            parent.appendChild(row);
-        }
-    }
-
-    private static setFlowId(row: HTMLElement, flowId: string) {
-        row.querySelector<HTMLElement>('.flow-progress')!.dataset.flowId = flowId;
-    }
-
-    private static setStart(row: HTMLElement, start: number) {
-        row.querySelector<HTMLElement>('.flow-progress')!.dataset.start = String(start);
-    }
-
-    private static queryBy(flowId: string): HTMLElement {
-        return document.querySelector(`[data-flow-id="${flowId}"]`)! as HTMLElement;
     }
 }

@@ -203,12 +203,12 @@ class Row {
     }
 
     private end(): void {
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().date().toLocaleTimeString();
         if (this.progress.isFinished()) {
             this.row.querySelector<HTMLElement>('.end')!.classList.remove('dim');
         } else {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().date().toLocaleTimeString();
     }
 }
 

@@ -26,7 +26,7 @@ describe('Percent', () => {
     });
 
     test('Percent.value()', () => {
-        expect(new Percent(42).value()).toBe(42);
+        expect(new Percent(42).format(percentFormatter)).toBe('42%');
     });
 
     test('Percent.format()', () => {
@@ -34,6 +34,6 @@ describe('Percent', () => {
     });
 });
 
-const percentFormatter = (percent: number) => {
+export const percentFormatter = (percent: number) => {
     return percent + '%';
 }

@@ -1,6 +1,5 @@
 import {Progress} from "../progress";
-import {Time} from '../time';
-import {timeFormatter} from './time.test';
+import {percentFormatter} from './percent.test';
 
 describe('Progress', () => {
     const start = new Date(1672866000000); // 22:00:00
@@ -19,11 +18,11 @@ describe('Progress', () => {
     });
 
     test('Progress.percent()', () => {
-        expect(progress50Percent30Minutes.percent().value()).toBe(50);
+        expect(progress50Percent30Minutes.percent().format(percentFormatter)).toBe('50%');
     });
 
     test('Progress.start()', () => {
-        expect(progress50Percent30Minutes.start().format(timeFormatter)).toBe(new Time(start.getTime()).format(timeFormatter));
+        expect(progress50Percent30Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
     });
 
     test('Progress.duration()', () => {
@@ -35,7 +34,7 @@ describe('Progress', () => {
     });
 
     test('Progress.end()', () => {
-        expect(progress50Percent30Minutes.end().format(timeFormatter)).toBe(new Time(plus60.getTime()).format(timeFormatter));
-        expect(new Progress(start, plus60, percent50).end().format(timeFormatter)).toBe(new Time(plus120.getTime()).format(timeFormatter));
+        expect(progress50Percent30Minutes.end().date().toTimeString()).toBe(plus60.toTimeString());
+        expect(new Progress(start, plus60, percent50).end().date().toTimeString()).toBe(plus120.toTimeString());
     });
 });

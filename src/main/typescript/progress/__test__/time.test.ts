@@ -8,11 +8,11 @@ describe('Time', () => {
     const duration = new Duration(30 * 60 * 1000); // 30 minutes
 
     test('Time.format()', () => {
-        expect(start.format(timeFormatter)).toBe('21:00:00');
+        expect(start.format(formatter)).toBe('21:00:00');
     });
 
     test('Time.plus()', () => {
-        expect(start.plus(duration).format(timeFormatter)).toBe('21:30:00');
+        expect(start.plus(duration).format(formatter)).toBe('21:30:00');
     });
 
     test('Time.differenceTo()', () => {
@@ -25,7 +25,7 @@ describe('Time', () => {
     });
 });
 
-export const timeFormatter = (date: Date) => {
+const formatter = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
         hour: '2-digit',
         minute: '2-digit',

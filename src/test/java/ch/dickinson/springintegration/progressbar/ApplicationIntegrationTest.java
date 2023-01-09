@@ -30,11 +30,11 @@ class ProgressBarIT {
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments(
-//                "--no-sandbox",
-//                "--disable-dev-shm-usage",
-//                "--headless"
-//        );
+        options.addArguments(
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--headless"
+        );
         driver = new ChromeDriver(options);
     }
 

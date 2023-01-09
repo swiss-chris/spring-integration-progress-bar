@@ -15,6 +15,11 @@ on:
     branches: [ "main" ]
 
 jobs:
+  install_chrome:
+    steps:
+      - uses: browser-actions/setup-chrome@latest
+      - run: chrome --version
+
   build:
 
     runs-on: ubuntu-latest

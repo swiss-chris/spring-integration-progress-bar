@@ -27,3 +27,16 @@ export class Time implements Formattable<Date> {
         return callback(new Date(this.millis));
     }
 }
+
+export const localTimeFormatter =
+    (date: Date) => {
+        // get the local timezone
+        const {timeZone} = Intl.DateTimeFormat().resolvedOptions();
+        return new Intl.DateTimeFormat('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: timeZone,
+            hour12: false,
+        }).format(date);
+    }

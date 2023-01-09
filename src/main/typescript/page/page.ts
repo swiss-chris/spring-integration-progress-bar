@@ -1,6 +1,7 @@
 import {ArrayUtils} from '../util';
 import {Progress} from '../progress';
 import {remainingTimerDeActivator, websocketConnector} from '../main';
+import {localTimeFormatter} from '../progress/time';
 
 interface StartFlowParams {
     flowId: string;
@@ -186,7 +187,7 @@ class Row {
     }
 
     private start(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().date().toLocaleTimeString();
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(localTimeFormatter);
     }
 
     private progressBar(): void {
@@ -208,7 +209,7 @@ class Row {
         } else {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().date().toLocaleTimeString();
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().format(localTimeFormatter);
     }
 }
 

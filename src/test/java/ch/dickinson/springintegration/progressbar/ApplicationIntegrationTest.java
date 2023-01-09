@@ -54,8 +54,8 @@ class ProgressBarIT {
         final String categories = driver.findElement(By.className("categories")).getText();
         assertThat(categories, is("all"));
 
-//        final String duration = driver.findElement(By.className("duration")).getText();
-//        assertThat(duration, matchesPattern(TIME_PATTERN));
+        final String duration = driver.findElement(By.className("duration")).getText();
+        assertThat(duration, matchesPattern(TIME_PATTERN));
 
         driver.quit();
     }

@@ -161,6 +161,7 @@ class Row {
         this.sources(sources);
         this.categories(categories);
         this.start();
+        this.duration();
     }
 
     updateProgress(start: Date, percent: number): void {

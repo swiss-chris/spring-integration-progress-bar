@@ -17,6 +17,8 @@ To use live-reloading through webpack:
 
 You can also open the web app in two different tabs at the same time. The same progress will be displayed in both.
 
+Running `mvn clean package` will run the typescript unit tests, bundle the typescript code into `bundle.js`, and run a Spring Boot Integration Test for the full application.
+
 Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example
 * https://github.com/johnpili/websocket-progress-bar

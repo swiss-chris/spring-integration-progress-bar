@@ -1,6 +1,7 @@
 package selenium.tutorials;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -32,6 +33,7 @@ public class OpenBrowserTest {
     }
 
     @Test
+    @Disabled("only works on a Mac")
     public void safariSession() {
         WebDriverManager.safaridriver().setup();
         SafariOptions options = new SafariOptions();

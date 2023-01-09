@@ -40,8 +40,8 @@ public class Application {
     private static final String HTTP_PARAM_SOURCES = "sources";
     private static final String HTTP_PARAM_CATEGORIES = "categories";
 
-    @Value("${websocket.additional-client-urls}")
-    private String[] additionalClientUrls;
+    @Value("${websocket.additional-allowed-origins}")
+    private String[] additionalAllowedOrigins;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -105,7 +105,7 @@ public class Application {
     @Bean
     ServerWebSocketContainer serverWebSocketContainer() {
         return new ServerWebSocketContainer("/messages")
-                .setAllowedOrigins(additionalClientUrls)
+                .setAllowedOrigins(additionalAllowedOrigins)
                 .withSockJs();
     }
 

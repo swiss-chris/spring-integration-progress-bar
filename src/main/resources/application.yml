@@ -2,4 +2,6 @@ server.port: 8080
 
 logging.level.ch.dickinson: DEBUG
 
-websocket.additional-client-urls: http://localhost:9000 # comma-separated
+# 8081: For Spring Boot Integration Test
+# 9000: For Webpack Dev Server
+websocket.additional-allowed-origins: http://localhost:8081, http://localhost:9000

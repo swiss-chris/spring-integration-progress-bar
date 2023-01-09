@@ -8,8 +8,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ApplicationIntegrationTest {
 
@@ -26,7 +28,7 @@ class ApplicationIntegrationTest {
 
     @Test
     public void testTest() {
-        driver.get("http://localhost:%d".formatted(port));
+        driver.get("http://localhost:" + port);
         Assertions.assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());
         driver.quit();
     }

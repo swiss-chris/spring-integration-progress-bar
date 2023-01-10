@@ -3,7 +3,7 @@ import SockJS from 'sockjs-client';
 export class WebsocketConnector {
     private readonly url;
     private readonly onMessageReceived;
-    private socket: WebSocket | undefined;
+    private socket?: WebSocket;
 
     constructor(url: string, onMessageReceived: (_: any) => void) {
         this.url = url;

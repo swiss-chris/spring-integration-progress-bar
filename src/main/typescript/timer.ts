@@ -20,7 +20,7 @@ export class OnOffTimer {
     private static readonly ONE_SECOND = 1000;
 
     private readonly callback;
-    private intervalId: NodeJS.Timer | undefined;
+    private intervalId?: NodeJS.Timer;
     private isActive = false;
 
     constructor(callback: () => void) {

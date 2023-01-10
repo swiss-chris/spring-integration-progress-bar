@@ -2,6 +2,7 @@
 **/target/
 /.idea/
 /dist/
+/node/
 
 /src/**/*.js
 **.js.map

@@ -1,7 +1,7 @@
-import {ArrayUtils} from '../util';
-import {Progress} from '../progress';
-import {remainingTimerDeActivator, websocketConnector} from '../main';
-import {localTimeFormatter} from '../progress/time';
+import { ArrayUtils } from '../util';
+import { Progress } from '../progress';
+import { remainingTimerDeActivator, websocketConnector } from '../main';
+import { localTimeFormatter } from '../progress/time';
 
 interface StartFlowParams {
     flowId: string;
@@ -54,15 +54,16 @@ export class Rows {
     private static rowsMap = new Map<string, Row>();
 
     static createRow(flowId: string, start: Date, sources: string, categories: string, percent: number = 0) {
-        this.rowsMap.set(flowId, new Row(RowCreator.createRowFromTemplate(flowId, start.getTime()), start, sources, categories, percent));
-        if (percent > 0) {
-            this.rowsMap.get(flowId)!.updateRemaining(); // on page refresh
-        }
+        const html = RowCreator.createRowFromTemplate(flowId, start.getTime());
+        const row = new Row(html, start, sources, categories, percent);
+        row.initializeRow(sources, categories);
+        row.updateCalculatedTimes(); // on page refresh
+        this.rowsMap.set(flowId, row);
     }
 
     static updateProgress(start: Date, flowId: string, sources: string, categories: string, percent: number) {
         Rows.createNowIfNecessary(start, flowId, sources, categories, percent);
-        Rows.rowsMap.get(flowId)!.updateProgress(start, percent);
+        Rows.rowsMap.get(flowId)!.updatePercent(start, percent);
         remainingTimerDeActivator.update();
     }
 
@@ -71,7 +72,7 @@ export class Rows {
     }
 
     static updateRemaining() {
-        Rows.rows().forEach(row => row.updateRemaining())
+        Rows.rows().forEach(row => row.updateCalculatedTimes())
     }
 
     private static createNowIfNecessary(start: Date, flowId: string, sources: string, categories: string, percent: number) {
@@ -149,32 +150,31 @@ class Row {
 
     constructor(row: HTMLElement, start: Date, sources: string, categories: string, percent: number) {
         this.row = row;
-        this.progress = new Progress(start, new Date(), percent);
-        this.initializeRow(sources, categories);
+        this.progress = new Progress(start, new Date(), percent); // TODO pass progress in from the outside ?
     }
 
     isFlowFinished(): boolean {
         return !!this.progress && this.progress.isFinished();
     }
 
-    private initializeRow(sources: string, categories: string) {
+    initializeRow(sources: string, categories: string) {
         this.sources(sources);
         this.categories(categories);
         this.start();
         this.duration();
     }
 
-    updateProgress(start: Date, percent: number): void {
+    updatePercent(start: Date, percent: number): void {
         this.progress = new Progress(start, new Date(), percent);
         this.progressBar();
         if (this.progress.isFinished()) {
-            this.updateRemaining();
+            this.updateCalculatedTimes();
         }
     }
 
-    updateRemaining(): void {
+    updateCalculatedTimes(): void {
+        this.duration(); // can always update duration !
         if (this.progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
-        this.duration();
         this.remaining();
         this.end();
     }

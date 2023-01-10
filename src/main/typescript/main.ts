@@ -1,7 +1,7 @@
-import {Form, MessageHandler, Rows} from './page'
-import {DarkModeSwitcher} from './dark-mode';
-import {WebsocketConnector} from './websocket-connector';
-import {OnOffTimer, TimerDeActivator} from './timer';
+import { Form, MessageHandler, Rows } from './page'
+import { DarkModeSwitcher } from './dark-mode';
+import { WebsocketConnector } from './websocket-connector';
+import { OnOffTimer, TimerDeActivator } from './timer';
 
 ////// -------- FORM -------- //////
 
@@ -15,13 +15,13 @@ DarkModeSwitcher.initialize();
 ////// -------- WEB SOCKET -------- //////
 
 export const websocketConnector = new WebsocketConnector(
-    'http://localhost:8080/messages',
-    MessageHandler.handleMessage,
+    `http://localhost:${process.env.PORT}/messages`,
+    MessageHandler.handleMessage
 ).connect();
 
 ////// -------- TIMER -------- //////
 
 export const remainingTimerDeActivator = new TimerDeActivator(
     Rows.allFlowsAreFinished,
-    new OnOffTimer(Rows.updateRemaining),
+    new OnOffTimer(Rows.updateRemaining)
 );

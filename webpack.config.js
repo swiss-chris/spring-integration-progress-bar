@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack")
 module.exports = {
     entry: "./src/main/typescript/main.ts",
     output: {
@@ -22,4 +23,9 @@ module.exports = {
     resolve: {
         extensions: [".ts", ".js"],
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            "process.env.PORT": JSON.stringify(process.env.PORT),
+        }),
+    ],
 };

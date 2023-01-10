@@ -24,7 +24,7 @@ export class Form {
     private static startFlow({start, flowId, sources, categories}: StartFlowParams) {
         const queryParams = new URLSearchParams({flowId, start: start.toString(), sources, categories});
         const toString = queryParams.toString();
-        fetch(`http://localhost:8080/flow?${toString}`, {
+        fetch(`http://localhost:${process.env.PORT}/flow?${toString}`, {
             method: 'post',
             mode: 'no-cors'
         });

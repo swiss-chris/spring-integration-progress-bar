@@ -3,14 +3,19 @@ import {Duration} from './duration';
 import {Time} from './time';
 
 export class Progress {
-    private readonly _start: Time;
-    private readonly _now: Time;
-    private readonly _percent: Percent;
+    // TODO swap signatures between constructor and create()
+    private constructor(private _start: Time, private _now: Time, private _percent: Percent) {}
 
-    constructor(start: Date, now: Date, percent: number) {
-        this._start = new Time(start.getTime());
-        this._now = new Time(now.getTime());
-        this._percent = new Percent(percent);
+    static create(start: Date, now: Date, percent: number) {
+        return new Progress(new Time(start.getTime()), new Time(now.getTime()), new Percent(percent))
+    }
+
+    updateTime(now: Date) {
+        return new Progress(this._start, new Time(now.getTime()), this._percent)
+    }
+
+    updatePercent(now: Date, percent: number) {
+        return new Progress(this._start, new Time(now.getTime()), new Percent(percent))
     }
 
     isFinished() {

@@ -26,7 +26,7 @@ export class Form {
         const toString = queryParams.toString();
         fetch(`http://localhost:8080/flow?${toString}`, {
             method: 'post',
-            mode: 'no-cors',
+            mode: 'no-cors'
         });
     }
 
@@ -38,7 +38,7 @@ export class Form {
             start: timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
             sources: sources as string,
-            categories: categories as string,
+            categories: categories as string
         };
     }
 }
@@ -54,8 +54,7 @@ export class Rows {
     private static rowsMap = new Map<string, Row>();
 
     static createRow(flowId: string, start: Date, sources: string, categories: string, percent: number = 0) {
-        const html = RowCreator.createRowFromTemplate(flowId, start.getTime());
-        const row = new Row(html, start, sources, categories, percent);
+        const row = new Row(flowId, start, percent);
         row.initializeRow(sources, categories);
         row.updateCalculatedTimes(); // on page refresh
         this.rowsMap.set(flowId, row);
@@ -63,7 +62,7 @@ export class Rows {
 
     static updateProgress(start: Date, flowId: string, sources: string, categories: string, percent: number) {
         Rows.createNowIfNecessary(start, flowId, sources, categories, percent);
-        Rows.rowsMap.get(flowId)!.updatePercent(start, percent);
+        Rows.rowsMap.get(flowId)!.updatePercent(percent);
         remainingTimerDeActivator.update();
     }
 
@@ -148,9 +147,9 @@ class Row {
     private readonly row: HTMLElement;
     private progress: Progress;
 
-    constructor(row: HTMLElement, start: Date, sources: string, categories: string, percent: number) {
-        this.row = row;
-        this.progress = new Progress(start, new Date(), percent); // TODO pass progress in from the outside ?
+    constructor(flowId: string, start: Date, percent: number) {
+        this.row = RowCreator.createRowFromTemplate(flowId, start.getTime());
+        this.progress = Progress.create(start, new Date(), percent);
     }
 
     isFlowFinished(): boolean {
@@ -164,8 +163,8 @@ class Row {
         this.duration();
     }
 
-    updatePercent(start: Date, percent: number): void {
-        this.progress = new Progress(start, new Date(), percent);
+    updatePercent(percent: number): void {
+        this.progress = this.progress.updatePercent(new Date(), percent);
         this.progressBar();
         if (this.progress.isFinished()) {
             this.updateCalculatedTimes();
@@ -173,6 +172,9 @@ class Row {
     }
 
     updateCalculatedTimes(): void {
+        if (!this.isFlowFinished()) {
+            this.progress = this.progress.updateTime(new Date());
+        }
         this.duration(); // can always update duration !
         if (this.progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
         this.remaining();

@@ -8,13 +8,13 @@ describe('Progress', () => {
     const plus120 = new Date(1672959600000); // 00:00:00
     const percent50 = 50;
     const duration30 = '00:30:00'; // 30 minutes
-    const progress50Percent30Minutes = new Progress(start, plus30, percent50);
+    const progress50Percent30Minutes = Progress.create(start, plus30, percent50);
 
     test('Progress.isFinished()', () => {
-        expect(new Progress(start, plus30, 0).isFinished()).toBeFalsy();
-        expect(new Progress(start, plus30, 50).isFinished()).toBeFalsy();
-        expect(new Progress(start, plus30, 99).isFinished()).toBeFalsy();
-        expect(new Progress(start, plus30, 100).isFinished()).toBeTruthy();
+        expect(Progress.create(start, plus30, 0).isFinished()).toBeFalsy();
+        expect(Progress.create(start, plus30, 50).isFinished()).toBeFalsy();
+        expect(Progress.create(start, plus30, 99).isFinished()).toBeFalsy();
+        expect(Progress.create(start, plus30, 100).isFinished()).toBeTruthy();
     });
 
     test('Progress.percent()', () => {
@@ -35,6 +35,6 @@ describe('Progress', () => {
 
     test('Progress.end()', () => {
         expect(progress50Percent30Minutes.end().date().toTimeString()).toBe(plus60.toTimeString());
-        expect(new Progress(start, plus60, percent50).end().date().toTimeString()).toBe(plus120.toTimeString());
+        expect(Progress.create(start, plus60, percent50).end().date().toTimeString()).toBe(plus120.toTimeString());
     });
 });

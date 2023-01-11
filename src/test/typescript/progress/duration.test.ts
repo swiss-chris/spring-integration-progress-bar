@@ -15,6 +15,8 @@ describe('Duration', () => {
         expect(new Duration(toMillis(0, 0, 59)).toString()).toBe('00:00:59');
         expect(new Duration(toMillis(0, 1, 0)).toString()).toBe('00:01:00');
         expect(new Duration(toMillis(0, 59, 59)).toString()).toBe('00:59:59');
+        expect(new Duration(toMillis(0, 60, 0)).toString()).toBe('01:00:00');
+        expect(new Duration(toMillis(1, 0, 0)).toString()).toBe('01:00:00');
         expect(new Duration(toMillis(60, 0, 0)).toString()).toBe('60:00:00');
         expect(new Duration(toMillis(1234, 59, 59)).toString()).toBe('1234:59:59');
     });

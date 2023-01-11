@@ -1,8 +1,6 @@
 import { Progress } from "../../../main/typescript/progress";
 
 describe('Progress', () => {
-    const plus120 = new Date(1672959600000); // 00:00:00
-
     test('0 percent', () => {
         const start = new Date(1672866000000);
         const percent0 = 0;
@@ -12,6 +10,7 @@ describe('Progress', () => {
         expect(progress0Percent.isFinished()).toBeFalsy();
         expect(progress0Percent.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
         expect(progress0Percent.percent().isZero()).toBeTruthy();
+        expect(progress0Percent.percent().isOneHundred()).toBeFalsy();
         expect(progress0Percent.duration().toString()).toBe(duration0.toString());
         expect(progress0Percent.remaining()).toBeUndefined();
         expect(progress0Percent.end()).toBeUndefined();
@@ -28,8 +27,26 @@ describe('Progress', () => {
         expect(progress50Percent30Minutes.isFinished()).toBeFalsy();
         expect(progress50Percent30Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
         expect(progress50Percent30Minutes.percent().isZero()).toBeFalsy();
+        expect(progress50Percent30Minutes.percent().isOneHundred()).toBeFalsy();
         expect(progress50Percent30Minutes.duration().toString()).toBe(duration30.toString());
         expect(progress50Percent30Minutes.remaining()!.toString()).toBe(duration30.toString());
         expect(progress50Percent30Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
+    });
+
+    test('100 percent 60 minutes', () => {
+        const start = new Date(1672866000000); // 22:00:00
+        const plus60 = new Date(1672869600000); // 23:00:00
+        const percent100 = 100;
+        const progress100Percent60Minutes = Progress.create(start, plus60, percent100);
+        const duration0 = '00:00:00';
+        const duration60 = '01:00:00';
+
+        expect(progress100Percent60Minutes.isFinished()).toBeTruthy();
+        expect(progress100Percent60Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
+        expect(progress100Percent60Minutes.percent().isZero()).toBeFalsy();
+        expect(progress100Percent60Minutes.percent().isOneHundred()).toBeTruthy();
+        expect(progress100Percent60Minutes.duration().toString()).toBe(duration60.toString());
+        expect(progress100Percent60Minutes.remaining()!.toString()).toBe(duration0.toString());
+        expect(progress100Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
     });
 });

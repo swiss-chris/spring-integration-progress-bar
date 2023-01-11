@@ -18,23 +18,12 @@
         <form id="startflow" onsubmit="return formSubmit()">
             <div class="row mt-3">
                 <div class="col-3">
-                    <label for="sources-select" class="form-label">Sources</label>
-                    <select class="form-select form-select-sm" name="sources" id="sources-select">
-                        <option value="all">--ALL--</option>
-                        <option value="A">Source A</option>
-                        <option value="B">Source B</option>
-                        <option value="C">Source C</option>
-                        <option value="D">Source D</option>
-                    </select>
-                </div>
-                <div class="col-3">
-                    <label for="categories-select" class="form-label">Categories</label>
-                    <select class="form-select form-select-sm" name="categories" id="categories-select">
-                        <option value="all">--ALL--</option>
-                        <option value="A">Category A</option>
-                        <option value="B">Category B</option>
-                        <option value="C">Category C</option>
-                        <option value="D">Category D</option>
+                    <label for="percent-select" class="form-label">Percent completed per Second</label>
+                    <select class="form-select form-select-sm" name="percentPerSecond" id="percent-select">
+                        <option value="0.1">0.1%</option>
+                        <option value="1">1%</option>
+                        <option selected value="10">10%</option>
+                        <option value="100">100%</option>
                     </select>
                 </div>
             </div>
@@ -49,10 +38,7 @@
                 <div class="label">Progress</div>
             </div>
             <div class="col-1">
-                <div class="label">Sources</div>
-            </div>
-            <div class="col-1">
-                <div class="label">Categories</div>
+                <div class="label">Percent per Second</div>
             </div>
             <div class="col-1">
                 <div class="label">Start</div>
@@ -75,8 +61,7 @@
                     <div class="progress-bar bg-primary" role="progressbar"></div>
                 </div>
             </div>
-            <div class="col-1 sources"></div>
-            <div class="col-1 categories"></div>
+            <div class="col-1 percent-per-second"></div>
             <div class="col-1 start"></div>
             <div class="col-1 duration"></div>
             <div class="col-1 remaining"></div>

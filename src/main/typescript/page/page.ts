@@ -6,8 +6,7 @@ import { localTimeFormatter } from '../progress/time';
 interface StartFlowParams {
     flowId: string;
     start: number;
-    sources: string;
-    categories: string;
+    percentPerSecond: number;
 }
 
 ////// -------- ON FORM SUBMIT -------- //////
@@ -15,14 +14,14 @@ interface StartFlowParams {
 export class Form {
     static submit() {
         websocketConnector.reconnect();
-        const {flowId, start, sources, categories}: StartFlowParams = this.getParams();
-        Rows.createRow(flowId, new Date(start), sources, categories);
-        this.startFlow({flowId, start, sources, categories});
+        const {flowId, start, percentPerSecond}: StartFlowParams = this.getParams();
+        Rows.createRow(flowId, new Date(start), percentPerSecond);
+        this.startFlow({flowId, start, percentPerSecond});
         return false; // prevent regular form submit & page refresh
     }
 
-    private static startFlow({start, flowId, sources, categories}: StartFlowParams) {
-        const queryParams = new URLSearchParams({flowId, start: start.toString(), sources, categories});
+    private static startFlow({start, flowId, percentPerSecond}: StartFlowParams) {
+        const queryParams = new URLSearchParams({flowId, start: start.toString(), percentPerSecond: percentPerSecond.toString()});
         const toString = queryParams.toString();
         fetch(`http://localhost:${process.env.JAVA_PORT}/flow?${toString}`, {
             method: 'post',
@@ -32,36 +31,35 @@ export class Form {
 
     private static getParams() {
         // @ts-ignore
-        const {sources, categories} = Object.fromEntries(new FormData(document.getElementById("startflow")));
+        const {percentPerSecond} = Object.fromEntries(new FormData(document.getElementById("startflow")));
         const timestamp = Date.now();
         return {
             start: timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
-            sources: sources as string,
-            categories: categories as string
+            percentPerSecond: parseFloat(percentPerSecond as string)
         };
     }
 }
 
 export class MessageHandler {
     static handleMessage({data}: { data: string }) {
-        const {start: start, flowId, sources, categories, percent} = JSON.parse(data);
-        Rows.updateProgress(new Date(parseInt(start)), flowId, sources, categories, percent);
+        const {start: start, flowId, percentPerSecond, percent} = JSON.parse(data);
+        Rows.updateProgress(new Date(parseInt(start)), flowId, percentPerSecond, percent);
     }
 }
 
 export class Rows {
     private static rowsMap = new Map<string, Row>();
 
-    static createRow(flowId: string, start: Date, sources: string, categories: string, percent: number = 0) {
+    static createRow(flowId: string, start: Date, percentPerSecond: number, percent: number = 0) {
         const row = new Row(flowId, start, percent);
-        row.initializeRow(sources, categories);
+        row.initializeRow(percentPerSecond);
         row.updateCalculatedTimes(); // on page refresh
         this.rowsMap.set(flowId, row);
     }
 
-    static updateProgress(start: Date, flowId: string, sources: string, categories: string, percent: number) {
-        Rows.createNowIfNecessary(start, flowId, sources, categories, percent);
+    static updateProgress(start: Date, flowId: string, percentPerSecond: number, percent: number) {
+        Rows.createNowIfNecessary(start, flowId, percentPerSecond, percent);
         Rows.rowsMap.get(flowId)!.updatePercent(percent);
         remainingTimerDeActivator.update();
     }
@@ -74,10 +72,10 @@ export class Rows {
         Rows.rows().forEach(row => row.updateCalculatedTimes())
     }
 
-    private static createNowIfNecessary(start: Date, flowId: string, sources: string, categories: string, percent: number) {
+    private static createNowIfNecessary(start: Date, flowId: string, percentPerSecond: number, percent: number) {
         // e.g. if we refresh the page during a running flow
         if (!Rows.rowsMap.has(flowId)) {
-            this.createRow(flowId, start, sources, categories, percent);
+            this.createRow(flowId, start, percentPerSecond, percent);
         }
     }
 
@@ -156,9 +154,8 @@ class Row {
         return !!this.progress && this.progress.isFinished();
     }
 
-    initializeRow(sources: string, categories: string) {
-        this.sources(sources);
-        this.categories(categories);
+    initializeRow(percentPerSecond: number) {
+        this.percentPerSecond(percentPerSecond);
         this.start();
         this.duration();
     }
@@ -181,12 +178,8 @@ class Row {
         this.end();
     }
 
-    private sources(sources: string): void {
-        this.row.querySelector<HTMLElement>('.sources')!.innerText = sources;
-    }
-
-    private categories(categories: string): void {
-        this.row.querySelector<HTMLElement>('.categories')!.innerText = categories;
+    private percentPerSecond(percentPerSecond: number): void {
+        this.row.querySelector<HTMLElement>('.percent-per-second')!.innerText = `${percentPerSecond}%`;
     }
 
     private start(): void {

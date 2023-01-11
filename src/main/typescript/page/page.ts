@@ -205,7 +205,7 @@ class Row {
         } else {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end().format(localTimeFormatter);
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(localTimeFormatter);
     }
 }
 

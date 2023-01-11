@@ -5,12 +5,14 @@ Recovers from page-refreshes on currently running flows.
 
 ![progress-bar.gif](progress-bar.gif)
 
+In any case:
+- run `npm run build` to bundle the typescript code into `bundle.js`. This is necessary both for the quick setup as well as for manually runnign the `SpringBootTest`.
+
 To get up and running quickly:
-- run `npm run build` to bundle the typescript code into `bundle.js`.
 - run the Spring Boot `Application` in your favorite IDE.
 - open the browser at http://localhost:8080
 
-To be able to run SpringBootTests with maven on a separate port from the locally running Spring Boot Application, or to use live-reloading through webpack:
+To be able to run SpringBootTests (manually, or through Maven) on a separate port from the locally running Spring Boot Application, or to use live-reloading through webpack:
 - run the Spring Boot `Application` in your favorite IDE, but set the Spring Profile to 'localhost'.
 - run the `webpack-dev-server` with `npm run dev`
 - open the browser at http://localhost:9000

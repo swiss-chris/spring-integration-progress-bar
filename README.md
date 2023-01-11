@@ -1,25 +1,38 @@
 # spring-integration-progress-bar
 A progress bar that can be controlled from a Spring Integration (Java DSL) Flow.  
 The progress is communicated via WebSocket.  
-Recovers from page-refreshes on currently running flows.
+Recovers from page-refreshes on currently running flows and also runs in parallel in multiple tabs
 
 ![progress-bar.gif](progress-bar.gif)
 
-In any case:
-- run `npm run build` to bundle the typescript code into `bundle.js`. This is necessary both for the quick setup as well as for manually runnign the `SpringBootTest`.
+# Getting started
 
-To get up and running quickly:
+## Installing node and npm
+You have 2 options:
+- Install Node locally on your machine
+- Run `mvn package` and it will install a copy of node into the root directory of this project
+
+## To get up and running quickly
+- run `npm run build` to bundle the typescript code into `bundle.js`.
 - run the Spring Boot `Application` in your favorite IDE.
 - open the browser at http://localhost:8080
 
-To be able to run SpringBootTests (manually, or through Maven) on a separate port from the locally running Spring Boot Application, or to use live-reloading through webpack:
+## To develop using live-reloading through webpack
 - run the Spring Boot `Application` in your favorite IDE, but set the Spring Profile to 'localhost'.
 - run the `webpack-dev-server` with `npm run dev`
 - open the browser at http://localhost:9000
 
-You can also open the web app in two different tabs at the same time. The same progress will be displayed in both.
+## To run the SpringBootTest manually
+- run `npm run build` to bundle the typescript code into `bundle.js`.
+- run the `ApplicationIntegrationTest`.
 
-Running `mvn clean package` will run the typescript unit tests, bundle the typescript code into `bundle.js`, and run a Spring Boot Integration Test for the full application (using port `8080`).
+## mvn package
+Running `mvn package` will:
+- install node and npm
+- run `npm install`
+- run `npm run build` which uses webpack to create `bundle.js` in the `resources` directory
+- run `npm run test` to run the typescript unit tests
+- run a Spring Boot Integration Test for the full application.
 
 Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example

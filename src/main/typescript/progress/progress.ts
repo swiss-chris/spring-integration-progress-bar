@@ -40,8 +40,9 @@ export class Progress {
             : this.elapsed().times(this._percent.remaining().divideBy(this._percent));
     }
 
-    end(): Time {
-        return this._now.plus(this.remaining()!);
+    end(): Time | undefined {
+        const remaining = this.remaining();
+        return remaining ? this._now.plus(remaining) : undefined;
     }
 
     private elapsed(): Duration {

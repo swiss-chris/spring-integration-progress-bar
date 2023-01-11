@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.http.dsl.Http;
@@ -50,8 +51,16 @@ public class Application implements ApplicationContextAware {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        final String port = applicationContext.getEnvironment().getProperty("server.port");
-        log.info("Open: http://localhost:{}", port);
+        logServerInfos();
+    }
+
+    private static void logServerInfos() {
+        final Environment environment = applicationContext.getEnvironment();
+        if (List.of(environment.getActiveProfiles()).contains("localhost")) {
+            log.info("Run: `npm run dev` to start the webserver on a separate port.");
+        } else {
+            log.info("Open: http://localhost:{}", environment.getProperty("server.port", Integer.class));
+        }
     }
 
     @Bean
@@ -86,7 +95,8 @@ public class Application implements ApplicationContextAware {
 
     @Bean
     IntegrationFlow webSocketFlow() {
-        final String logCat = getLogCat(new Object() {});
+        final String logCat = getLogCat(new Object() {
+        });
         return flow -> flow
                 .log(DEBUG, logCat, m -> "Received: " + m.getPayload())
                 .split(Message.class, m -> serverWebSocketContainer()

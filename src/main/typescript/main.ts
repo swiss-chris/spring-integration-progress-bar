@@ -15,7 +15,7 @@ DarkModeSwitcher.initialize();
 ////// -------- WEB SOCKET -------- //////
 
 export const websocketConnector = new WebsocketConnector(
-    `http://localhost:${process.env.PORT}/messages`,
+    `http://localhost:${process.env.JAVA_PORT}/messages`,
     MessageHandler.handleMessage
 ).connect();
 

@@ -2,9 +2,12 @@ package ch.dickinson.springintegration.progressbar;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,7 +31,7 @@ import static org.springframework.messaging.simp.SimpMessageHeaderAccessor.SESSI
 @Slf4j
 @Configuration
 @SpringBootApplication
-public class Application {
+public class Application implements ApplicationContextAware {
 
     private static final String HTTP_PATH = "/flow";
 
@@ -40,12 +43,15 @@ public class Application {
     private static final String HTTP_PARAM_SOURCES = "sources";
     private static final String HTTP_PARAM_CATEGORIES = "categories";
 
+    private static ApplicationContext applicationContext;
+
     @Value("${websocket.additional-allowed-origins}")
     private String[] additionalAllowedOrigins;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        log.info("Open: http://localhost:8080");
+        final String port = applicationContext.getEnvironment().getProperty("server.port");
+        log.info("Open: http://localhost:{}", port);
     }
 
     @Bean
@@ -111,5 +117,10 @@ public class Application {
 
     private static String getLogCat(Object anonymousInstance) {
         return anonymousInstance.getClass().getName() + anonymousInstance.getClass().getEnclosingMethod().getName();
+    }
+
+    @Override
+    public void setApplicationContext(@SuppressWarnings("NullableProblems") ApplicationContext applicationContext) throws BeansException {
+        Application.applicationContext = applicationContext;
     }
 }

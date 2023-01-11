@@ -4,8 +4,9 @@
   "scripts": {
     "test": "jest",
     "watch": "jest --watch",
-    "dev": "webpack-dev-server --mode development",
-    "build": "PORT=8080 webpack --mode production"
+    "build": "JAVA_PORT=8080 webpack --mode production",
+    "build:dev": "JAVA_PORT=8081 webpack --mode production",
+    "dev": "JAVA_PORT=8081 webpack-dev-server --mode development"
   },
   "devDependencies": {
     "@types/jest": "^29.2.5",

@@ -86,7 +86,7 @@ public class Application implements ApplicationContextAware {
 
     @SneakyThrows
     private static <T> Message<T> doSomeImportantWork(Message<T> m) {
-        final Float percentPerSecond = requireNonNull(m.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND, Float.class));
+        final float percentPerSecond = requireNonNull(m.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND, Float.class));
         Thread.sleep((int) (ONE_SECOND / percentPerSecond));
         return m;
     }

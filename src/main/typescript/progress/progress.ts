@@ -3,19 +3,18 @@ import {Duration} from './duration';
 import {Time} from './time';
 
 export class Progress {
-    // TODO swap signatures between constructor and create()
-    private constructor(private _start: Time, private _now: Time, private _percent: Percent) {}
+    private constructor(private _start: Time, private _now: Time, private _percent: Percent, private _lastUpdate: Time) {}
 
     static create(start: Date, now: Date, percent: number) {
-        return new Progress(new Time(start.getTime()), new Time(now.getTime()), new Percent(percent))
+        return new Progress(new Time(start.getTime()), new Time(now.getTime()), new Percent(percent), new Time(now.getTime()))
     }
 
     updateTime(now: Date) {
-        return new Progress(this._start, new Time(now.getTime()), this._percent)
+        return new Progress(this._start, new Time(now.getTime()), this._percent, this._lastUpdate)
     }
 
     updatePercent(now: Date, percent: number) {
-        return new Progress(this._start, new Time(now.getTime()), new Percent(percent))
+        return new Progress(this._start, new Time(now.getTime()), new Percent(percent), new Time(now.getTime()))
     }
 
     isFinished() {
@@ -43,6 +42,10 @@ export class Progress {
     end(): Time | undefined {
         const remaining = this.remaining();
         return remaining ? this._now.plus(remaining) : undefined;
+    }
+
+    lastUpdate(): Time {
+        return this._lastUpdate;
     }
 
     private elapsed(): Duration {

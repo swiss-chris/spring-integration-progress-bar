@@ -36,9 +36,9 @@ class ProgressBarIT {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments(
-//                "--no-sandbox",
-//                "--disable-dev-shm-usage",
-//                "--headless"
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--headless"
         );
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
@@ -50,6 +50,10 @@ class ProgressBarIT {
 
         driver.get("http://localhost:" + port);
         assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());
+
+//        Select select = new Select(WebElement webelement);
+
+//        driver.findElement(By.className(""))
 
         driver.findElement(By.xpath("//button[text() = 'Start Flow']")).click();
 

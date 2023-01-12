@@ -32,15 +32,21 @@ class ProgressBarIT {
     @Value(("${server.port}"))
     private Integer port;
 
+    @Value("${spring.profiles.active:Unknown}")
+    private String activeProfile;
+
     @BeforeEach
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments(
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--headless"
-        );
+        // set `spring.profiles.active` to `browser` to show the browser during the test
+        if (!"browser".equals(activeProfile)) {
+            options.addArguments(
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--headless"
+            );
+        }
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
@@ -52,7 +58,8 @@ class ProgressBarIT {
         driver.get("http://localhost:" + port);
         assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());
 
-        Select select = new Select(driver.findElement(By.className("form-select")));select.selectByValue("10");
+        Select select = new Select(driver.findElement(By.className("form-select")));
+        select.selectByValue("10");
 
         driver.findElement(By.xpath("//button[text() = 'Start Flow']")).click();
 

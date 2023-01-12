@@ -31,7 +31,7 @@ jobs:
       uses: browser-actions/setup-chrome@latest
     - run: chrome --version
     - name: Build with Maven
-      run: mvn -B package
+      run: mvn -B package -Dheadless=true
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph

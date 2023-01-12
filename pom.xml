@@ -14,6 +14,13 @@
         <version>3.0.0</version>
     </parent>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>ch.dickinson.springintegration.progressbar.Application</start-class>
+        <java.version>17</java.version>
+        <headless>false</headless>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,12 +67,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>ch.dickinson.springintegration.progressbar.Application</start-class>
-        <java.version>17</java.version>
-    </properties>
 
     <build>
         <plugins>
@@ -123,6 +124,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <argLine>-Dheadless=${headless}</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*IT.java</include>

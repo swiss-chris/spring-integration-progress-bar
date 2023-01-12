@@ -32,15 +32,18 @@ class ProgressBarIT {
     @Value(("${server.port}"))
     private Integer port;
 
-    @Value("${spring.profiles.active:Unknown}")
-    private String activeProfile;
+    @Value("${headless}")
+    private Boolean headless;
 
     @BeforeEach
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        // set `spring.profiles.active` to `browser` to show the browser during the test
-        if (!"browser".equals(activeProfile)) {
+
+        System.out.println("headless: " + headless);
+
+        if (headless) {
+            // run headless on CI environment
             options.addArguments(
                     "--no-sandbox",
                     "--disable-dev-shm-usage",

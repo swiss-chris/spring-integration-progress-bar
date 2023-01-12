@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,9 +52,7 @@ class ProgressBarIT {
         driver.get("http://localhost:" + port);
         assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());
 
-//        Select select = new Select(WebElement webelement);
-
-//        driver.findElement(By.className(""))
+        Select select = new Select(driver.findElement(By.className("form-select")));select.selectByValue("10");
 
         driver.findElement(By.xpath("//button[text() = 'Start Flow']")).click();
 

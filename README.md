@@ -22,9 +22,9 @@ You have 2 options:
 - run the `webpack-dev-server` with `npm run dev`
 - open the browser at http://localhost:9000
 
-## To run the SpringBootTest manually
+## To run the Selenium SpringBootTest manually
 - run `npm run build` to bundle the typescript code into `bundle.js`.
-- run the `ApplicationIntegrationTest`.
+- run the `ProgressBarIT`.
 
 ## mvn package
 Running `mvn package` will:

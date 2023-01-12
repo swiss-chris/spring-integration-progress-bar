@@ -7,8 +7,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.Duration;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -19,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ProgressBarIT {
 
     public static final String TIME_PATTERN = "\\d{2}:\\d{2}:\\d{2}"; // e.g. 23:59:59
+    public static final String DURATION_PATTERN = "00:00:\\d{2}"; // e.g. 00:00:09
+
     private WebDriver driver;
 
     @Value(("${server.port}"))
@@ -29,15 +36,18 @@ class ProgressBarIT {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments(
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--headless"
+//                "--no-sandbox",
+//                "--disable-dev-shm-usage",
+//                "--headless"
         );
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
     }
 
     @Test
     public void testTest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+
         driver.get("http://localhost:" + port);
         assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());
 
@@ -50,7 +60,15 @@ class ProgressBarIT {
         assertThat(sources, is("10%"));
 
         final String duration = driver.findElement(By.className("duration")).getText();
-        assertThat(duration, matchesPattern(TIME_PATTERN));
+        assertThat(duration, matchesPattern(DURATION_PATTERN));
+
+        wait.until(ExpectedConditions.textMatches(By.className("remaining"), Pattern.compile(DURATION_PATTERN)));
+
+        final String remaining = driver.findElement(By.className("remaining")).getText();
+        assertThat(remaining, matchesPattern(DURATION_PATTERN));
+
+        final String end = driver.findElement(By.className("end")).getText();
+        assertThat(end, matchesPattern(TIME_PATTERN));
 
         driver.quit();
     }

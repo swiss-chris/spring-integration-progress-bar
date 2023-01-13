@@ -1,5 +1,5 @@
-import {Duration} from "../../../main/typescript/page/progress/duration";
-import {Time} from "../../../main/typescript/page/progress/time";
+import {Duration} from "../../../main/typescript/page/rows/progress/duration";
+import {Time} from "../../../main/typescript/page/rows/progress/time";
 
 describe('Time', () => {
     const startMillis = 1672866000000; // 21:00:00 UTC

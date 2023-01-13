@@ -127,7 +127,8 @@ class Row {
         if (!this.isFlowFinished()) {
             this.progress = this.progress.updateTime(new Date());
         }
-        this.duration(); // can always update duration !
+        this.duration(); // can always show duration
+        this.lastUpdate(); // can always show last update
         if (this.progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
         this.remaining();
         this.end();
@@ -161,6 +162,10 @@ class Row {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
         this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(localTimeFormatter);
+    }
+
+    private lastUpdate(): void {
+        this.row.querySelector<HTMLElement>('.last-update')!.innerText = this.progress.lastUpdate().format(localTimeFormatter);
     }
 }
 

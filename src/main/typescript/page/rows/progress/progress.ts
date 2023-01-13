@@ -44,8 +44,9 @@ export class Progress {
         return remaining ? this._now.plus(remaining) : undefined;
     }
 
-    lastUpdate(): Time {
-        return this._lastUpdate;
+    // TODO unit test
+    timeSinceLastUpdate(): Duration {
+        return this._lastUpdate.differenceTo(this._now);
     }
 
     private elapsed(): Duration {

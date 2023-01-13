@@ -8,6 +8,11 @@ export class Duration implements Formattable<number>{
         this.millis = millis;
     }
 
+    // TODO unit test
+    isLessThan(other: Duration): boolean {
+        return this.millis < other.millis;
+    }
+
     times(factor: number) {
         return new Duration(this.millis * factor);
     }

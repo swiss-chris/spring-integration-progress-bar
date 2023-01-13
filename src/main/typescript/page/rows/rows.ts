@@ -2,6 +2,7 @@ import { localTimeFormatter } from './progress/time';
 import { remainingTimerDeActivator } from '../../main';
 import { ArrayUtils } from '../util';
 import { Progress } from './progress';
+import { Duration } from './progress/duration';
 
 export class Rows {
     private static rowsMap = new Map<string, Row>();
@@ -97,6 +98,7 @@ class RowCreator {
 }
 
 class Row {
+    private static readonly ONE_SECOND = new Duration(1000); // TODO move to constants.ts ?
     private readonly row: HTMLElement;
     private progress: Progress;
 
@@ -128,7 +130,7 @@ class Row {
             this.progress = this.progress.updateTime(new Date());
         }
         this.duration(); // can always show duration
-        this.lastUpdate(); // can always show last update
+        this.timeSinceLastUpdate(); // can always show time since last update
         if (this.progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
         this.remaining();
         this.end();
@@ -164,8 +166,10 @@ class Row {
         this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(localTimeFormatter);
     }
 
-    private lastUpdate(): void {
-        this.row.querySelector<HTMLElement>('.last-update')!.innerText = this.progress.lastUpdate().format(localTimeFormatter);
+    private timeSinceLastUpdate(): void {
+        const timeSinceLastUpdate = this.progress.timeSinceLastUpdate();
+        this.row.querySelector<HTMLElement>('.time-since-last-update')!.innerText =
+            timeSinceLastUpdate.isLessThan(Row.ONE_SECOND) ? '' : timeSinceLastUpdate.toString();
     }
 }
 

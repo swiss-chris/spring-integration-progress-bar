@@ -1,6 +1,7 @@
 package ch.dickinson.springintegration.progressbar;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.hamcrest.text.IsEmptyString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -75,10 +76,10 @@ class ProgressBarIT {
         final String duration = driver.findElement(By.className("duration")).getText();
         assertThat(duration, matchesPattern(DURATION_PATTERN));
 
-        wait.until(ExpectedConditions.textMatches(By.className("remaining"), Pattern.compile(DURATION_PATTERN)));
+        final String timeSinceLastUpdate = driver.findElement(By.className("time-since-last-update")).getText();
+        assertThat(timeSinceLastUpdate, IsEmptyString.emptyOrNullString());
 
-        final String remaining = driver.findElement(By.className("remaining")).getText();
-        assertThat(remaining, matchesPattern(DURATION_PATTERN));
+        wait.until(ExpectedConditions.textMatches(By.className("remaining"), Pattern.compile(DURATION_PATTERN)));
 
         final String end = driver.findElement(By.className("end")).getText();
         assertThat(end, matchesPattern(TIME_PATTERN));

@@ -1,4 +1,4 @@
-import {ArrayUtils} from '../../../main/typescript/util';
+import {ArrayUtils} from '../../../main/typescript/page/util';
 
 describe('ArrayUtils', () => {
     test('ArrayUtils.getInsertionIndex()', () => {

@@ -1,4 +1,4 @@
-import { Progress } from "../../../main/typescript/progress";
+import { Progress } from "../../../main/typescript/page/progress";
 
 describe('Progress', () => {
     test('0 percent', () => {

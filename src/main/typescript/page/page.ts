@@ -1,7 +1,7 @@
-import { ArrayUtils } from '../util';
-import { Progress } from '../progress';
+import { ArrayUtils } from './util';
+import { Progress } from './progress';
 import { remainingTimerDeActivator, websocketConnector } from '../main';
-import { localTimeFormatter } from '../progress/time';
+import { localTimeFormatter } from './progress/time';
 
 interface StartFlowParams {
     flowId: string;

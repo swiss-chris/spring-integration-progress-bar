@@ -47,14 +47,7 @@ export class Rows {
     }
 
     private static sort() {
-        const parent = RowCreator.getParent();
-        const children = RowCreator.getChildren(parent);
-        children.forEach(child => {
-            const percent = parseInt((child.dataset.percent)!);
-            const newIndex = RowCreator.getNewIndex(children, percent);
-            const nextSibling = RowCreator.getNextSibling(children, newIndex);
-            RowCreator.insertBeforeNextSibling(nextSibling, parent, child);
-        })
+        RowCreator.getRows().forEach(row => RowCreator.appendInOrder(row, parseInt(row.dataset.percent!)));
     }
 }
 
@@ -70,20 +63,24 @@ class RowCreator {
         return this.queryBy(flowId);
     }
 
-    private static appendInOrder(row: HTMLElement, percent: number) {
-        const parent = this.getParent();
+    public static appendInOrder(row: HTMLElement, percent: number) {
+        const parent = this.getRowsContainer();
         const children = this.getChildren(parent);
         const newIndex = this.getNewIndex(children, percent);
         const nextSibling = this.getNextSibling(children, newIndex);
         this.insertBeforeNextSibling(nextSibling, parent, row);
     }
 
-    public static getParent(): HTMLElement {
+    public static getRowsContainer(): HTMLElement {
         return document.getElementById('root')!;
     }
 
     public static getChildren(parent: HTMLElement): HTMLElement[] {
         return [...parent.querySelectorAll('.flow-progress')] as HTMLElement[];
+    }
+
+    public static getRows(): HTMLElement[] {
+        return [...this.getRowsContainer().querySelectorAll('.flow-progress')] as HTMLElement[];
     }
 
     public static getNewIndex(children: HTMLElement[], percent: number) {

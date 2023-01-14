@@ -98,7 +98,7 @@ class RowCreator {
 }
 
 class Row {
-    private static readonly ONE_SECOND = new Duration(1000); // TODO move to constants.ts ?
+    private static readonly ONE_SECOND = new Duration(1000);
     private readonly row: HTMLElement;
     private progress: Progress;
 

@@ -40,8 +40,7 @@ export class Progress {
     }
 
     end(): Time | undefined {
-        const remaining = this.remainingSinceLastUpdate();
-        return remaining ? this._lastUpdate.plus(remaining) : undefined;
+        return this.remainingSinceLastUpdate()?.addTo(this._lastUpdate);
     }
 
     private remainingSinceLastUpdate(): Duration | undefined {

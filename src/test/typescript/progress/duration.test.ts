@@ -1,4 +1,4 @@
-import {Duration} from '../../../main/typescript/rows/progress/lib';
+import { Duration, Time } from '../../../main/typescript/rows/progress/lib';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {
@@ -27,7 +27,12 @@ describe('Duration', () => {
         expect(new Duration(0).times(100).isLessThan(new Duration(1))).toBeTruthy();
         expect(new Duration(1).times(1000).toString()).toBe('00:00:01');
         expect(new Duration(1000).times(5).toString()).toBe('00:00:05');
+    });
 
+    test('addTo()', () => {
+        const time = new Time(1672866000000); // 21:00:00 UTC
+        const duration = Duration.ofSeconds(60);
+        expect(duration.addTo(time).date().toLocaleTimeString()).toBe(time.plus(duration).date().toLocaleTimeString());
     });
 
     test('toString()', () => {

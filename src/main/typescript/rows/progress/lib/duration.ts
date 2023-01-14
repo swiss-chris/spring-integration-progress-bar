@@ -1,3 +1,5 @@
+import { Time } from './time';
+
 export class Duration implements Formattable<number>{
     private static readonly ONE_SECOND = 1000;
     private readonly millis: number;
@@ -23,6 +25,10 @@ export class Duration implements Formattable<number>{
 
     times(factor: number) {
         return new Duration(this.millis * factor);
+    }
+
+    addTo(time: Time) {
+        return time.plus(this);
     }
 
     toString() {

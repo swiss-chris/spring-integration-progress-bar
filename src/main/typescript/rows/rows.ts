@@ -64,19 +64,15 @@ class RowCreator {
     }
 
     public static appendInOrder(row: HTMLElement, percent: number) {
-        const parent = this.getRowsContainer();
-        const children = this.getChildren(parent);
-        const newIndex = this.getNewIndex(children, percent);
-        const nextSibling = this.getNextSibling(children, newIndex);
-        this.insertBeforeNextSibling(nextSibling, parent, row);
+        const rows = this.getRows();
+        const newIndex = this.getNewIndex(rows, percent);
+        const nextSibling = this.getNextSibling(rows, newIndex);
+        const rowsContainer = this.getRowsContainer();
+        this.insertBeforeNextSibling(nextSibling, rowsContainer, row);
     }
 
     public static getRowsContainer(): HTMLElement {
         return document.getElementById('root')!;
-    }
-
-    public static getChildren(parent: HTMLElement): HTMLElement[] {
-        return [...parent.querySelectorAll('.flow-progress')] as HTMLElement[];
     }
 
     public static getRows(): HTMLElement[] {

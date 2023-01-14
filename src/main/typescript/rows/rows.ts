@@ -136,7 +136,9 @@ class Row {
     }
 
     initializeRow(percentPerSecond: number) {
+        this.progressBar();
         this.percentPerSecond(percentPerSecond);
+        this.percent();
         this.start();
         this.duration();
     }
@@ -145,6 +147,7 @@ class Row {
         this.progress = this.progress.updatePercent(new Date(), percent);
         this.row.dataset.percent = `${percent}`;
         this.progressBar();
+        this.percent();
         if (this.progress.isFinished()) {
             this.updateEntireRow();
         }
@@ -162,17 +165,21 @@ class Row {
         this.end();
     }
 
+    private progressBar(): void {
+        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().format(Formatter.percent);
+        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().format(Formatter.percent);
+    }
+
     private percentPerSecond(percentPerSecond: number): void {
         this.row.querySelector<HTMLElement>('.percent-per-second')!.innerText = `${percentPerSecond}%`;
     }
 
-    private start(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(Time.localTimeFormatter);
+    private percent(): void {
+        this.row.querySelector<HTMLElement>('.percent')!.innerText = this.progress.percent().format(Formatter.percent);
     }
 
-    private progressBar(): void {
-        this.row.querySelector<HTMLElement>('.progress-bar')!.style.width = this.progress.percent().format(Formatter.percent);
-        this.row.querySelector<HTMLElement>('.progress-bar')!.innerText = this.progress.percent().format(Formatter.percent);
+    private start(): void {
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(Time.localTimeFormatter);
     }
 
     private duration(): void {

@@ -1,4 +1,4 @@
-import {Duration} from './duration';
+import { Duration } from './duration';
 
 export class Time implements Formattable<Date> {
     private readonly millis: number;
@@ -9,6 +9,16 @@ export class Time implements Formattable<Date> {
 
     static now() {
         return new Time(Date.now());
+    }
+
+    public static localTimeFormatter = (date: Date) => {
+        return new Intl.DateTimeFormat('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // local timezone
+            hour12: false
+        }).format(date);
     }
 
     plus(duration: Duration) {
@@ -27,16 +37,3 @@ export class Time implements Formattable<Date> {
         return callback(new Date(this.millis));
     }
 }
-
-export const localTimeFormatter =
-    (date: Date) => {
-        // get the local timezone
-        const {timeZone} = Intl.DateTimeFormat().resolvedOptions();
-        return new Intl.DateTimeFormat('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: timeZone,
-            hour12: false,
-        }).format(date);
-    }

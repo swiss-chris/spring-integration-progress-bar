@@ -1,4 +1,4 @@
-import { localTimeFormatter, Duration } from './progress/lib';
+import { Time, Duration } from './progress/lib';
 import { remainingTimerDeActivator } from '../main';
 import { ArrayUtils } from './util';
 import { Progress } from './progress';
@@ -147,7 +147,7 @@ class Row {
     }
 
     private start(): void {
-        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(localTimeFormatter);
+        this.row.querySelector<HTMLElement>('.start')!.innerText = this.progress.start().format(Time.localTimeFormatter);
     }
 
     private progressBar(): void {
@@ -169,7 +169,7 @@ class Row {
         } else {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
-        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(localTimeFormatter);
+        this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(Time.localTimeFormatter);
     }
 
     private timeSinceLastUpdate(): void {

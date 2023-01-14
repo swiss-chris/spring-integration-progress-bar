@@ -24,7 +24,7 @@ You have 2 options:
 
 ## To run the Selenium SpringBootTest manually
 - run `npm run build` to bundle the typescript code into `bundle.js`.
-  - repeat this step you change the typescript code. Instead, you can also just run the whole `mvn test` goal (see below). 
+  - repeat this step you change the typescript code. Instead, you can also just run the whole `mvn test` phase (see below). 
 - run the `ProgressBarIT`.
 
 ## mvn package

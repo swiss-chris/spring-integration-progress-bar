@@ -6,10 +6,20 @@ describe('Duration', () => {
         expect(() => new Duration(0)).not.toThrowError();
     });
 
+    test('ofSeconds()', () => {
+        expect(Duration.ofSeconds(0).toString()).toBe('00:00:00');
+        expect(Duration.ofSeconds(1).toString()).toBe('00:00:01');
+        expect(Duration.ofSeconds(60).toString()).toBe('00:01:00');
+    });
+
     test('isLessThan()', () => {
         expect(new Duration(0).isLessThan(new Duration(1))).toBeTruthy();
         expect(new Duration(1).isLessThan(new Duration(0))).toBeFalsy();
+    });
 
+    test('isGreaterThan()', () => {
+        expect(new Duration(0).isGreaterThan(new Duration(1))).toBeFalsy();
+        expect(new Duration(1).isGreaterThan(new Duration(0))).toBeTruthy();
     });
 
     test('times()', () => {

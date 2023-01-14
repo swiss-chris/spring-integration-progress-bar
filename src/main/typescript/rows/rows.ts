@@ -162,6 +162,7 @@ class Row {
         const timeSinceLastUpdate = this.progress.timeSinceLastUpdate();
         this.row.querySelector<HTMLElement>('.time-since-last-update')!.innerText =
             timeSinceLastUpdate.isLessThan(Duration.ofSeconds(1)) ? '' : timeSinceLastUpdate.toString();
+        this.row.querySelector<HTMLElement>('.time-since-last-update')!.style.color = this.getLateColor(timeSinceLastUpdate)
     }
 
     private remaining(): void {
@@ -175,6 +176,22 @@ class Row {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
         this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(Time.localTimeFormatter);
+    }
+
+    private isLate(timeSinceLastUpdate: Duration): boolean {
+        return timeSinceLastUpdate.isGreaterThan(Duration.ofSeconds(10));
+    }
+
+    private isVeryLate(timeSinceLastUpdate: Duration): boolean {
+        return timeSinceLastUpdate.isGreaterThan(Duration.ofSeconds(60));
+    }
+
+    private getLateColor(timeSinceLastUpdate: Duration) {
+        return this.isVeryLate(timeSinceLastUpdate)
+            ? 'orangered'
+            : this.isLate(timeSinceLastUpdate)
+                ? 'orange'
+                : '';
     }
 }
 

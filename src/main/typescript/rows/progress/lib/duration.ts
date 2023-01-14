@@ -17,6 +17,10 @@ export class Duration implements Formattable<number>{
         return this.millis < other.millis;
     }
 
+    isGreaterThan(other: Duration): boolean {
+        return this.millis > other.millis;
+    }
+
     times(factor: number) {
         return new Duration(this.millis * factor);
     }

@@ -96,7 +96,10 @@ class RowCreator {
 
     public static insertBeforeNextSibling(nextSibling: HTMLElement | null, parent: HTMLElement, row: any) {
         if (nextSibling != null) {
-            parent.insertBefore(row, nextSibling);
+            if (row !== nextSibling) {
+                // calling this too often results in stop-and-go movement of the progress bar
+                parent.insertBefore(row, nextSibling);
+            }
         } else {
             parent.appendChild(row);
         }

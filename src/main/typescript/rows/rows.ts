@@ -1,8 +1,14 @@
-import { localTimeFormatter } from './progress/time';
-import { remainingTimerDeActivator } from '../../main';
-import { ArrayUtils } from '../util';
+import { localTimeFormatter, Duration } from './progress/lib';
+import { remainingTimerDeActivator } from '../main';
+import { ArrayUtils } from './util';
 import { Progress } from './progress';
-import { Duration } from './progress/duration';
+
+export class MessageHandler {
+    static handleMessage({data}: { data: string }) {
+        const {start: start, flowId, percentPerSecond, percent} = JSON.parse(data);
+        Rows.updateProgress(new Date(parseInt(start)), flowId, percentPerSecond, percent);
+    }
+}
 
 export class Rows {
     private static rowsMap = new Map<string, Row>();

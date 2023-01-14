@@ -1,5 +1,5 @@
 import { websocketConnector } from '../main';
-import { Rows } from './rows';
+import { Rows } from '../rows';
 
 interface StartFlowParams {
     flowId: string;
@@ -36,12 +36,5 @@ export class Form {
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
             percentPerSecond: parseFloat(percentPerSecond as string)
         };
-    }
-}
-
-export class MessageHandler {
-    static handleMessage({data}: { data: string }) {
-        const {start: start, flowId, percentPerSecond, percent} = JSON.parse(data);
-        Rows.updateProgress(new Date(parseInt(start)), flowId, percentPerSecond, percent);
     }
 }

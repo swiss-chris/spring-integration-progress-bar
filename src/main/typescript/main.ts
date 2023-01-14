@@ -24,5 +24,5 @@ export const websocketConnector = new WebsocketConnector(
 
 export const remainingTimerDeActivator = new TimerDeActivator(
     Rows.allFlowsAreFinished,
-    new OnOffTimer(Rows.updateRemaining)
+    new OnOffTimer(Rows.timerBasedUpdate)
 );

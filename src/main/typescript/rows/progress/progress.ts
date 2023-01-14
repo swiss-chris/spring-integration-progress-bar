@@ -31,6 +31,10 @@ export class Progress {
         return this.elapsed();
     }
 
+    timeSinceLastUpdate(): Duration {
+        return this._lastUpdate.differenceTo(this._now);
+    }
+
     remaining(): Duration | undefined {
         return this._percent.isZero()
             ? undefined
@@ -40,11 +44,6 @@ export class Progress {
     end(): Time | undefined {
         const remaining = this.remaining();
         return remaining ? this._now.plus(remaining) : undefined;
-    }
-
-    // TODO unit test
-    timeSinceLastUpdate(): Duration {
-        return this._lastUpdate.differenceTo(this._now);
     }
 
     private elapsed(): Duration {

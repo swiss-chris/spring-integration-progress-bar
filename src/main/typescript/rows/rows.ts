@@ -16,12 +16,12 @@ export class Rows {
     static createRow(flowId: string, start: Date, percentPerSecond: number, percent: number = 0) {
         const row = new Row(flowId, start, percent);
         row.initializeRow(percentPerSecond);
-        row.updateCalculatedTimes(); // on page refresh
+        row.updateEntireRow(); // on page refresh
         this.rowsMap.set(flowId, row);
     }
 
     static updateProgress(start: Date, flowId: string, percentPerSecond: number, percent: number) {
-        Rows.createNowIfNecessary(start, flowId, percentPerSecond, percent);
+        Rows.createRowIfNecessary(start, flowId, percentPerSecond, percent);
         Rows.rowsMap.get(flowId)!.updatePercent(percent);
         remainingTimerDeActivator.update();
     }
@@ -30,11 +30,12 @@ export class Rows {
         return Rows.rows().every(row => row.isFlowFinished());
     }
 
-    static updateRemaining() {
-        Rows.rows().forEach(row => row.updateCalculatedTimes())
+    static timerBasedUpdate() {
+        Rows.rows().forEach(row => row.updateEntireRow())
+        Rows.sort();
     }
 
-    private static createNowIfNecessary(start: Date, flowId: string, percentPerSecond: number, percent: number) {
+    private static createRowIfNecessary(start: Date, flowId: string, percentPerSecond: number, percent: number) {
         // e.g. if we refresh the page during a running flow
         if (!Rows.rowsMap.has(flowId)) {
             this.createRow(flowId, start, percentPerSecond, percent);
@@ -44,45 +45,57 @@ export class Rows {
     private static rows(): Row[] {
         return Array.from(this.rowsMap.values());
     }
+
+    private static sort() {
+        const parent = RowCreator.getParent();
+        const children = RowCreator.getChildren(parent);
+        children.forEach(child => {
+            const percent = parseInt((child.dataset.percent)!);
+            const newIndex = RowCreator.getNewIndex(children, percent);
+            const nextSibling = RowCreator.getNextSibling(children, newIndex);
+            RowCreator.insertBeforeNextSibling(nextSibling, parent, child);
+        })
+    }
 }
 
 class RowCreator {
-    static createRowFromTemplate(flowId: string, start: number): HTMLElement {
+    static createRowFromTemplate(flowId: string, start: number, percent: number): HTMLElement {
         // @ts-ignore
         const row: HTMLElement = document.getElementById('progress-row').content.cloneNode(true);
         this.setFlowId(row, flowId);
         this.setStart(row, start);
-        this.appendInOrder(row, start);
+        this.setPercent(row);
+        this.appendInOrder(row, percent);
         // we can't return 'row' as it is empty after appending
         return this.queryBy(flowId);
     }
 
-    private static appendInOrder(row: HTMLElement, start: number) {
+    private static appendInOrder(row: HTMLElement, percent: number) {
         const parent = this.getParent();
-        const children = this.getChildren(parent)
-        const newIndex = this.getNewIndex(children, start);
+        const children = this.getChildren(parent);
+        const newIndex = this.getNewIndex(children, percent);
         const nextSibling = this.getNextSibling(children, newIndex);
         this.insertBeforeNextSibling(nextSibling, parent, row);
     }
 
-    private static getParent(): HTMLElement {
+    public static getParent(): HTMLElement {
         return document.getElementById('root')!;
     }
 
-    private static getChildren(parent: HTMLElement): HTMLElement[] {
+    public static getChildren(parent: HTMLElement): HTMLElement[] {
         return [...parent.querySelectorAll('.flow-progress')] as HTMLElement[];
     }
 
-    private static getNewIndex(children: HTMLElement[], start: number) {
-        const startValues: number[] = children.map(s => parseInt(s.dataset.start as string));
-        return ArrayUtils.getInsertionIndex(startValues, start, false);
+    public static getNewIndex(children: HTMLElement[], percent: number) {
+        const percentValues: number[] = children.map(s => parseInt(s.dataset.percent as string));
+        return ArrayUtils.getInsertionIndex(percentValues, percent);
     }
 
-    private static getNextSibling(children: HTMLElement[], newIndex: number): HTMLElement | null {
+    public static getNextSibling(children: HTMLElement[], newIndex: number): HTMLElement | null {
         return (newIndex < children.length) ? children[newIndex] : null;
     }
 
-    private static insertBeforeNextSibling(nextSibling: HTMLElement | null, parent: HTMLElement, row: any) {
+    public static insertBeforeNextSibling(nextSibling: HTMLElement | null, parent: HTMLElement, row: any) {
         if (nextSibling != null) {
             parent.insertBefore(row, nextSibling);
         } else {
@@ -98,6 +111,10 @@ class RowCreator {
         row.querySelector<HTMLElement>('.flow-progress')!.dataset.start = String(start);
     }
 
+    private static setPercent(row: HTMLElement) {
+        row.querySelector<HTMLElement>('.flow-progress')!.dataset.percent = '0';
+    }
+
     private static queryBy(flowId: string): HTMLElement {
         return document.querySelector(`[data-flow-id="${flowId}"]`)! as HTMLElement;
     }
@@ -108,7 +125,7 @@ class Row {
     private progress: Progress;
 
     constructor(flowId: string, start: Date, percent: number) {
-        this.row = RowCreator.createRowFromTemplate(flowId, start.getTime());
+        this.row = RowCreator.createRowFromTemplate(flowId, start.getTime(), percent);
         this.progress = Progress.create(start, new Date(), percent);
     }
 
@@ -124,19 +141,21 @@ class Row {
 
     updatePercent(percent: number): void {
         this.progress = this.progress.updatePercent(new Date(), percent);
+        this.row.dataset.percent = `${percent}`;
         this.progressBar();
         if (this.progress.isFinished()) {
-            this.updateCalculatedTimes();
+            this.updateEntireRow();
         }
     }
 
-    updateCalculatedTimes(): void {
+    updateEntireRow(): void {
         if (!this.isFlowFinished()) {
             this.progress = this.progress.updateTime(new Date());
         }
-        this.duration(); // can always show duration
-        this.timeSinceLastUpdate(); // can always show time since last update
-        if (this.progress.percent().isZero()) return; // can happen if called by timer before the first update arrived for this row
+        this.duration();
+        this.timeSinceLastUpdate();
+        if (this.progress.percent().isZero())
+            return; // can happen if called by timer before the first update arrived for this row
         this.remaining();
         this.end();
     }

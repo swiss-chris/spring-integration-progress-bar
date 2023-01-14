@@ -1,4 +1,5 @@
 export class Duration implements Formattable<number>{
+    private static readonly ONE_SECOND = 1000;
     private readonly millis: number;
 
     constructor(millis: number) {
@@ -6,6 +7,10 @@ export class Duration implements Formattable<number>{
             throw new Error('the parameter "millis" must be >= 0');
         }
         this.millis = millis;
+    }
+
+    static ofSeconds(seconds: number): Duration {
+        return new Duration(seconds * this.ONE_SECOND);
     }
 
     isLessThan(other: Duration): boolean {

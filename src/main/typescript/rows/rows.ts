@@ -104,7 +104,6 @@ class RowCreator {
 }
 
 class Row {
-    private static readonly ONE_SECOND = new Duration(1000);
     private readonly row: HTMLElement;
     private progress: Progress;
 
@@ -159,6 +158,12 @@ class Row {
         this.row.querySelector<HTMLElement>('.duration')!.innerText = this.progress.duration().toString();
     }
 
+    private timeSinceLastUpdate(): void {
+        const timeSinceLastUpdate = this.progress.timeSinceLastUpdate();
+        this.row.querySelector<HTMLElement>('.time-since-last-update')!.innerText =
+            timeSinceLastUpdate.isLessThan(Duration.ofSeconds(1)) ? '' : timeSinceLastUpdate.toString();
+    }
+
     private remaining(): void {
         this.row.querySelector<HTMLElement>('.remaining')!.innerText = this.progress.isFinished() ? '' : this.progress.remaining()!.toString();
     }
@@ -170,12 +175,6 @@ class Row {
             this.row.querySelector<HTMLElement>('.end')!.classList.add('dim');
         }
         this.row.querySelector<HTMLElement>('.end')!.innerText = this.progress.end()!.format(Time.localTimeFormatter);
-    }
-
-    private timeSinceLastUpdate(): void {
-        const timeSinceLastUpdate = this.progress.timeSinceLastUpdate();
-        this.row.querySelector<HTMLElement>('.time-since-last-update')!.innerText =
-            timeSinceLastUpdate.isLessThan(Row.ONE_SECOND) ? '' : timeSinceLastUpdate.toString();
     }
 }
 

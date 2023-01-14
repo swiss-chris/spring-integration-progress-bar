@@ -1,21 +1,3 @@
-export class TimerDeActivator {
-    private readonly deactivationPredicate;
-    private onOffTimer;
-
-    constructor(deactivationPredicate: () => boolean, onOffTimer: OnOffTimer) {
-        this.deactivationPredicate = deactivationPredicate;
-        this.onOffTimer = onOffTimer;
-    }
-
-    update() {
-        if (this.deactivationPredicate()) {
-            this.onOffTimer.deactivate();
-        } else {
-            this.onOffTimer.keepActive();
-        }
-    }
-}
-
 export class OnOffTimer {
     private static readonly ONE_SECOND = 1000;
 

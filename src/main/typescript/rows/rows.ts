@@ -1,7 +1,7 @@
 import { Time, Duration } from './progress/lib';
-import { remainingTimerDeActivator } from '../main';
 import { ArrayUtils } from './util';
 import { Progress } from './progress';
+import { OnOffTimer } from './timer';
 
 export class MessageHandler {
     static handleMessage({data}: { data: string }) {
@@ -11,6 +11,7 @@ export class MessageHandler {
 }
 
 export class Rows {
+    private static readonly timer = new OnOffTimer(Rows.timerBasedUpdate);
     private static rowsMap = new Map<string, Row>();
 
     static createRow(flowId: string, start: Date, percentPerSecond: number, percent: number = 0) {
@@ -18,12 +19,15 @@ export class Rows {
         row.initializeRow(percentPerSecond);
         row.updateEntireRow(); // on page refresh
         this.rowsMap.set(flowId, row);
+        Rows.timer.keepActive();
     }
 
     static updateProgress(start: Date, flowId: string, percentPerSecond: number, percent: number) {
         Rows.createRowIfNecessary(start, flowId, percentPerSecond, percent);
         Rows.rowsMap.get(flowId)!.updatePercent(percent);
-        remainingTimerDeActivator.update();
+        if (Rows.allFlowsAreFinished()) {
+            Rows.timer.deactivate();
+        }
     }
 
     static allFlowsAreFinished() {
@@ -47,7 +51,9 @@ export class Rows {
     }
 
     private static sort() {
-        RowCreator.getRows().forEach(row => RowCreator.appendInOrder(row, parseInt(row.dataset.percent!)));
+        RowCreator.getRows()
+            .reverse() // preserves sort order for rows with same progress/percent
+            .forEach(row => RowCreator.appendInOrder(row, parseInt(row.dataset.percent!)));
     }
 }
 

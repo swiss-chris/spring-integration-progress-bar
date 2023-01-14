@@ -1,7 +1,6 @@
 import { DarkModeSwitcher } from './dark-mode';
 import { WebsocketConnector } from './websocket-connector';
-import { OnOffTimer, TimerDeActivator } from './timer';
-import { Rows, MessageHandler } from './rows';
+import { MessageHandler } from './rows';
 import { Form } from './form'
 
 ////// -------- FORM -------- //////
@@ -18,11 +17,4 @@ DarkModeSwitcher.initialize();
 export const websocketConnector = new WebsocketConnector(
     `http://localhost:${process.env.JAVA_PORT}/messages`,
     MessageHandler.handleMessage
-).connect();
-
-////// -------- TIMER -------- //////
-
-export const remainingTimerDeActivator = new TimerDeActivator(
-    Rows.allFlowsAreFinished,
-    new OnOffTimer(Rows.timerBasedUpdate)
-);
+).connect(); // on page refresh, we want to receive already running flows

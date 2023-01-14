@@ -27,6 +27,7 @@ class ProgressBarIT {
 
     public static final String TIME_PATTERN = "\\d{2}:\\d{2}:\\d{2}"; // e.g. 23:59:59
     public static final String DURATION_PATTERN = "00:00:\\d{2}"; // e.g. 00:00:09
+    public static final String PERCENT_PATTERN = "\\d{1,2}%"; // e.g. 0% or 99%
 
     private WebDriver driver;
 
@@ -72,6 +73,9 @@ class ProgressBarIT {
 
         final String sources = driver.findElement(By.className("percent-per-second")).getText();
         assertThat(sources, is("10%"));
+
+        final String percent = driver.findElement(By.className("percent")).getText();
+        assertThat(percent, matchesPattern(PERCENT_PATTERN));
 
         final String duration = driver.findElement(By.className("duration")).getText();
         assertThat(duration, matchesPattern(DURATION_PATTERN));

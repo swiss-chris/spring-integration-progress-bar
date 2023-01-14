@@ -54,9 +54,9 @@ describe('Progress', () => {
         const start = new Date(1672866000000); // 22:00:00
         const plus30 = new Date(1672867800000); // 22:30:00
         const plus60 = new Date( 1672869600000); // 23:00:00
-        const plus120 = new Date(1672873200000); // 24:00:00
         const percent50 = 50;
         const progress50Percent30Minutes = Progress.create(start, plus30, percent50);
+        const duration00 = '00:00:00'; // 60 minutes
         const duration30 = '00:30:00'; // 60 minutes
         const duration60 = '01:00:00'; // 60 minutes
 
@@ -67,8 +67,8 @@ describe('Progress', () => {
         expect(progress50Percent60Minutes.percent().isOneHundred()).toBeFalsy();
         expect(progress50Percent60Minutes.duration().toString()).toBe(duration60.toString());
         expect(progress50Percent60Minutes.timeSinceLastUpdate().toString()).toBe(duration30.toString());
-        expect(progress50Percent60Minutes.remaining()!.toString()).toBe(duration60.toString());
-        expect(progress50Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus120.toLocaleTimeString());
+        expect(progress50Percent60Minutes.remaining()!.toString()).toBe(duration00.toString());
+        expect(progress50Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
     })
 
     test('updatePercent', () => {

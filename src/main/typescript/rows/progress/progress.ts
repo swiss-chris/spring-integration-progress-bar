@@ -36,17 +36,24 @@ export class Progress {
     }
 
     remaining(): Duration | undefined {
-        return this._percent.isZero()
-            ? undefined
-            : this.elapsed().times(this._percent.remaining().divideBy(this._percent));
+        return this.end()?.differenceTo(this._now);
     }
 
     end(): Time | undefined {
-        const remaining = this.remaining();
-        return remaining ? this._now.plus(remaining) : undefined;
+        const remaining = this.remainingSinceLastUpdate();
+        return remaining ? this._lastUpdate.plus(remaining) : undefined;
     }
 
+    private remainingSinceLastUpdate(): Duration | undefined {
+        return this._percent.isZero()
+            ? undefined
+            : this.elapsedToLastUpdate().times(this._percent.remaining().divideBy(this._percent));
+    }
     private elapsed(): Duration {
         return this._start.differenceTo(this._now);
+    }
+
+    private elapsedToLastUpdate(): Duration {
+        return this._start.differenceTo(this._lastUpdate);
     }
 }

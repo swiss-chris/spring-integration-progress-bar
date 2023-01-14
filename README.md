@@ -24,16 +24,19 @@ You have 2 options:
 
 ## To run the Selenium SpringBootTest manually
 - run `npm run build` to bundle the typescript code into `bundle.js`.
+  - repeat this step you change the typescript code. Instead, you can also just run the whole `mvn test` goal (see below). 
 - run the `ProgressBarIT`.
 
 ## mvn package
-Running `mvn package` will:
+Running `mvn test` will:
 - install node and npm
 - run `npm install`
 - run `npm run build` which uses webpack to create `bundle.js` in the `resources` directory
 - run `npm run test` to run the typescript unit tests
 - run a Spring Boot Integration Test for the full application.
 
-Inspired by:
+You can also run `mvn test -Dheadless=true` to prevent opening a browser for the Selenium test.
+
+## Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example
 * https://github.com/johnpili/websocket-progress-bar

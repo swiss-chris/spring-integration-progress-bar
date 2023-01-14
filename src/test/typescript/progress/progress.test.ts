@@ -14,7 +14,6 @@ describe('Progress', () => {
         expect(progress0Percent.duration().toString()).toBe(duration0.toString());
         expect(progress0Percent.remaining()).toBeUndefined();
         expect(progress0Percent.end()).toBeUndefined();
-        // expect(progress0Percent.lastUpdate().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
     });
 
     test('50 percent 30 minutes', () => {
@@ -32,7 +31,6 @@ describe('Progress', () => {
         expect(progress50Percent30Minutes.duration().toString()).toBe(duration30.toString());
         expect(progress50Percent30Minutes.remaining()!.toString()).toBe(duration30.toString());
         expect(progress50Percent30Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
-        // expect(progress50Percent30Minutes.lastUpdate().date().toLocaleTimeString()).toBe(plus30.toLocaleTimeString());
     });
 
     test('100 percent 60 minutes', () => {
@@ -50,7 +48,6 @@ describe('Progress', () => {
         expect(progress100Percent60Minutes.duration().toString()).toBe(duration60.toString());
         expect(progress100Percent60Minutes.remaining()!.toString()).toBe(duration0.toString());
         expect(progress100Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
-        // expect(progress50Percent60Minutes.lastUpdate().date().toLocaleTimeString()).toBe(plus30.toLocaleTimeString());
     });
 
     test('updateTime', () => {
@@ -60,6 +57,7 @@ describe('Progress', () => {
         const plus120 = new Date(1672873200000); // 24:00:00
         const percent50 = 50;
         const progress50Percent30Minutes = Progress.create(start, plus30, percent50);
+        const duration30 = '00:30:00'; // 60 minutes
         const duration60 = '01:00:00'; // 60 minutes
 
         const progress50Percent60Minutes = progress50Percent30Minutes.updateTime(plus60);
@@ -68,9 +66,9 @@ describe('Progress', () => {
         expect(progress50Percent60Minutes.percent().isZero()).toBeFalsy();
         expect(progress50Percent60Minutes.percent().isOneHundred()).toBeFalsy();
         expect(progress50Percent60Minutes.duration().toString()).toBe(duration60.toString());
+        expect(progress50Percent60Minutes.timeSinceLastUpdate().toString()).toBe(duration30.toString());
         expect(progress50Percent60Minutes.remaining()!.toString()).toBe(duration60.toString());
         expect(progress50Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus120.toLocaleTimeString());
-        // expect(progress50Percent60Minutes.lastUpdate().date().toLocaleTimeString()).toBe(plus30.toLocaleTimeString());
     })
 
     test('updatePercent', () => {
@@ -80,6 +78,7 @@ describe('Progress', () => {
         const plus60 = new Date(1672869600000); // 23:00:00
         const percent50 = 50;
         const progress50Percent30Minutes = Progress.create(start, plus30, percent50);
+        const duration00 = '00:00:00'; // 30 minutes
         const duration15 = '00:15:00'; // 30 minutes
         const duration45 = '00:45:00'; // 30 minutes
 
@@ -89,8 +88,8 @@ describe('Progress', () => {
         expect(progress50Percent60Minutes.percent().isZero()).toBeFalsy();
         expect(progress50Percent60Minutes.percent().isOneHundred()).toBeFalsy();
         expect(progress50Percent60Minutes.duration().toString()).toBe(duration45.toString());
+        expect(progress50Percent60Minutes.timeSinceLastUpdate().toString()).toBe(duration00.toString());
         expect(progress50Percent60Minutes.remaining()!.toString()).toBe(duration15.toString());
         expect(progress50Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
-        // expect(progress50Percent60Minutes.lastUpdate()!.date().toLocaleTimeString()).toBe(plus45.toLocaleTimeString());
     })
 });

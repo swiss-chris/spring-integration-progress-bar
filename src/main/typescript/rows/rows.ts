@@ -207,7 +207,7 @@ class Row {
     }
 
     private isLate(timeSinceLastUpdate: Duration): boolean {
-        return timeSinceLastUpdate.isGreaterThan(Duration.ofSeconds(10));
+        return timeSinceLastUpdate.isGreaterThan(Duration.ofSeconds(12));
     }
 
     private isVeryLate(timeSinceLastUpdate: Duration): boolean {

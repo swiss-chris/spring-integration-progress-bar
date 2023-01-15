@@ -19,6 +19,7 @@ import org.springframework.integration.websocket.outbound.WebSocketOutboundMessa
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -95,8 +96,9 @@ public class Application implements ApplicationContextAware {
     IntegrationFlow webSocketFlow() {
         final String logCat = getLogCat(new Object() {
         });
+        final DecimalFormat df = new DecimalFormat("0.##");
         return flow -> flow
-                .<Integer>log(DEBUG, logCat, m -> "Received (%.1f perc/s): %d".formatted(m.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND, Float.class), m.getPayload()))
+                .<Integer>log(DEBUG, logCat, m1 -> "Received (%s%%/s): %d".formatted(df.format(m1.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND, Float.class)), m1.getPayload()))
                 .split(Message.class, m -> serverWebSocketContainer()
                         .getSessions()
                         .keySet()

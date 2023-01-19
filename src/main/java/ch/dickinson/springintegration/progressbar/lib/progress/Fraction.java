@@ -6,6 +6,9 @@ public class Fraction {
     private final Integer denominator;
 
     public Fraction(Integer numerator, Integer denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("denominator may not be 0.");
+        }
         this.numerator = numerator;
         this.denominator = denominator;
     }

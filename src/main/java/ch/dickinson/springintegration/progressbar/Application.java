@@ -98,7 +98,7 @@ public class Application implements ApplicationContextAware {
         });
         final DecimalFormat df = new DecimalFormat("0.##");
         return flow -> flow
-                .<Integer>log(DEBUG, logCat, m1 -> "Received (%s%%/s): %d".formatted(df.format(m1.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND, Float.class)), m1.getPayload()))
+                .<Integer>log(DEBUG, logCat, m -> "Received (%s%%/s): %d".formatted(df.format(m.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND, Float.class)), m.getPayload()))
                 .split(Message.class, m -> serverWebSocketContainer()
                         .getSessions()
                         .keySet()

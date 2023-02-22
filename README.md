@@ -7,10 +7,18 @@ Recovers from page-refreshes on currently running flows and also runs in paralle
 
 # Getting started
 
+## Using Github Codespaces
+If you use Github Codespaces, you should already have all the necessary dependencies from the `.devcontainer/Dockerfile`.
+
+Note: you'll need to add `-Dheadless=true` anytime you are running the tests with maven.
+
+## Installing the dependencies on your local machine
+You can check the `.devcontainer/Dockerfile` and install the required dependencies manually.
+
 ## Installing node and npm
 You have 2 options:
-- Install Node locally on your machine
-- Run `mvn package` and it will install a copy of node into the root directory of this project
+- Install Node on your machine or developer environment.
+- Run `mvn package -Dheadless=true` and it will install a copy of node into the root directory of this project
 
 ## To get up and running quickly
 - run `npm run build` to bundle the typescript code into `bundle.js`.

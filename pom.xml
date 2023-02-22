@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>ch.dickinson.springintegration.progressbar.Application</start-class>
         <java.version>17</java.version>
-        <headless>false</headless>
+        <headless>true</headless>
     </properties>
 
     <dependencies>

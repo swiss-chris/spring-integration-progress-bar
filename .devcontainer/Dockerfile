@@ -4,4 +4,5 @@ FROM mcr.microsoft.com/vscode/devcontainers/java:0-17
 RUN apt-get update && apt-get -y install --no-install-recommends \
     libglib2.0-0 \
     libxcb1 \
+    libnss3 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*

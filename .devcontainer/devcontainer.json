@@ -20,7 +20,8 @@
 				"vscjava.vscode-java-pack",
 				"ms-azuretools.vscode-docker",
 				"redhat.fabric8-analytics",
-				"vmware.vscode-boot-dev-pack"
+				"vmware.vscode-boot-dev-pack",
+				"vmware.vscode-spring-boot"
 			]
 		}
 	}

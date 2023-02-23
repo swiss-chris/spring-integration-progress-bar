@@ -12,6 +12,9 @@
 			"installMaven": "true",
 			"mavenVersion": "latest",
 			"installGradle": "false"
+		},
+		"ghcr.io/devcontainers/features/sshd:1": {
+			"version": "latest"
 		}
 	},
 	"customizations": {

@@ -2,4 +2,7 @@ server.port: 8080
 
 logging.level.ch.dickinson: DEBUG
 
-websocket.additional-allowed-origins: http://localhost:9000, http://127.0.0.1:8080 # comma-separated
+# needs to be a single-line comma-separated string.
+websocket.additional-allowed-origins: >
+    http://localhost:9000, 
+    http://127.0.0.1:8080

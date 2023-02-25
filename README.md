@@ -16,7 +16,7 @@ You can check the `.devcontainer/Dockerfile` and install the required dependenci
 ## To get up and running quickly
 - run `npm run build` to bundle the typescript code into `bundle.js`.
 - run the Spring Boot `Application` in your favorite IDE.
-  - If you are using Codespaces, open it inside VS Code instead of in the browser to have full debugging options. 
+  - If you are using Codespaces, open it inside VS Code instead of in the browser to start the application. 
 - open the browser at http://localhost:8080
 
 ## To develop using live-reloading through webpack

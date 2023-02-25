@@ -8,7 +8,7 @@ Recovers from page-refreshes on currently running flows and also runs in paralle
 # Getting started
 
 ## Using Github Codespaces
-If you use Github Codespaces, you should already have all the necessary dependencies from the `.devcontainer/Dockerfile`.
+If you use Github Codespaces, you already have all the necessary dependencies from the `.devcontainer/Dockerfile`.
 
 ## Installing the dependencies on your local machine
 You can check the `.devcontainer/Dockerfile` and install the required dependencies manually. Many of them are only necessary for the Selenium Test to work.
@@ -16,7 +16,7 @@ You can check the `.devcontainer/Dockerfile` and install the required dependenci
 ## To get up and running quickly
 - run `npm run build` to bundle the typescript code into `bundle.js`.
 - run the Spring Boot `Application` in your favorite IDE.
-  - If you are using Codespaces in the Browser, try opening the Codespace inside VSCode on your local machine instead. For some reason, Java Applications don't seem to run in GitHub Codespaces when opened in the Browser.
+  - If you are using Codespaces, open it inside VS Code instead of in the browser to have full debugging options. 
 - open the browser at http://localhost:8080
 
 ## To develop using live-reloading through webpack

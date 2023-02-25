@@ -30,7 +30,7 @@ You can check the `.devcontainer/Dockerfile` and install the required dependenci
 - run the `ProgressBarIT`.
 - alternatively, you can run `mvn test` which does everything for you (see below).
 
-## mvn package
+## mvn test
 Running `mvn test` will:
 - install node and npm
 - run `npm install`

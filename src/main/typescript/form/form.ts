@@ -15,7 +15,6 @@ export class Form {
         const {flowId, start, percentPerSecond}: StartFlowParams = this.getParams();
         Rows.createRow(flowId, new Date(start), percentPerSecond);
         this.startFlow({flowId, start, percentPerSecond});
-        return false; // prevent regular form submit & page refresh
     }
 
     private static startFlow({start, flowId, percentPerSecond}: StartFlowParams) {

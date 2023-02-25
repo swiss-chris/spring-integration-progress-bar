@@ -5,8 +5,13 @@ import { Form } from './form'
 
 ////// -------- FORM -------- //////
 
-// @ts-ignore
-window.formSubmit = () => Form.submit();
+window.onload = () => {
+    const form = document.querySelector('form');
+    form!.onsubmit = (e: Event) => {
+        e.preventDefault();
+        Form.submit();
+    };
+}
 
 ////// -------- DARK MODE -------- //////
 

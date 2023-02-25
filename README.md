@@ -37,7 +37,7 @@ For some reason, at the time of writing, The Java Plugin for Codespaces doesn't 
 - run the `ProgressBarIT`.
 - alternatively, you can run `mvn test` which does everything for you (see below).
 
-## mvn package
+## mvn test
 Running `mvn test` will:
 - install node and npm
 - run `npm install`

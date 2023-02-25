@@ -5,4 +5,6 @@ logging.level.ch.dickinson: DEBUG
 # needs to be a single-line comma-separated string.
 websocket.additional-allowed-origins: >
     http://localhost:9000,
-    http://127.0.0.1:8080
+    http://127.0.0.1:8080,
+    http://127.0.0.1:9000,
+

@@ -5,7 +5,6 @@ function isLocalhost(host: string) {
 export const getHostUrl = (): string => {
     const url = new URL(window.location.href);
     const host = (url.host.split(':'))[0];
-    const port = isLocalhost(host) ? process.env.JAVA_PORT! : '80';
     const protocol = url.protocol;
-    return `${protocol}//${host}:${port}`;
+    return `${protocol}//${host}${isLocalhost(host) ? `:${process.env.JAVA_PORT}` : ''}`;
 };

@@ -19,6 +19,13 @@ You can check the `.devcontainer/Dockerfile` and install the required dependenci
   - If you are using Codespaces, open it inside VS Code instead of in the browser to start the application. 
 - open the browser at http://localhost:8080
 
+### Running the app with GitHub Codespaces inside the browser
+For some reason, at the time of writing, The Java Plugin for Codespaces doesn't seem to work inside the browser. However, `mvn package` can run the java application just fine for the selenium test, and with the following instructions, you can get the app to run in the browser as well:
+1. run `mvn package -DskipTests=true` to bundle tha app into a JAR file.
+1. run the app with `java -jar target/spring-integration-progress-bar-0.0.1-SNAPSHOT.jar`
+1. in the Terminal, click on the line that says `Open: http://localhost:8080` and you will be directed to a public URL in the browser that connects to the running app on GitHub. 
+1. To get the WebSocket connection to work, you'll have to copy this public URL which is unique to your personal Codespaces container and add it inside `src/main/resources/application.yml` under `websocket.additional-allowed-origins`. Then start over at instruction `1.` to rebundle and start the application with this added websocket `allowed-origin` url.
+
 ## To develop using live-reloading through webpack
 - run the Spring Boot `Application` in your favorite IDE, but set the Spring Profile to 'localhost'.
 - run the `webpack-dev-server` with `npm run dev`

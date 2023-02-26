@@ -1,4 +1,4 @@
-import SockJS from 'sockjs-client';
+import SockJS from 'sockjs-client/dist/sockjs';
 
 export class WebsocketConnector {
     private readonly url;

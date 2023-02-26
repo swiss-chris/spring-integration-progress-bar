@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [svelte()],
   build: {
     outDir: '../../resources/static'
+  },
+  define: {
+    'process.env.BACKEND_PORT': process.env.BACKEND_PORT
   }
 })

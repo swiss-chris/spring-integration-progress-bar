@@ -7,11 +7,12 @@
     import RowsHeader from "./RowsHeader.svelte";
 
     interface Row {
+        flowId: string;
         percentPerSecond: number;
         progress: Progress;
     }
 
-    let rowsMap = new Map<string, Row>();
+    let rows: Row[] = [];
 
     messageBroker.subscribe((data) => {
         if (!data) {
@@ -27,7 +28,8 @@
             percentPerSecond,
             percent: new Percent(percent),
         };
-        rowsMap.set(flowId, {
+        rows = addOrUpdateRow(rows, {
+            flowId,
             percentPerSecond,
             progress: Progress.create(
                 new Date(parseInt(start)),
@@ -35,19 +37,34 @@
                 percent
             ),
         });
-        rowsMap = new Map(rowsMap);
+        rows = sort(rows);
     });
 
-    const getSortedMap = (map: Map<string, Row>): [string, Row][] =>
-        [...rowsMap].sort(([_, rowA], [__, rowB]) =>
-            rowA.progress.percent().compare(rowB.progress.percent())
-        );
+    function addOrUpdateRow(rows: Row[], row: Row): Row[] {
+        const existingRowIndex = rows.findIndex((r) => r.flowId === row.flowId);
+        if (existingRowIndex !== -1) {
+            rows[existingRowIndex] = row;
+        } else {
+            rows.push(row);
+        }
+        return rows;
+    }
+
+    const sort = (rows: Row[]): Row[] =>
+        rows.sort((rowA, rowB) => {
+            const {progress: progressA} = rowA;
+            const {progress: progressB} = rowB;
+            const result = progressA
+                .percent()
+                .compare(progressB.percent());
+            return result ?? rows.indexOf(rowA) - rows.indexOf(rowB); // preserve the original order if the result is 0
+        });
 </script>
 
 <RowsHeader />
 
-{#each getSortedMap(rowsMap) as [flowId, row] (flowId)}
+{#each [...rows] as {flowId, percentPerSecond, progress} (flowId)}
     <div animate:flip>
-        <Row percentPerSecond={row.percentPerSecond} progress={row.progress} />
+        <Row {percentPerSecond} {progress} />
     </div>
 {/each}

@@ -8,9 +8,11 @@
 </script>
 
 <main>
-  <Title />
-  <Form />
-  <ProgressRows />
+  <div class="container">
+    <Title />
+    <Form />
+    <ProgressRows />
+  </div>
 </main>
 
 <style>

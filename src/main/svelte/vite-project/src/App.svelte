@@ -1,19 +1,9 @@
 <script lang="ts">
-  import { DarkModeSwitcher } from './typescript/dark-mode';
+  import { DarkModeSwitcher } from "./typescript/dark-mode";
   import { WebsocketConnector } from "./typescript/websocket-connector";
   import { MessageHandler } from "./typescript/rows";
-  import { Form } from "./typescript/form";
   import { getBackendUrl } from "./typescript/util/host";
-
-  ////// -------- FORM -------- //////
-
-  window.onload = () => {
-    const form = document.querySelector("form");
-    form!.onsubmit = (e: Event) => {
-      e.preventDefault();
-      Form.submit();
-    };
-  };
+  import Form from "./lib/Form.svelte";
 
   ////// -------- DARK MODE -------- //////
 
@@ -34,30 +24,9 @@
         <h3>Spring Integration Progress Bar</h3>
       </div>
     </div>
-    <form id="startflow">
-      <div class="row mt-3">
-        <div class="col-3">
-          <label for="percent-select" class="form-label"
-            >Percent completed per second</label
-          >
-          <select
-            class="form-select form-select-sm"
-            name="percentPerSecond"
-            id="percent-select"
-          >
-            <option value="0.01">0.01%</option>
-            <option value="0.1">0.1%</option>
-            <option value="1">1%</option>
-            <option selected value="10">10%</option>
-          </select>
-        </div>
-      </div>
-      <div class="row mt-3">
-        <div class="col-3">
-          <button class="btn btn-sm btn-primary mt-3">Start Flow</button>
-        </div>
-      </div>
-    </form>
+
+    <Form />
+    
     <div class="row mt-4">
       <div class="col-3">
         <div class="label">Progress</div>
@@ -88,14 +57,4 @@
 </main>
 
 <style>
-  @media (prefers-color-scheme: dark) {
-    .dim {
-      color: #444;
-    }
-  }
-  @media (prefers-color-scheme: light) {
-    .dim {
-      color: lightgray;
-    }
-  }
 </style>

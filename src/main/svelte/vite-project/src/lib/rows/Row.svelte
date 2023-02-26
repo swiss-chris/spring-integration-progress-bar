@@ -30,3 +30,4 @@
     <div class="col-1 end {!progress.isFinished() ? 'dim' : ''}">
         {progress.end().toString()}
     </div>
+</div>

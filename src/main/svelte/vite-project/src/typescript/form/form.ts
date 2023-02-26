@@ -5,17 +5,17 @@ import { getBackendUrl } from '../util/host';
 interface StartFlowParams {
     flowId: string;
     start: number;
-    percentPerSecond: number;
+    percentPerSecond: string
 }
 
 ////// -------- ON FORM SUBMIT -------- //////
 
 export class Form {
-    static submit() {
+    static submit(percentPerSecond: number) {
         websocketConnector.reconnect();
-        const {flowId, start, percentPerSecond}: StartFlowParams = this.getParams();
+        const {flowId, start} = this.getParams();
         Rows.createRow(flowId, new Date(start), percentPerSecond);
-        this.startFlow({flowId, start, percentPerSecond});
+        this.startFlow({flowId, start, percentPerSecond: percentPerSecond as unknown as string});
     }
 
     private static startFlow({start, flowId, percentPerSecond}: StartFlowParams) {
@@ -29,12 +29,10 @@ export class Form {
 
     private static getParams() {
         // @ts-ignore
-        const {percentPerSecond} = Object.fromEntries(new FormData(document.getElementById("startflow")));
         const timestamp = Date.now();
         return {
             start: timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
-            percentPerSecond: parseFloat(percentPerSecond as string)
         };
     }
 }

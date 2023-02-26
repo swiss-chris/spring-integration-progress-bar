@@ -20,21 +20,22 @@ You can check the `.devcontainer/Dockerfile` and install the required dependenci
 - open the browser at http://localhost:8080
 
 ### Running the app with GitHub Codespaces inside the browser
-For some reason, at the time of writing, The Java plugin for Codespaces doesn't seem to work inside the browser. However, `mvn package` can run the Java application just fine for the Selenium test, and with the following instructions, you can get the app to run in the browser as well:
+At the time of writing, The Java plugin for Codespaces doesn't seem to work inside the browser. However, `mvn package` can run the Java application just fine for the Selenium test, and with the following instructions, you can get the app to run in the browser as well:
 1. run `mvn package -DskipTests=true` to bundle tha app into a JAR file.
 1. run the app with `java -jar target/spring-integration-progress-bar-0.0.1-SNAPSHOT.jar`
 1. in the Terminal, click on the line that says `Open: http://localhost:8080` and you will be directed to a public URL in the browser that connects to the running app on GitHub.
 
 ## To develop using live-reloading through webpack
-- run the Spring Boot `Application` in your favorite IDE, but set the Spring Profile to 'localhost'.
+- run the Spring Boot `Application`.
 - run the `webpack-dev-server` with `npm run dev`
 - open the browser at http://localhost:9000
 
-## To run the Selenium SpringBootTest manually
+## To run the Selenium SpringBootTest
+The Selenium test is run as part of `mvn test` (see below).
+
+To run it manually:
 - run `npm run build` to bundle the typescript code into `bundle.js`.
-  - repeat this step after you change the typescript code. 
 - run the `ProgressBarIT`.
-- alternatively, you can run `mvn test` which does everything for you (see below).
 
 ## mvn test
 Running `mvn test` will:
@@ -44,7 +45,7 @@ Running `mvn test` will:
 - run `npm run test` to run the typescript unit tests
 - run a Spring Boot Integration Test for the full application.
 
-If you're running maven on your own machine, you can also run `mvn test -Dheadless=false` to open a browser for the Selenium test.
+If you're running maven on your own machine, you can run `mvn test -Dheadless=false` if you want to open a browser for the Selenium test (e.g. for debugging).
 
 ## Inspired by:
 * https://github.com/joshlong/techtips/tree/master/examples/spring-integration-4.1-websockets-example

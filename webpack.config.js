@@ -25,7 +25,7 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            "process.env.BACKEND_PORT": JSON.stringify(process.env.BACKEND_PORT),
+            "process.env.BACKEND_PORT": JSON.stringify(process.env.BACKEND_PORT || 8080),
         }),
     ],
 };

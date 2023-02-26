@@ -6,11 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Application LOCALHOST",
+            "name": "Launch Application",
             "request": "launch",
             "mainClass": "ch.dickinson.springintegration.progressbar.Application",
-            "projectName": "spring-integration-progress-bar",
-            "vmArgs": "-Dspring.profiles.active=localhost"
+            "projectName": "spring-integration-progress-bar"
         }
     ]
 }

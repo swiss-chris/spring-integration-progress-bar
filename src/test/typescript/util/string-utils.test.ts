@@ -7,5 +7,6 @@ describe('string-utils', () => {
         expect(replaceAfterColon('', replacementString)).toBe('');
         expect(replaceAfterColon('something', replacementString)).toBe('something');
         expect(replaceAfterColon('something:withcolon', replacementString)).toBe(`something:${replacementString}`);
+        expect(replaceAfterColon('something:', replacementString)).toBe(`something:${replacementString}`);
     });
 });

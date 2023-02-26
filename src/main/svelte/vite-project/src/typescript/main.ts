@@ -7,4 +7,4 @@ import { getBackendUrl } from './util/host';
 export const websocketConnector = new WebsocketConnector(
     `${getBackendUrl()}/messages`,
     MessageHandler.handleMessage
-); // on page refresh, we want to receive already running flows
+).connect(); // on page refresh, we want to receive already running flows

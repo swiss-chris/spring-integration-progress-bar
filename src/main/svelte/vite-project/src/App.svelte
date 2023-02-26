@@ -1,20 +1,8 @@
 <script lang="ts">
-  import { DarkModeSwitcher } from "./typescript/dark-mode";
-  import { WebsocketConnector } from "./typescript/websocket-connector";
-  import { MessageHandler } from "./typescript/rows";
-  import { getBackendUrl } from "./typescript/util/host";
   import Form from "./lib/Form.svelte";
-
-  ////// -------- DARK MODE -------- //////
-
+  import { DarkModeSwitcher } from "./typescript/dark-mode";
+  
   DarkModeSwitcher.initialize();
-
-  ////// -------- WEB SOCKET -------- //////
-
-  export const websocketConnector = new WebsocketConnector(
-    `${getBackendUrl()}/messages`,
-    MessageHandler.handleMessage
-  ).connect(); // on page refresh, we want to receive already running flows
 </script>
 
 <main>
@@ -26,7 +14,7 @@
     </div>
 
     <Form />
-    
+
     <div class="row mt-4">
       <div class="col-3">
         <div class="label">Progress</div>

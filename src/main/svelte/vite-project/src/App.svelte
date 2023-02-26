@@ -1,6 +1,6 @@
 <script lang="ts">
   import Form from "./lib/form/Form.svelte";
-  import ProgressRows from "./lib/rows/Rows.svelte";
+  import Rows from "./lib/rows/Rows.svelte";
   import Title from "./lib/Title.svelte";
   import { DarkModeSwitcher } from "./typescript/dark-mode";
 
@@ -11,7 +11,7 @@
   <div class="container">
     <Title />
     <Form />
-    <ProgressRows />
+    <Rows />
   </div>
 </main>
 

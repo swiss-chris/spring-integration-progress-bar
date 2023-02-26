@@ -35,6 +35,13 @@ export class Percent implements Formattable<number> {
         return this.percent / percent.percent;
     }
 
+    compare(other: Percent): number {
+        const diff = this.percent - other.percent;
+        return diff > 0 ? 1
+            : diff < 0 ? -1
+                : 0;
+    }
+
     format(callback: (percent: number) => string) {
         return callback(this.percent);
     }

@@ -6,8 +6,8 @@
     import RowsHeader from "./RowsHeader.svelte";
 
     interface Row {
-        percentPerSecond: number,
-        progress: Progress
+        percentPerSecond: number;
+        progress: Progress;
     }
 
     let rowsMap = new Map<string, Row>();
@@ -26,19 +26,25 @@
             percentPerSecond,
             percent: new Percent(percent),
         };
-        rowsMap.set(
-            flowId,
-            {
-                percentPerSecond,
-                progress: Progress.create(new Date(parseInt(start)), new Date(), percent)
-            }
-        );
+        rowsMap.set(flowId, {
+            percentPerSecond,
+            progress: Progress.create(
+                new Date(parseInt(start)),
+                new Date(),
+                percent
+            ),
+        });
         rowsMap = new Map(rowsMap);
     });
+
+    const getSortedMap = (map: Map<string, Row>): [string, Row][] =>
+        [...rowsMap].sort(([_, rowA], [__, rowB]) =>
+            rowA.progress.percent().compare(rowB.progress.percent())
+        );
 </script>
 
 <RowsHeader />
 
-{#each [...rowsMap] as [flowId, {percentPerSecond, progress}] (flowId)}
+{#each getSortedMap(rowsMap) as [flowId, { percentPerSecond, progress }] (flowId)}
     <Row {percentPerSecond} {progress} />
 {/each}

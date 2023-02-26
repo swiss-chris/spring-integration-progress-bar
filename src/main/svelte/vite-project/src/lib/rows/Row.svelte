@@ -4,6 +4,7 @@
     export let percentPerSecond: number;
     export let progress: Progress;
 
+    $: dim = !progress.isFinished();
     $: percentString = progress.percent().toString();
 </script>
 
@@ -27,7 +28,7 @@
         {progress.timeSinceLastUpdate()}
     </div>
     <div class="col-1 remaining">{progress.remaining()}</div>
-    <div class="col-1 end {!progress.isFinished() ? 'dim' : ''}">
+    <div class="col-1 end" class:dim>
         {progress.end().toString()}
     </div>
 </div>

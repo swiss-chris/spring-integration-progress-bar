@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { flip } from "svelte/animate";
     import { Progress } from "../../typescript/rows/progress";
     import { Percent } from "../../typescript/rows/progress/lib";
     import { messageBroker } from "../stores";
@@ -45,6 +46,8 @@
 
 <RowsHeader />
 
-{#each getSortedMap(rowsMap) as [flowId, { percentPerSecond, progress }] (flowId)}
-    <Row {percentPerSecond} {progress} />
+{#each getSortedMap(rowsMap) as [flowId, row] (flowId)}
+    <div animate:flip>
+        <Row percentPerSecond={row.percentPerSecond} progress={row.progress} />
+    </div>
 {/each}

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Progress } from "../../typescript/rows/progress";
-        
+
     export let percentPerSecond: number;
     export let progress: Progress;
 
@@ -27,5 +27,6 @@
         {progress.timeSinceLastUpdate()}
     </div>
     <div class="col-1 remaining">{progress.remaining()}</div>
-    <div class="col-1 end">{progress.end().toString()}</div>
-</div>
+    <div class="col-1 end {!progress.isFinished() ? 'dim' : ''}">
+        {progress.end().toString()}
+    </div>

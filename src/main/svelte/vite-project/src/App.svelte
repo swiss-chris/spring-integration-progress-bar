@@ -1,23 +1,16 @@
 <script lang="ts">
   import Form from "./lib/form/Form.svelte";
-  import ProgressRows from "./lib/form/rows/ProgressRows.svelte";
+  import ProgressRows from "./lib/rows/ProgressRows.svelte";
+  import Title from "./lib/Title.svelte";
   import { DarkModeSwitcher } from "./typescript/dark-mode";
 
   DarkModeSwitcher.initialize();
 </script>
 
 <main>
-  <div id="root" class="container">
-    <div class="row mt-4">
-      <div class="col-12">
-        <h3>Spring Integration Progress Bar</h3>
-      </div>
-    </div>
-
-    <Form />
-
-    <ProgressRows />
-  </div>
+  <Title />
+  <Form />
+  <ProgressRows />
 </main>
 
 <style>

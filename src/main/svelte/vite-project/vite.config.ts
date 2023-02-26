@@ -8,6 +8,6 @@ export default defineConfig({
     outDir: '../../resources/static'
   },
   define: {
-    'process.env.BACKEND_PORT': process.env.BACKEND_PORT
+    'process.env.BACKEND_PORT': process.env.BACKEND_PORT || 8080
   }
 })

@@ -3,10 +3,10 @@
 
     let percentages = [0.01, 0.1, 1, 10];
 
-    let selected = 10;
+    export let selected = 10;
 
-    function handleSubmit() {
-        Form.submit(this.selected);
+    const handleSubmit = () => {
+        Form.submit(selected);
     }
 </script>
 

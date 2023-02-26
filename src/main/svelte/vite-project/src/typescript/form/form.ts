@@ -5,7 +5,7 @@ import { getBackendUrl } from '../util/host';
 interface StartFlowParams {
     flowId: string;
     start: number;
-    percentPerSecond: string
+    percentPerSecond: number
 }
 
 ////// -------- ON FORM SUBMIT -------- //////
@@ -14,8 +14,7 @@ export class Form {
     static submit(percentPerSecond: number) {
         websocketConnector.reconnect();
         const {flowId, start} = this.getParams();
-        Rows.createRow(flowId, new Date(start), percentPerSecond);
-        this.startFlow({flowId, start, percentPerSecond: percentPerSecond as unknown as string});
+        this.startFlow({flowId, start, percentPerSecond});
     }
 
     private static startFlow({start, flowId, percentPerSecond}: StartFlowParams) {

@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    <div class="col-1 percent-per-second">TODO ...</div>
+    <div class="col-1 percent-per-second">TODO...</div>
     <div class="col-1 percent">{percentString}</div>
     <div class="col-1 start">{progress.start().toString()}</div>
     <div class="col-1 duration">{progress.duration()}</div>

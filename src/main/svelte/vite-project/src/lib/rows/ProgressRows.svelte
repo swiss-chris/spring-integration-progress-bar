@@ -1,17 +1,11 @@
 <script lang="ts">
+    import { Progress } from "../../typescript/rows/progress";
     import { Percent } from "../../typescript/rows/progress/lib";
     import { messageStore } from "../stores";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
 
-    interface Flow {
-        start: Date;
-        flowId: string;
-        percentPerSecond: number;
-        percent: Percent;
-    }
-
-    let rowsMap = new Map<string, Flow>(); // TODO change object to Row
+    let rowsMap = new Map<string, Progress>(); // TODO change object to Row
 
     messageStore.subscribe((data) => {
         if(!data){
@@ -27,16 +21,16 @@
             percentPerSecond,
             percent: new Percent(percent),
         };
-        rowsMap.set(flowId, flowProgress);
+        rowsMap.set(flowId, Progress.create(new Date(parseInt(start)), new Date(), percent));
         rowsMap = new Map(rowsMap);
     });
 </script>
 
 <RowsHeader />
 <div>
-    {#each [...rowsMap] as [flowId, flow]}
+    {#each [...rowsMap] as [flowId, progress] (flowId)}
     <div>
-        {flowId} : {flow.percent.format(percent => `${percent}%`)}
+        <Row progress={progress} />
     </div>
 {/each}
 </div>

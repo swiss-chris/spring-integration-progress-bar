@@ -36,4 +36,9 @@ export class Time implements Formattable<Date> {
     format(callback: (date: Date) => string) {
         return callback(new Date(this.millis));
     }
+
+    // TODO unit test
+    toString(){
+        return this.format(Time.localTimeFormatter);
+    }
 }

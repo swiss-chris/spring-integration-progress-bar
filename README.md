@@ -20,7 +20,7 @@ You can check the `.devcontainer/Dockerfile` and install the required dependenci
 - open the browser at http://localhost:8080
 
 ### Running the app with GitHub Codespaces inside the browser
-At the time of writing, The Java plugin for Codespaces doesn't seem to work inside the browser. However, `mvn package` can run the Java application just fine for the Selenium test, and with the following instructions, you can get the app to run in the browser as well:
+At the time of writing, The Java plugin for Codespaces doesn't seem to work inside the browser. However, `mvn test` can run the Java application just fine for the Selenium test, and with the following instructions, you can get the app to run in the browser as well:
 1. run `mvn package -DskipTests=true` to bundle tha app into a JAR file.
 1. run the app with `java -jar target/spring-integration-progress-bar-0.0.1-SNAPSHOT.jar`
 1. in the Terminal, click on the line that says `Open: http://localhost:8080` and you will be directed to a public URL in the browser that connects to the running app on GitHub.

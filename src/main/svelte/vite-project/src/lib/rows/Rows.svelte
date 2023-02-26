@@ -30,8 +30,7 @@
 </script>
 
 <RowsHeader />
-<div>
-    {#each [...rowsMap] as [flowId, progress] (flowId)}
-        <Row {progress} />
-    {/each}
-</div>
+
+{#each [...rowsMap] as [flowId, progress] (flowId)}
+    <Row {progress} />
+{/each}

@@ -1,19 +1,19 @@
 <script lang="ts">
     import { Progress } from "../../typescript/rows/progress";
     import { Percent } from "../../typescript/rows/progress/lib";
-    import { messageStore } from "../stores";
+    import { messageBroker } from "../stores";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
 
-    let rowsMap = new Map<string, Progress>(); // TODO change object to Row
+    let rowsMap = new Map<string, Progress>();
 
-    messageStore.subscribe((data) => {
-        if(!data){
+    messageBroker.subscribe((data) => {
+        if (!data) {
             // FIXME cleanup
             console.log("empty data received!");
             return;
         }
-        
+
         const { start, flowId, percentPerSecond, percent } = JSON.parse(data);
         const flowProgress = {
             start,
@@ -21,7 +21,10 @@
             percentPerSecond,
             percent: new Percent(percent),
         };
-        rowsMap.set(flowId, Progress.create(new Date(parseInt(start)), new Date(), percent));
+        rowsMap.set(
+            flowId,
+            Progress.create(new Date(parseInt(start)), new Date(), percent)
+        );
         rowsMap = new Map(rowsMap);
     });
 </script>
@@ -29,8 +32,8 @@
 <RowsHeader />
 <div>
     {#each [...rowsMap] as [flowId, progress] (flowId)}
-    <div>
-        <Row progress={progress} />
-    </div>
-{/each}
+        <div>
+            <Row {progress} />
+        </div>
+    {/each}
 </div>

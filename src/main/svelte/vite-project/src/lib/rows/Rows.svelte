@@ -5,7 +5,12 @@
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
 
-    let rowsMap = new Map<string, Progress>();
+    interface Row {
+        percentPerSecond: number,
+        progress: Progress
+    }
+
+    let rowsMap = new Map<string, Row>();
 
     messageBroker.subscribe((data) => {
         if (!data) {
@@ -23,7 +28,10 @@
         };
         rowsMap.set(
             flowId,
-            Progress.create(new Date(parseInt(start)), new Date(), percent)
+            {
+                percentPerSecond,
+                progress: Progress.create(new Date(parseInt(start)), new Date(), percent)
+            }
         );
         rowsMap = new Map(rowsMap);
     });
@@ -31,6 +39,6 @@
 
 <RowsHeader />
 
-{#each [...rowsMap] as [flowId, progress] (flowId)}
-    <Row {progress} />
+{#each [...rowsMap] as [flowId, {percentPerSecond, progress}] (flowId)}
+    <Row {percentPerSecond} {progress} />
 {/each}

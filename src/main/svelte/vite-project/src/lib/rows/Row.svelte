@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Progress } from "../../typescript/rows/progress";
-    import type { Duration, Percent, Time } from "../../typescript/rows/progress/lib";
-    
+        
+    export let percentPerSecond: number;
     export let progress: Progress;
 
     $: percentString = progress.percent().toString();
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    <div class="col-1 percent-per-second">TODO...</div>
+    <div class="col-1 percent-per-second">{percentPerSecond}%</div>
     <div class="col-1 percent">{percentString}</div>
     <div class="col-1 start">{progress.start().toString()}</div>
     <div class="col-1 duration">{progress.duration()}</div>

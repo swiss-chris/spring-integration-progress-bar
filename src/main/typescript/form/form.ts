@@ -1,6 +1,6 @@
 import { websocketConnector } from '../main';
 import { Rows } from '../rows';
-import { getHostUrl } from '../util/host';
+import { getBackendUrl } from '../util/host';
 
 interface StartFlowParams {
     flowId: string;
@@ -21,7 +21,7 @@ export class Form {
     private static startFlow({start, flowId, percentPerSecond}: StartFlowParams) {
         const queryParams = new URLSearchParams({flowId, start: start.toString(), percentPerSecond: percentPerSecond.toString()});
         const toString = queryParams.toString();
-        fetch(`${getHostUrl()}/flow?${toString}`, {
+        fetch(`${getBackendUrl()}/flow?${toString}`, {
             method: 'post',
             mode: 'no-cors'
         });

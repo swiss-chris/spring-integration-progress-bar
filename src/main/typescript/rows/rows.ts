@@ -1,7 +1,7 @@
 import { Time, Duration } from './progress/lib';
-import { ArrayUtils } from './util';
 import { Progress } from './progress';
 import { OnOffTimer } from './timer';
+import { getInsertionIndex } from '../util';
 
 export class MessageHandler {
     static handleMessage({data}: { data: string }) {
@@ -87,7 +87,7 @@ class RowCreator {
 
     public static getNewIndex(children: HTMLElement[], percent: number) {
         const percentValues: number[] = children.map(s => parseInt(s.dataset.percent as string));
-        return ArrayUtils.getInsertionIndex(percentValues, percent);
+        return getInsertionIndex(percentValues, percent);
     }
 
     public static getNextSibling(children: HTMLElement[], newIndex: number): HTMLElement | null {

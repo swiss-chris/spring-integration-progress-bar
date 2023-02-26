@@ -1,10 +1,6 @@
-function isLocalhost(host: string) {
-    return host.includes('localhost') || host.includes('127.0.0.1');
-}
+import { replaceAfterColon } from './string-utils';
 
-export const getHostUrl = (): string => {
+export const getBackendUrl = (): string => {
     const url = new URL(window.location.href);
-    const host = (url.host.split(':'))[0];
-    const protocol = url.protocol;
-    return `${protocol}//${host}${isLocalhost(host) ? `:${process.env.JAVA_PORT}` : ''}`;
+    return `${(url.protocol)}//${(replaceAfterColon(url.host, process.env.JAVA_PORT!))}`;
 };

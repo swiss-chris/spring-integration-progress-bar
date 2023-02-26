@@ -24,7 +24,9 @@
 				"ms-azuretools.vscode-docker",
 				"redhat.fabric8-analytics",
 				"vmware.vscode-boot-dev-pack",
-				"vmware.vscode-spring-boot"
+				"vmware.vscode-spring-boot",
+				"fivethree.vscode-svelte-snippets",
+				"svelte.svelte-vscode"
 			]
 		}
 	}

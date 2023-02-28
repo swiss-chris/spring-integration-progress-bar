@@ -1,4 +1,4 @@
-import { websocketConnector } from '../../lib/stores.ts';
+import { websocketConnector } from '../../lib/rows/stores.ts';
 import { getBackendUrl } from '../util/host';
 
 interface StartFlowParams {

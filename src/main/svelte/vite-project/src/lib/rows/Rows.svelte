@@ -2,7 +2,7 @@
     import { flip } from "svelte/animate";
     import { Progress } from "../../typescript/rows/progress";
     import { Percent } from "../../typescript/rows/progress/lib";
-    import { messageBroker } from "../stores";
+    import { subscribe } from "./stores";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
 
@@ -13,8 +13,8 @@
     }
 
     let rows: Row[] = [];
-
-    messageBroker.subscribe((data) => {
+    
+    subscribe((data) => {
         if (!data) {
             // FIXME cleanup
             console.log("empty data received!");

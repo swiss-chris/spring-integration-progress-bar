@@ -20,8 +20,7 @@
     onMount(() => {
         timer = new OnOffTimer(timerBasedUpdate);
         websocketUnsubscribe = websocketSubscribe((data) => {
-            // FIXME see if we can prevent this check
-            if (!data) return;
+            if (!data) return; // FIXME see if we can prevent this check
 
             const {start, flowId, percentPerSecond, percent} = JSON.parse(data);
             rows = addOrUpdateRow(rows, {
@@ -33,14 +32,8 @@
                     percent
                 )
             });
-            rows = rows.sort((rowA, rowB) => {
-                const {progress: progressA} = rowA;
-                const {progress: progressB} = rowB;
-                const result = progressA
-                    .percent()
-                    .compare(progressB.percent());
-                return result ?? rows.indexOf(rowA) - rows.indexOf(rowB); // preserve the original order if the result is 0
-            });
+            rows = rows.sort((rowA, rowB) => rowA.progress.percent()
+                .compare(rowB.progress.percent()));
 
             if (rows.every(row => row.progress.isFinished())) {
                 timer.deactivate();

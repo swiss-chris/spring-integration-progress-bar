@@ -4,7 +4,7 @@
     export let percentPerSecond: number;
     export let progress: Progress;
 
-    $: dim = progress?.isFinished();
+    $: dim = !progress?.isFinished();
     $: percentString = progress?.percent().toString();
 </script>
 

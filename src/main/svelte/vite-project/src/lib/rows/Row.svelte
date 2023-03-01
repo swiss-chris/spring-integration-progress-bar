@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Progress } from "../../typescript/rows/progress";
+    import type { Progress } from "./progress";
 
     export let percentPerSecond: number;
     export let progress: Progress;

@@ -1,5 +1,5 @@
 <script>
-    import { Form } from "../../typescript/form";
+    import { Form } from "./form";
 
     let percentages = [0.01, 0.1, 1, 10];
 

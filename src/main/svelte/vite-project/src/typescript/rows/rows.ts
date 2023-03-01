@@ -1,6 +1,6 @@
-import { Time, Duration } from './progress/lib';
-import { Progress } from './progress';
-import { OnOffTimer } from './timer';
+import { Time, Duration } from '../../lib/rows/progress/lib';
+import { Progress } from '../../lib/rows/progress';
+import { OnOffTimer } from '../../lib/rows/timer';
 import { getInsertionIndex } from '../util';
 
 export class MessageHandler {

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-import { getBackendUrl } from '../../typescript/util/host';
-import { WebsocketConnector } from '../../typescript/websocket-connector';
+import { getBackendUrl } from '../util/host';
+import { WebsocketConnector } from '../websocket-connector';
 
 const { set, subscribe } = writable(undefined);
 

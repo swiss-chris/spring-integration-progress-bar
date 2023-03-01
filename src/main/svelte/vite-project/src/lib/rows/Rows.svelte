@@ -1,10 +1,10 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { Progress } from "../../typescript/rows/progress";
+    import { Progress } from "./progress";
     import { subscribe as websocketSubscribe } from "./websocket-message-broker";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
-    import { OnOffTimer } from '../../typescript/rows/timer';
+    import { OnOffTimer } from './timer';
     import { onMount, onDestroy } from 'svelte';
 
     interface Row {
@@ -69,7 +69,7 @@
         const now = new Date();
         rows = rows.map(row => ({
             ...row,
-            progress: row.progress.updateTime(now)
+            progress: row.progress.isFinished() ? row.progress : row.progress.updateTime(now)
         }));
     }
 </script>

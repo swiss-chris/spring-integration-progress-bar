@@ -1,4 +1,4 @@
-import { websocketConnector } from '../../lib/rows/websocket-message-broker';
+import { websocketConnector } from '../rows/websocket-message-broker';
 import { getBackendUrl } from '../util/host';
 
 interface StartFlowParams {

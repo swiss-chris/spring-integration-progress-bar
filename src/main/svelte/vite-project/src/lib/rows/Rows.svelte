@@ -1,10 +1,10 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
     import { Progress } from "../../typescript/rows/progress";
-    import { Percent } from "../../typescript/rows/progress/lib";
-    import { subscribe } from "./stores";
+    import { subscribe as websocketSubscribe } from "./websocket-message-broker";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
+    import { OnOffTimer } from '../../typescript/rows/timer';
 
     interface Row {
         flowId: string;
@@ -13,21 +13,13 @@
     }
 
     let rows: Row[] = [];
-    
-    subscribe((data) => {
-        if (!data) {
-            // FIXME cleanup
-            console.log("empty data received!");
-            return;
-        }
+    let timer: OnOffTimer = new OnOffTimer(timerBasedUpdate);
 
-        const { start, flowId, percentPerSecond, percent } = JSON.parse(data);
-        const flowProgress = {
-            start,
-            flowId,
-            percentPerSecond,
-            percent: new Percent(percent),
-        };
+    websocketSubscribe((data) => {
+        // FIXME see if we can prevent this check
+        if (!data) return;
+
+        const {start, flowId, percentPerSecond, percent} = JSON.parse(data);
         rows = addOrUpdateRow(rows, {
             flowId,
             percentPerSecond,
@@ -35,9 +27,16 @@
                 new Date(parseInt(start)),
                 new Date(),
                 percent
-            ),
+            )
         });
-        rows = sort(rows);
+        rows = rows.sort((rowA, rowB) => {
+            const {progress: progressA} = rowA;
+            const {progress: progressB} = rowB;
+            const result = progressA
+                .percent()
+                .compare(progressB.percent());
+            return result ?? rows.indexOf(rowA) - rows.indexOf(rowB); // preserve the original order if the result is 0
+        });
     });
 
     function addOrUpdateRow(rows: Row[], row: Row): Row[] {
@@ -46,25 +45,25 @@
             rows[existingRowIndex] = row;
         } else {
             rows.push(row);
+            timer.keepActive();
         }
         return rows;
     }
 
-    const sort = (rows: Row[]): Row[] =>
-        rows.sort((rowA, rowB) => {
-            const {progress: progressA} = rowA;
-            const {progress: progressB} = rowB;
-            const result = progressA
-                .percent()
-                .compare(progressB.percent());
-            return result ?? rows.indexOf(rowA) - rows.indexOf(rowB); // preserve the original order if the result is 0
+    function timerBasedUpdate() {
+        console.log("timer tick received")
+        rows.forEach(row => {
+            if (!row.progress.isFinished()) {
+                row.progress.updateTime(new Date());
+            }
         });
+    }
 </script>
 
-<RowsHeader />
+<RowsHeader/>
 
 {#each [...rows] as {flowId, percentPerSecond, progress} (flowId)}
     <div animate:flip>
-        <Row {percentPerSecond} {progress} />
+        <Row {percentPerSecond} {progress}/>
     </div>
 {/each}

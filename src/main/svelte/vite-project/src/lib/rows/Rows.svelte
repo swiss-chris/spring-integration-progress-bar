@@ -5,6 +5,7 @@
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
     import { OnOffTimer } from '../../typescript/rows/timer';
+    import { onMount, onDestroy } from 'svelte';
 
     interface Row {
         flowId: string;
@@ -13,30 +14,43 @@
     }
 
     let rows: Row[] = [];
-    let timer: OnOffTimer = new OnOffTimer(timerBasedUpdate);
+    let timer: OnOffTimer;
+    let websocketUnsubscribe;
 
-    websocketSubscribe((data) => {
-        // FIXME see if we can prevent this check
-        if (!data) return;
+    onMount(() => {
+        timer = new OnOffTimer(timerBasedUpdate);
+        websocketUnsubscribe = websocketSubscribe((data) => {
+            // FIXME see if we can prevent this check
+            if (!data) return;
 
-        const {start, flowId, percentPerSecond, percent} = JSON.parse(data);
-        rows = addOrUpdateRow(rows, {
-            flowId,
-            percentPerSecond,
-            progress: Progress.create(
-                new Date(parseInt(start)),
-                new Date(),
-                percent
-            )
-        });
-        rows = rows.sort((rowA, rowB) => {
-            const {progress: progressA} = rowA;
-            const {progress: progressB} = rowB;
-            const result = progressA
-                .percent()
-                .compare(progressB.percent());
-            return result ?? rows.indexOf(rowA) - rows.indexOf(rowB); // preserve the original order if the result is 0
-        });
+            const {start, flowId, percentPerSecond, percent} = JSON.parse(data);
+            rows = addOrUpdateRow(rows, {
+                flowId,
+                percentPerSecond,
+                progress: Progress.create(
+                    new Date(parseInt(start)),
+                    new Date(),
+                    percent
+                )
+            });
+            rows = rows.sort((rowA, rowB) => {
+                const {progress: progressA} = rowA;
+                const {progress: progressB} = rowB;
+                const result = progressA
+                    .percent()
+                    .compare(progressB.percent());
+                return result ?? rows.indexOf(rowA) - rows.indexOf(rowB); // preserve the original order if the result is 0
+            });
+
+            if (rows.every(row => row.progress.isFinished())) {
+                timer.deactivate();
+            }
+        })
+    });
+
+    onDestroy(() => {
+        websocketUnsubscribe();
+        timer.deactivate();
     });
 
     function addOrUpdateRow(rows: Row[], row: Row): Row[] {
@@ -52,11 +66,11 @@
 
     function timerBasedUpdate() {
         console.log("timer tick received")
-        rows.forEach(row => {
-            if (!row.progress.isFinished()) {
-                row.progress.updateTime(new Date());
-            }
-        });
+        const now = new Date();
+        rows = rows.map(row => ({
+            ...row,
+            progress: row.progress.updateTime(now)
+        }));
     }
 </script>
 

@@ -1,7 +1,7 @@
-import {Duration} from "../../../main/svelte/vite-project/src/lib/rows/progress/lib";
-import {Time} from "../../../main/svelte/vite-project/src/lib/rows/progress/lib";
+import { Duration, Time } from "../../../main/svelte/src/lib/rows/progress/lib";
+import { expect, test } from 'vitest'
 
-describe('Time', () => {
+test('Time', () => {
     const startMillis = 1672866000000; // 21:00:00 UTC
     const start = new Time(startMillis);
     const now = new Time(1672867800000); // 21:30:00 UTC

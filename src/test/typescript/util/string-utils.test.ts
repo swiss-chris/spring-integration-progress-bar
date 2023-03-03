@@ -1,6 +1,7 @@
-import { replaceAfterColon } from '../../../main/svelte/vite-project/src/lib/util/string-utils';
+import { replaceAfterColon } from '../../../main/svelte/src/lib/util/string-utils';
+import { expect, test } from 'vitest'
 
-describe('string-utils', () => {
+test('string-utils', () => {
     test('getHost()', () => {
         const replacementString = '8080';
 

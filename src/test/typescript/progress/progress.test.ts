@@ -1,6 +1,7 @@
-import { Progress } from "../../../main/svelte/vite-project/src/lib/rows/progress";
+import { Progress } from "../../../main/svelte/src/lib/rows/progress";
+import { expect, test } from 'vitest'
 
-describe('Progress', () => {
+test('Progress', () => {
     test('0 percent', () => {
         const start = new Date(1672866000000);
         const percent0 = 0;

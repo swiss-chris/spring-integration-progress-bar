@@ -1,4 +1,4 @@
-import { Progress } from "../../../main/svelte/src/lib/rows/progress";
+import { Progress } from "../../../main/svelte/lib/rows/progress";
 import { expect, test } from 'vitest'
 
 test('Progress', () => {

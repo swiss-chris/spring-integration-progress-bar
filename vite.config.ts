@@ -10,5 +10,5 @@ export default defineConfig({
   define: {
     'process.env.BACKEND_PORT': process.env.BACKEND_PORT || 8080
   },
-  root: './src/main/svelte'
+  root: './src/main/svelte',
 })

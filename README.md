@@ -25,7 +25,7 @@ At the time of writing, The Java plugin for Codespaces doesn't seem to work insi
 1. run the app with `java -jar target/spring-integration-progress-bar-0.0.1-SNAPSHOT.jar`
 1. in the Terminal, click on the line that says `Open: http://localhost:8080` and you will be directed to a public URL in the browser that connects to the running app on GitHub.
 
-## To develop using live-reloading (Svelte Hot Module Reloading)
+## To develop using live-reloading (Hot Module Reloading)
 - run the Spring Boot `Application`.
 - run the svelte app with `npm run dev` 
   - use `npm run dev:codespaces` to expose the port if you are using GitHub Codespaces

@@ -58,7 +58,7 @@ class ProgressBarIT {
 
     @Test
     public void testTest() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(500));
 
         driver.get("http://localhost:" + port);
         assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());

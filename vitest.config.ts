@@ -3,6 +3,6 @@ import { configDefaults, defineConfig } from 'vitest/config'
 export default defineConfig({
     test: {
         exclude: [...configDefaults.exclude, 'packages/template/*'],
-        root: './src/test/typescript'
+        root: './src/test/svelte'
     },
 })

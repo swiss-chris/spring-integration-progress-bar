@@ -34,7 +34,7 @@ class ProgressBarIT {
     @Value(("${server.port}"))
     private Integer port;
 
-    @Value("${headless}")
+    @Value("${headless:true}")
     private Boolean headless;
 
     @BeforeEach

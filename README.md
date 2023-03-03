@@ -42,7 +42,7 @@ To run it manually:
 Running `mvn test` will:
 - install node and npm
 - run `npm install`
-- run `npm run build` which uses webpack to create `bundle.js` in the `resources` directory
+- run `npm run build` which uses vite to create `bundle.js` in the `resources` directory
 - run `npm run test` to run the typescript unit tests
 - run a Spring Boot Integration Test for the full application.
 

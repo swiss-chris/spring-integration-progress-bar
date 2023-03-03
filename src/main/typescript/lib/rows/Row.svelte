@@ -30,9 +30,9 @@
     <div class="col-1 time-since-last-update" class:isLate class:isVeryLate>
         {progress.timeSinceLastUpdate()}
     </div>
-    <div class="col-1 remaining">{progress.remaining()}</div>
+    <div class="col-1 remaining">{progress.remaining() || ''}</div>
     <div class="col-1 end" class:dim>
-        {progress.end()?.toString()}
+        {progress.end()?.toString() || ''}
     </div>
 </div>
 

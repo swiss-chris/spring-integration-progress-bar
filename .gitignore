@@ -1,9 +1,7 @@
-/node_modules/
-/target/
-/.idea/
-/build/
-/dist/
-/node/
+.idea/
+node_modules/
+target/
+node/
 
 **/resources/static/*[.js, .map]
 .devcontainer/devcontainer.json.bak

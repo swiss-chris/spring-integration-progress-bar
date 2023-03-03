@@ -39,7 +39,7 @@ public class Application implements ApplicationContextAware {
 
     private static final int ONE_SECOND = 1000; // millis
 
-    private static final List<Integer> PERCENTAGES = IntStream.range(1, 101).boxed().toList();
+    private static final List<Integer> PERCENTAGES = IntStream.range(0, 101).boxed().toList();
     private static final String HTTP_PARAM_STARTED_AT = "start";
     private static final String HTTP_PARAM_FLOW_ID = "flowId";
     private static final String HTTP_PARAM_PERCENT_PER_SECOND = "percentPerSecond"; // 0.1, 1, 10, 100
@@ -80,8 +80,8 @@ public class Application implements ApplicationContextAware {
                         .setHeader(HTTP_PARAM_PERCENT_PER_SECOND, m.getHeaders().get(HTTP_PARAM_PERCENT_PER_SECOND))
                         .build())
                 .split()
-                .transform(Message.class, Application::doSomeImportantWork) // pace the messages at 'PERCENT_PER_SECOND'
                 .channel(webSocketFlow().getInputChannel())
+                .transform(Message.class, Application::doSomeImportantWork) // pace the messages at 'PERCENT_PER_SECOND'
                 .get();
     }
 

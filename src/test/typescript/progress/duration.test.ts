@@ -1,6 +1,7 @@
-import { Duration, Time } from '../../../main/typescript/rows/progress/lib';
+import { Duration, Time } from '../../../main/typescript/lib/rows/progress/lib';
+import { expect, test } from 'vitest'
 
-describe('Duration', () => {
+test('Duration', () => {
     test('Initializing Duration objects', () => {
         expect(() => new Duration(-1)).toThrowError();
         expect(() => new Duration(0)).not.toThrowError();

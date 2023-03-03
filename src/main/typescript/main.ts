@@ -1,26 +1,8 @@
-import { DarkModeSwitcher } from './dark-mode';
-import { WebsocketConnector } from './websocket-connector';
-import { MessageHandler } from './rows';
-import { Form } from './form'
-import { getBackendUrl } from './util/host';
+import './lib/app.css'
+import App from './lib/App.svelte'
 
-////// -------- FORM -------- //////
+const app = new App({
+  target: document.getElementById('app'),
+})
 
-window.onload = () => {
-    const form = document.querySelector('form');
-    form!.onsubmit = (e: Event) => {
-        e.preventDefault();
-        Form.submit();
-    };
-}
-
-////// -------- DARK MODE -------- //////
-
-DarkModeSwitcher.initialize();
-
-////// -------- WEB SOCKET -------- //////
-
-export const websocketConnector = new WebsocketConnector(
-    `${getBackendUrl()}/messages`,
-    MessageHandler.handleMessage
-).connect(); // on page refresh, we want to receive already running flows
+export default app

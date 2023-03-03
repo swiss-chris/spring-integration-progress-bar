@@ -1,7 +1,6 @@
 package ch.dickinson.springintegration.progressbar;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.hamcrest.text.IsEmptyString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -27,6 +26,7 @@ class ProgressBarIT {
 
     public static final String TIME_PATTERN = "\\d{2}:\\d{2}:\\d{2}"; // e.g. 23:59:59
     public static final String DURATION_PATTERN = "00:00:\\d{2}"; // e.g. 00:00:09
+    public static final String ZERO_DURATION_PATTERN = "00:00:\\d{2}"; // e.g. 00:00:09
     public static final String PERCENT_PATTERN = "\\d{1,2}%"; // e.g. 0% or 99%
 
     private WebDriver driver;
@@ -58,7 +58,7 @@ class ProgressBarIT {
 
     @Test
     public void testTest() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(500));
 
         driver.get("http://localhost:" + port);
         assertEquals("Spring Integration (Java DSL) Progress Bar, Using WebSockets", driver.getTitle());
@@ -68,8 +68,7 @@ class ProgressBarIT {
 
         driver.findElement(By.xpath("//button[text() = 'Start Flow']")).click();
 
-        final String start = driver.findElement(By.className("start")).getText();
-        assertThat(start, matchesPattern(TIME_PATTERN));
+        wait.until(ExpectedConditions.textMatches(By.className("start"), Pattern.compile(TIME_PATTERN)));
 
         final String sources = driver.findElement(By.className("percent-per-second")).getText();
         assertThat(sources, is("10%"));
@@ -81,7 +80,7 @@ class ProgressBarIT {
         assertThat(duration, matchesPattern(DURATION_PATTERN));
 
         final String timeSinceLastUpdate = driver.findElement(By.className("time-since-last-update")).getText();
-        assertThat(timeSinceLastUpdate, IsEmptyString.emptyOrNullString());
+        assertThat(timeSinceLastUpdate, matchesPattern(ZERO_DURATION_PATTERN));
 
         wait.until(ExpectedConditions.textMatches(By.className("remaining"), Pattern.compile(DURATION_PATTERN)));
 

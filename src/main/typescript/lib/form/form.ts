@@ -1,20 +1,18 @@
-import { websocketConnector } from '../main';
-import { Rows } from '../rows';
+import { websocketConnector } from '../rows/websocket-message-broker';
 import { getBackendUrl } from '../util/host';
 
 interface StartFlowParams {
     flowId: string;
     start: number;
-    percentPerSecond: number;
+    percentPerSecond: number
 }
 
 ////// -------- ON FORM SUBMIT -------- //////
 
 export class Form {
-    static submit() {
+    static submit(percentPerSecond: number) {
         websocketConnector.reconnect();
-        const {flowId, start, percentPerSecond}: StartFlowParams = this.getParams();
-        Rows.createRow(flowId, new Date(start), percentPerSecond);
+        const {flowId, start} = this.getParams();
         this.startFlow({flowId, start, percentPerSecond});
     }
 
@@ -29,12 +27,10 @@ export class Form {
 
     private static getParams() {
         // @ts-ignore
-        const {percentPerSecond} = Object.fromEntries(new FormData(document.getElementById("startflow")));
         const timestamp = Date.now();
         return {
             start: timestamp,
             flowId: timestamp.toString(), // ideally we'd use a proper 'uuid' for 'flowId'
-            percentPerSecond: parseFloat(percentPerSecond as string)
         };
     }
 }

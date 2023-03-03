@@ -1,6 +1,7 @@
-import {Percent} from '../../../main/typescript/rows/progress/lib';
+import { Percent } from '../../../main/typescript/lib/rows/progress/lib';
+import { expect, test } from 'vitest'
 
-describe('Percent', () => {
+test('Percent', () => {
     test('Initializing Percent objects', () => {
         expect(() => new Percent(-1)).toThrowError();
         expect(() => new Percent(101)).toThrowError();

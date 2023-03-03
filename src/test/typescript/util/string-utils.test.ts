@@ -1,4 +1,4 @@
-import { replaceAfterColon } from '../../../main/svelte/lib/util/string-utils';
+import { replaceAfterColon } from '../../../main/typescript/lib/util/string-utils';
 import { expect, test } from 'vitest'
 
 test('string-utils', () => {

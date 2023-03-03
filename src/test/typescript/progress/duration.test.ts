@@ -1,4 +1,4 @@
-import { Duration, Time } from '../../../main/svelte/lib/rows/progress/lib';
+import { Duration, Time } from '../../../main/typescript/lib/rows/progress/lib';
 import { expect, test } from 'vitest'
 
 test('Duration', () => {

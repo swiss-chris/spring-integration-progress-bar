@@ -1,4 +1,4 @@
-import { Percent } from '../../../main/svelte/lib/rows/progress/lib';
+import { Percent } from '../../../main/typescript/lib/rows/progress/lib';
 import { expect, test } from 'vitest'
 
 test('Percent', () => {

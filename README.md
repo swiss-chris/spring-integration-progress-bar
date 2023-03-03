@@ -27,8 +27,7 @@ At the time of writing, The Java plugin for Codespaces doesn't seem to work insi
 
 ## To develop using live-reloading (Hot Module Reloading)
 - run the Spring Boot `Application`.
-- run the svelte app with `npm run dev` 
-  - use `npm run dev:codespaces` to expose the port if you are using GitHub Codespaces
+- run the svelte app with `npm run dev:codespaces` or `npm run dev`.
 - open the browser at http://localhost:5173
 
 ## To run the Selenium SpringBootTest
@@ -36,6 +35,7 @@ The Selenium test is run as part of `mvn test` (see below).
 
 To run it manually:
 - run `npm run build` to bundle the typescript code into `bundle.js`.
+- stop the Spring Boot Application if it is currently running.
 - run the `ProgressBarIT`.
 
 ## mvn test

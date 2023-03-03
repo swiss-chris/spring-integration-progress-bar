@@ -9,7 +9,6 @@
     $: isLate = progress?.timeSinceLastUpdate().isGreaterThan(Duration.ofSeconds(12))
     $: isVeryLate = progress?.timeSinceLastUpdate().isGreaterThan(Duration.ofSeconds(60))
     $: percentString = progress?.percent().toString();
-    $: timeSinceLastUpdate = progress?.timeSinceLastUpdate();
 </script>
 
 <div class="row mt-4 flow-progress">

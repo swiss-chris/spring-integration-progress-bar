@@ -32,7 +32,7 @@
     </div>
     <div class="row mt-3">
         <div class="col-3">
-            <button class="start btn btn-sm btn-primary mt-3" type="submit"
+            <button class="btn btn-sm btn-primary mt-3" type="submit"
                 >Start Flow</button
             >
         </div>

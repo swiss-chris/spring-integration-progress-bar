@@ -1,5 +1,5 @@
-import {Duration} from "../../../main/typescript/rows/progress/lib";
-import {Time} from "../../../main/typescript/rows/progress/lib";
+import {Duration} from "../../../main/svelte/vite-project/src/lib/rows/progress/lib";
+import {Time} from "../../../main/svelte/vite-project/src/lib/rows/progress/lib";
 
 describe('Time', () => {
     const startMillis = 1672866000000; // 21:00:00 UTC

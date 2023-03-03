@@ -1,4 +1,4 @@
-import { replaceAfterColon } from '../../../main/typescript/util/string-utils';
+import { replaceAfterColon } from '../../../main/svelte/vite-project/src/lib/util/string-utils';
 
 describe('string-utils', () => {
     test('getHost()', () => {

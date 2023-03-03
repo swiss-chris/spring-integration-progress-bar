@@ -1,4 +1,4 @@
-import { Progress } from "../../../main/typescript/rows/progress";
+import { Progress } from "../../../main/svelte/vite-project/src/lib/rows/progress";
 
 describe('Progress', () => {
     test('0 percent', () => {

@@ -1,4 +1,4 @@
-import { Duration, Time } from '../../../main/typescript/rows/progress/lib';
+import { Duration, Time } from '../../../main/svelte/vite-project/src/lib/rows/progress/lib';
 
 describe('Duration', () => {
     test('Initializing Duration objects', () => {

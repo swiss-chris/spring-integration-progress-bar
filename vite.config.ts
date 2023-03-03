@@ -5,7 +5,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
   plugins: [svelte()],
   build: {
-    outDir: '../../resources/static'
+    outDir: '../resources/static'
   },
   define: {
     'process.env.BACKEND_PORT': process.env.BACKEND_PORT || 8080

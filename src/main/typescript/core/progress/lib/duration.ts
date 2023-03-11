@@ -1,4 +1,5 @@
 import type { Time } from './time';
+import type { Formattable } from './formattable.interface';
 
 export class Duration implements Formattable<number>{
     private static readonly ONE_SECOND = 1000;

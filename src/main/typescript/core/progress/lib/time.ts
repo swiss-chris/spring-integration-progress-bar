@@ -1,4 +1,5 @@
 import { Duration } from './duration';
+import type { Formattable } from './formattable.interface';
 
 export class Time implements Formattable<Date> {
     private readonly millis: number;

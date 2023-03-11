@@ -1,3 +1,5 @@
+import type { Formattable } from './formattable.interface';
+
 export class Percent implements Formattable<number> {
     static ZERO_PERCENT = new Percent(0);
     static ONE_HUNDRED_PERCENT = new Percent(100);

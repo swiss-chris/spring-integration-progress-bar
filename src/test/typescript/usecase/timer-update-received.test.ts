@@ -10,6 +10,7 @@ test('timer-update-received', () => {
     const durationMillis = 1500;
     const end = 2000;
     const currentProgress = Progress.create(new Date(startMillis), new Date(lastUpdate), percent);
+
     const updatedProgress = update(currentProgress, new Date(durationMillis));
 
     expect(updatedProgress.percent()).toEqual(new Percent(percent))

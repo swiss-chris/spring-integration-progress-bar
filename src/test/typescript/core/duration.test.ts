@@ -1,4 +1,4 @@
-import { Duration, Time } from '../../../../main/typescript/core/progress/lib';
+import { Duration, Time } from '../../../main/typescript/core';
 import { expect, test } from 'vitest'
 
 test('Duration', () => {

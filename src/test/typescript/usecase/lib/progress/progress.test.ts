@@ -1,4 +1,4 @@
-import { Progress } from "../../../../main/typescript/core/progress";
+import { Progress } from "../../../../../main/typescript/usecase/lib/progress";
 import { expect, test } from 'vitest'
 
 test('Progress', () => {

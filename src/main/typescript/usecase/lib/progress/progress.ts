@@ -1,4 +1,4 @@
-import { Percent, Duration, Time } from './lib';
+import { Percent, Duration, Time } from '../../../core';
 
 export class Progress {
     private constructor(private _start: Time, private _now: Time, private _percent: Percent, private _lastUpdate: Time) {}

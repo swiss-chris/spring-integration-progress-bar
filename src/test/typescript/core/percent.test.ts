@@ -1,4 +1,4 @@
-import { Percent } from '../../../../main/typescript/core/progress/lib';
+import { Percent } from '../../../main/typescript/core';
 import { expect, test } from 'vitest'
 
 test('Percent', () => {

@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest';
 import { update } from '../../../main/typescript/usecase/timer-update-received';
-import { Progress } from '../../../main/typescript/core/progress';
-import { Time, Percent, Duration } from '../../../main/typescript/core/progress/lib';
+import { Progress } from '../../../main/typescript/usecase/lib/progress';
+import { Time, Percent, Duration } from '../../../main/typescript/core';
 
 test('timer-update-received', () => {
     const percent = 50;

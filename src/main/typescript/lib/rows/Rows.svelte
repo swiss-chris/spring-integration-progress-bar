@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { Progress } from "./progress";
+    import { Progress } from "../../core/progress";
     import { subscribe as websocketSubscribe } from "./websocket-message-broker";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";

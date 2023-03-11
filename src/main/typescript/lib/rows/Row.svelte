@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Progress } from "./progress";
-    import { Duration } from './progress/lib';
+    import type { Progress } from "../../core/progress";
+    import { Duration } from '../../core/progress/lib';
 
     export let percentPerSecond: number;
     export let progress: Progress;

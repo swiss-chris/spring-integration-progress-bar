@@ -1,12 +1,12 @@
 import { test, expect, describe } from 'vitest';
-import { FlowProgressContainer } from '../../../../../main/typescript/usecase/lib/flows/flow-progress-container';
-import { Progress } from '../../../../../main/typescript/usecase/lib/progress';
-import { FlowProgress } from '../../../../../main/typescript/usecase/lib/flows/flow-progress';
+import { FlowProgressContainer } from '@/usecase/lib/flows/flow-progress-container';
+import { Progress } from '@/usecase/lib/progress';
+import { FlowProgress } from '@/usecase/lib/flows/flow-progress';
 
 describe('flows progress container', () => {
     describe('updatePercent', () => {
         test('very first update', () => {
-            // A flow needs to know it's flowID, it's progress data, and some metatada (in our case 'percentPerSecond')
+            // A flow needs to know it's flowID, it's progress data, and some metadata (in our case 'percentPerSecond')
             const flowId = 'flowId';
             const start = new Date(0);
             const percent = 50;

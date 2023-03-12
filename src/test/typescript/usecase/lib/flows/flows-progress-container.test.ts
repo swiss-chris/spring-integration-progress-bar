@@ -18,8 +18,8 @@ describe('flows', () => {
         const updatedFlowProgressContainer = flowProgressContainer.updatePercent(flowId, start, percent, now, percentPerSecond);
 
         expect(updatedFlowProgressContainer.length).toBe(1);
-        expect(updatedFlowProgressContainer[0].flowId).toEqual(flowId);
-        expect(updatedFlowProgressContainer[0].progress.equals(Progress.create(start, now, percent)));
+        expect(updatedFlowProgressContainer[0].equals(new FlowProgress(flowId, Progress.create(start, now, percent), {percentPerSecond})))
+            .toBeTruthy();
     })
 
     test('second update, same flowId', () => {
@@ -40,10 +40,36 @@ describe('flows', () => {
 
         expect(updatedFlowProgressContainer.length)
             .toBe(1);
-        const updatedFlowProgress = updatedFlowProgressContainer[0];
-        expect(updatedFlowProgress.flowId)
-            .toEqual(flowId);
-        expect(updatedFlowProgress.progress.equals(Progress.create(start, newNow, newPercent)))
+        expect(updatedFlowProgressContainer[0].equals(new FlowProgress(flowId, Progress.create(start, newNow, newPercent), {percentPerSecond})))
+            .toBeTruthy();
+    })
+
+
+    test('second update, different flowId', () => {
+        // A flow needs to know it's flowID, it's progress data, and some metatada (in our case 'percentPerSecond')
+        const oldFlowId = 'oldFlowId';
+        const start = new Date(0);
+        const oldPercent = 50;
+        const oldNow = new Date(1000);
+        const oldPercentPerSecond = 10;
+
+        const flowProgressContainer = new FlowProgressContainer([
+            new FlowProgress(oldFlowId, Progress.create(start, oldNow, oldPercent), {percentPerSecond: oldPercentPerSecond})
+        ]);
+
+        const newPercent = 75;
+        const newNow = new Date(1500);
+        const newFlowId = 'newFlowId';
+        const newPercentPerSecond = 10;
+        const updatedFlowProgressContainer = flowProgressContainer.updatePercent(newFlowId, start, newPercent, newNow, newPercentPerSecond);
+
+        expect(updatedFlowProgressContainer.length)
+            .toBe(2);
+        const oldFlowProgress = updatedFlowProgressContainer.find(fp => fp.flowId === oldFlowId);
+        expect(oldFlowProgress.equals(new FlowProgress(oldFlowId, Progress.create(start, oldNow, oldPercent), {percentPerSecond: oldPercentPerSecond})))
+            .toBeTruthy();
+        const newFlowProgress = updatedFlowProgressContainer.find(fp => fp.flowId === newFlowId);
+        expect(newFlowProgress.equals(new FlowProgress(newFlowId, Progress.create(start, newNow, newPercent), {percentPerSecond: newPercentPerSecond})))
             .toBeTruthy();
     })
 })

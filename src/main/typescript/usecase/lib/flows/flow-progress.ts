@@ -22,4 +22,10 @@ export class FlowProgress {
     get metadata(): Metadata {
         return this._metadata;
     }
+
+    equals(other: FlowProgress) {
+        return this.flowId === other.flowId
+            && this.progress.equals(other.progress)
+            && JSON.stringify(this.metadata) === JSON.stringify(other.metadata);
+    }
 }

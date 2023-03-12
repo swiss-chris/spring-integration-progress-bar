@@ -18,8 +18,8 @@ describe('flows', () => {
         const updatedFlowProgressContainer = flowProgressContainer.updatePercent(flowId, start, percent, now, percentPerSecond);
 
         expect(updatedFlowProgressContainer.length).toBe(1);
-        expect(updatedFlowProgressContainer[0].flowId()).toEqual(flowId);
-        expect(updatedFlowProgressContainer[0].progress().equals(Progress.create(start, now, percent)));
+        expect(updatedFlowProgressContainer[0].flowId).toEqual(flowId);
+        expect(updatedFlowProgressContainer[0].progress.equals(Progress.create(start, now, percent)));
     })
 
     test('second update, same flowId', () => {
@@ -38,10 +38,12 @@ describe('flows', () => {
         const newNow = new Date(1500);
         const updatedFlowProgressContainer = flowProgressContainer.updatePercent(flowId, start, newPercent, newNow, percentPerSecond);
 
-        expect(updatedFlowProgressContainer.length).toBe(1);
-        expect(updatedFlowProgressContainer[0].flowId()).toEqual(flowId);
-        expect(updatedFlowProgressContainer[0].progress().equals(Progress.create(start, newNow, newPercent)));
-        expect(JSON.stringify(updatedFlowProgressContainer[0].progress()))
-            .toEqual(JSON.stringify(Progress.create(start, newNow, newPercent)));
+        expect(updatedFlowProgressContainer.length)
+            .toBe(1);
+        const updatedFlowProgress = updatedFlowProgressContainer[0];
+        expect(updatedFlowProgress.flowId)
+            .toEqual(flowId);
+        expect(updatedFlowProgress.progress.equals(Progress.create(start, newNow, newPercent)))
+            .toBeTruthy();
     })
 })

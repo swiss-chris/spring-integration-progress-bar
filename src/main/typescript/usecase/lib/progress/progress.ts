@@ -3,8 +3,8 @@ import { Percent, Duration, Time } from '../../../core';
 export class Progress {
     private constructor(private _start: Time, private _now: Time, private _percent: Percent, private _lastUpdate: Time) {}
 
-    static create(start: Date, now: Date, percent: number) {
-        return new Progress(new Time(start.getTime()), new Time(now.getTime()), new Percent(percent), new Time(now.getTime()))
+    static create(start: Date, now: Date, percent: number, lastUpdate?: Date) {
+        return new Progress(new Time(start.getTime()), new Time(now.getTime()), new Percent(percent), new Time(lastUpdate?.getTime() ?? now.getTime()))
     }
 
     updateTime(now: Date) {

@@ -19,6 +19,16 @@ export class FlowProgressContainer {
         } else {
             this.flows.set(flowId, new FlowProgress(flowId, flow.progress.updatePercent(now, percent), {percentPerSecond}))
         }
+        return this.getFlowsAsArray();
+    }
+
+    updateTime(flowId: string, now: Date) {
+        const flow = this.flows.get(flowId);
+        this.flows.set(flowId, new FlowProgress(flowId, flow.progress.updateTime(now), flow.metadata));
+        return this.getFlowsAsArray();
+    }
+
+    private getFlowsAsArray() {
         return [...this.flows.values()];
     }
 }

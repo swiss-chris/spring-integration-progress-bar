@@ -8,11 +8,11 @@ export class Time implements Formattable<Date> {
         this.millis = millis;
     }
 
-    static now() {
+    static now(): Time {
         return new Time(Date.now());
     }
 
-    public static localTimeFormatter = (date: Date) => {
+    public static localTimeFormatter = (date: Date): string => {
         return new Intl.DateTimeFormat('en-US', {
             hour: '2-digit',
             minute: '2-digit',
@@ -22,24 +22,28 @@ export class Time implements Formattable<Date> {
         }).format(date);
     }
 
-    plus(duration: Duration) {
+    plus(duration: Duration): Time {
         return new Time(this.millis + duration['millis']); // we would need a C++-style 'friend' class
     }
 
-    differenceTo(time: Time) {
+    differenceTo(time: Time): Duration {
         return new Duration(Math.abs(time.millis - this.millis));
     }
 
-    date() {
+    date(): Date {
         return new Date(this.millis);
     }
 
-    format(callback: (date: Date) => string) {
+    format(callback: (date: Date) => string): string {
         return callback(new Date(this.millis));
     }
 
     // TODO unit test
     toString(){
         return this.format(Time.localTimeFormatter);
+    }
+
+    equals(other: Time) {
+        return this.millis == other.millis;
     }
 }

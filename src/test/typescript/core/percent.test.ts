@@ -1,7 +1,7 @@
 import { Percent } from '../../../main/typescript/core';
-import { expect, test } from 'vitest'
+import { expect, test, describe } from 'vitest'
 
-test('Percent', () => {
+describe('Percent', () => {
     test('Initializing Percent objects', () => {
         expect(() => new Percent(-1)).toThrowError();
         expect(() => new Percent(101)).toThrowError();

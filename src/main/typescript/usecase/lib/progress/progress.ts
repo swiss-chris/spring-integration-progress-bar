@@ -43,6 +43,13 @@ export class Progress {
         return this.remainingSinceLastUpdate()?.addTo(this._lastUpdate);
     }
 
+    equals(other: Progress): boolean {
+        return this._start.equals(other._start)
+            && this._now.equals(other._now)
+            && this._lastUpdate.equals(other._lastUpdate)
+            && this._percent.equals(other._percent);
+    }
+
     private remainingSinceLastUpdate(): Duration | undefined {
         return this._percent.isZero()
             ? undefined

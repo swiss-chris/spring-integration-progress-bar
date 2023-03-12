@@ -1,7 +1,7 @@
 import { Duration, Time } from '../../../main/typescript/core';
-import { expect, test } from 'vitest'
+import { expect, test, describe } from 'vitest'
 
-test('Duration', () => {
+describe('Duration', () => {
     test('Initializing Duration objects', () => {
         expect(() => new Duration(-1)).toThrowError();
         expect(() => new Duration(0)).not.toThrowError();

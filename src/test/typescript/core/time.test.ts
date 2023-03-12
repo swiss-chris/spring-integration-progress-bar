@@ -1,7 +1,7 @@
 import { Duration, Time } from "../../../main/typescript/core";
-import { expect, test } from 'vitest'
+import { expect, test, describe } from 'vitest'
 
-test('Time', () => {
+describe('Time', () => {
     const startMillis = 1672866000000; // 21:00:00 UTC
     const start = new Time(startMillis);
     const now = new Time(1672867800000); // 21:30:00 UTC

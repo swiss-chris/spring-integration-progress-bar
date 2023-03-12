@@ -1,7 +1,7 @@
 import { Progress } from "../../../../../main/typescript/usecase/lib/progress";
-import { expect, test } from 'vitest'
+import { expect, test, describe } from 'vitest'
 
-test('Progress', () => {
+describe('Progress', () => {
     test('0 percent', () => {
         const start = new Date(1672866000000);
         const percent0 = 0;

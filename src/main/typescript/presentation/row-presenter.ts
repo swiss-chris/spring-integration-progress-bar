@@ -1,14 +1,14 @@
 import type { FlowProgress } from '@/usecase/flow/flow-progress';
 import type { Row } from '@/presentation/row';
-import { Duration } from '@/core';
+import { Duration, localTimeFormatter } from '@/core';
 
 export class RowPresenter {
     private timeFormatter: (date: Date) => string;
 
     constructor(
-        timeFormatter: (date: Date) => string
+        timeFormatter?: (date: Date) => string
     ) {
-        this.timeFormatter = timeFormatter;
+        this.timeFormatter = timeFormatter ?? localTimeFormatter;
     }
 
     toRow(

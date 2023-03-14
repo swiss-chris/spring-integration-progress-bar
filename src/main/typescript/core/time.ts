@@ -12,16 +12,6 @@ export class Time implements Formattable<Date> {
         return new Time(Date.now());
     }
 
-    public static localTimeFormatter = (date: Date): string => {
-        return new Intl.DateTimeFormat('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // local timezone
-            hour12: false
-        }).format(date);
-    }
-
     plus(duration: Duration): Time {
         return new Time(this.millis + duration['millis']); // we would need a C++-style 'friend' class
     }
@@ -34,11 +24,21 @@ export class Time implements Formattable<Date> {
         return new Date(this.millis);
     }
 
-    toString(callback: (date: Date) => string = Time.localTimeFormatter): string {
+    toString(callback: (date: Date) => string = localTimeFormatter): string {
         return callback(new Date(this.millis));
     }
 
     equals(other: Time) {
         return this.millis == other.millis;
     }
+}
+
+export const localTimeFormatter = (date: Date): string => {
+    return new Intl.DateTimeFormat('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // local timezone
+        hour12: false
+    }).format(date);
 }

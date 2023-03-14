@@ -26,10 +26,11 @@ export class RowPresenter {
             duration: duration.toString(),
             timeSinceLastUpdate: timeSinceLastUpdate.toString(),
             timeSinceLastUpdateColor:
-                this.isLate(timeSinceLastUpdate) ? 'orange'
-                    : this.isVeryLate(timeSinceLastUpdate) ? 'orangered' : '',
-            remaining: remaining?.toString(),
-            end: end?.toString(this.timeFormatter),
+                this.isVeryLate(timeSinceLastUpdate) ? 'orangered'
+                    : this.isLate(timeSinceLastUpdate) ? 'orange'
+                        : '',
+            remaining: remaining?.toString() ?? '',
+            end: end?.toString(this.timeFormatter) ?? '',
             endColorClass: isFinished ? '' : 'dim'
         }
     }

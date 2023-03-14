@@ -44,12 +44,7 @@ export class Percent implements Formattable<number> {
                 : 0;
     }
 
-    format(callback: (percent: number) => string) {
+    toString(callback: (percent: number) => string = percent => `${percent}%`) {
         return callback(this.percent);
-    }
-
-    // TODO unit test
-    toString() {
-        return this.format(percent => `${percent}%`);
     }
 }

@@ -1,4 +1,4 @@
-import { Percent } from '../../../main/typescript/core';
+import { Percent } from '@/core';
 import { expect, test, describe } from 'vitest'
 
 describe('Percent', () => {
@@ -27,11 +27,11 @@ describe('Percent', () => {
     });
 
     test('Percent.value()', () => {
-        expect(new Percent(42).format(percentFormatter)).toBe('42%');
+        expect(new Percent(42).toString(percentFormatter)).toBe('42%');
     });
 
     test('Percent.format()', () => {
-        expect(new Percent(42.5).format(percentFormatter)).toBe('42.5%');
+        expect(new Percent(42.5).toString(percentFormatter)).toBe('42.5%');
     });
 });
 

@@ -1,4 +1,4 @@
-import { Progress } from "@/usecase/lib/progress";
+import { Progress } from "@/usecase/progress";
 import { expect, test, describe } from 'vitest'
 
 describe('Progress', () => {
@@ -8,13 +8,13 @@ describe('Progress', () => {
         const progress0Percent = Progress.create(start, start, percent0);
         const duration0 = '00:00:00';
 
-        expect(progress0Percent.isFinished()).toBeFalsy();
-        expect(progress0Percent.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
-        expect(progress0Percent.percent().isZero()).toBeTruthy();
-        expect(progress0Percent.percent().isOneHundred()).toBeFalsy();
-        expect(progress0Percent.duration().toString()).toBe(duration0.toString());
-        expect(progress0Percent.remaining()).toBeUndefined();
-        expect(progress0Percent.end()).toBeUndefined();
+        expect(progress0Percent.isFinished).toBeFalsy();
+        expect(progress0Percent.start.date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
+        expect(progress0Percent.percent.isZero()).toBeTruthy();
+        expect(progress0Percent.percent.isOneHundred()).toBeFalsy();
+        expect(progress0Percent.duration.toString()).toBe(duration0.toString());
+        expect(progress0Percent.remaining).toBeUndefined();
+        expect(progress0Percent.end).toBeUndefined();
     });
 
     test('50 percent 30 minutes', () => {
@@ -25,13 +25,13 @@ describe('Progress', () => {
         const duration30 = '00:30:00'; // 30 minutes
         const plus60 = new Date(1672956000000); // 23:00:00
 
-        expect(progress50Percent30Minutes.isFinished()).toBeFalsy();
-        expect(progress50Percent30Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
-        expect(progress50Percent30Minutes.percent().isZero()).toBeFalsy();
-        expect(progress50Percent30Minutes.percent().isOneHundred()).toBeFalsy();
-        expect(progress50Percent30Minutes.duration().toString()).toBe(duration30.toString());
-        expect(progress50Percent30Minutes.remaining()!.toString()).toBe(duration30.toString());
-        expect(progress50Percent30Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
+        expect(progress50Percent30Minutes.isFinished).toBeFalsy();
+        expect(progress50Percent30Minutes.start.date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
+        expect(progress50Percent30Minutes.percent.isZero()).toBeFalsy();
+        expect(progress50Percent30Minutes.percent.isOneHundred()).toBeFalsy();
+        expect(progress50Percent30Minutes.duration.toString()).toBe(duration30.toString());
+        expect(progress50Percent30Minutes.remaining!.toString()).toBe(duration30.toString());
+        expect(progress50Percent30Minutes.end!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
     });
 
     test('100 percent 60 minutes', () => {
@@ -42,13 +42,13 @@ describe('Progress', () => {
         const duration0 = '00:00:00';
         const duration60 = '01:00:00';
 
-        expect(progress100Percent60Minutes.isFinished()).toBeTruthy();
-        expect(progress100Percent60Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
-        expect(progress100Percent60Minutes.percent().isZero()).toBeFalsy();
-        expect(progress100Percent60Minutes.percent().isOneHundred()).toBeTruthy();
-        expect(progress100Percent60Minutes.duration().toString()).toBe(duration60.toString());
-        expect(progress100Percent60Minutes.remaining()!.toString()).toBe(duration0.toString());
-        expect(progress100Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
+        expect(progress100Percent60Minutes.isFinished).toBeTruthy();
+        expect(progress100Percent60Minutes.start.date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
+        expect(progress100Percent60Minutes.percent.isZero()).toBeFalsy();
+        expect(progress100Percent60Minutes.percent.isOneHundred()).toBeTruthy();
+        expect(progress100Percent60Minutes.duration.toString()).toBe(duration60.toString());
+        expect(progress100Percent60Minutes.remaining!.toString()).toBe(duration0.toString());
+        expect(progress100Percent60Minutes.end!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
     });
 
     test('updateTime', () => {
@@ -62,14 +62,14 @@ describe('Progress', () => {
         const duration60 = '01:00:00'; // 60 minutes
 
         const progress50Percent60Minutes = progress50Percent30Minutes.updateTime(plus60);
-        expect(progress50Percent60Minutes.isFinished()).toBeFalsy();
-        expect(progress50Percent60Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
-        expect(progress50Percent60Minutes.percent().isZero()).toBeFalsy();
-        expect(progress50Percent60Minutes.percent().isOneHundred()).toBeFalsy();
-        expect(progress50Percent60Minutes.duration().toString()).toBe(duration60.toString());
-        expect(progress50Percent60Minutes.timeSinceLastUpdate().toString()).toBe(duration30.toString());
-        expect(progress50Percent60Minutes.remaining()!.toString()).toBe(duration00.toString());
-        expect(progress50Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
+        expect(progress50Percent60Minutes.isFinished).toBeFalsy();
+        expect(progress50Percent60Minutes.start.date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
+        expect(progress50Percent60Minutes.percent.isZero()).toBeFalsy();
+        expect(progress50Percent60Minutes.percent.isOneHundred()).toBeFalsy();
+        expect(progress50Percent60Minutes.duration.toString()).toBe(duration60.toString());
+        expect(progress50Percent60Minutes.timeSinceLastUpdate.toString()).toBe(duration30.toString());
+        expect(progress50Percent60Minutes.remaining!.toString()).toBe(duration00.toString());
+        expect(progress50Percent60Minutes.end!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
     })
 
     test('updatePercent', () => {
@@ -84,13 +84,13 @@ describe('Progress', () => {
         const duration45 = '00:45:00'; // 30 minutes
 
         const progress50Percent60Minutes = progress50Percent30Minutes.updatePercent(plus45, 75);
-        expect(progress50Percent60Minutes.isFinished()).toBeFalsy();
-        expect(progress50Percent60Minutes.start().date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
-        expect(progress50Percent60Minutes.percent().isZero()).toBeFalsy();
-        expect(progress50Percent60Minutes.percent().isOneHundred()).toBeFalsy();
-        expect(progress50Percent60Minutes.duration().toString()).toBe(duration45.toString());
-        expect(progress50Percent60Minutes.timeSinceLastUpdate().toString()).toBe(duration00.toString());
-        expect(progress50Percent60Minutes.remaining()!.toString()).toBe(duration15.toString());
-        expect(progress50Percent60Minutes.end()!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
+        expect(progress50Percent60Minutes.isFinished).toBeFalsy();
+        expect(progress50Percent60Minutes.start.date().toLocaleTimeString()).toBe(start.toLocaleTimeString());
+        expect(progress50Percent60Minutes.percent.isZero()).toBeFalsy();
+        expect(progress50Percent60Minutes.percent.isOneHundred()).toBeFalsy();
+        expect(progress50Percent60Minutes.duration.toString()).toBe(duration45.toString());
+        expect(progress50Percent60Minutes.timeSinceLastUpdate.toString()).toBe(duration00.toString());
+        expect(progress50Percent60Minutes.remaining!.toString()).toBe(duration15.toString());
+        expect(progress50Percent60Minutes.end!.date().toLocaleTimeString()).toBe(plus60.toLocaleTimeString());
     })
 });

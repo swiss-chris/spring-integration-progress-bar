@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { Progress } from "../../usecase/lib/progress";
+    import { Progress } from "../../usecase/progress";
     import { subscribe as websocketSubscribe } from "./websocket-message-broker";
     import Row from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
@@ -32,10 +32,10 @@
                     percent
                 )
             });
-            rows = rows.sort((rowA, rowB) => rowA.progress.percent()
-                .compare(rowB.progress.percent()));
+            rows = rows.sort((rowA, rowB) => rowA.progress.percent
+                .compare(rowB.progress.percent));
 
-            if (rows.every(row => row.progress.isFinished())) {
+            if (rows.every(row => row.progress.isFinished)) {
                 timer.deactivate();
             }
         })
@@ -62,7 +62,7 @@
         const now = new Date();
         rows = rows.map(row => ({
             ...row,
-            progress: row.progress.isFinished() ? row.progress : row.progress.updateTime(now)
+            progress: row.progress.isFinished ? row.progress : row.progress.updateTime(now)
         }));
     }
 </script>

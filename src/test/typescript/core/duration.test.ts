@@ -1,4 +1,4 @@
-import { Duration, Time } from '../../../main/typescript/core';
+import { Duration, Time } from '@/core';
 import { expect, test, describe } from 'vitest'
 
 describe('Duration', () => {
@@ -52,7 +52,7 @@ describe('Duration', () => {
     });
 
     test('format()', () => {
-        expect(new Duration(1234).format(formatter)).toBe('some custom format: 1234');
+        expect(new Duration(1234).toString(formatter)).toBe('some custom format: 1234');
     });
 });
 

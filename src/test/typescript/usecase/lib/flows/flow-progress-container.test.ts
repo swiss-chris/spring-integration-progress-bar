@@ -1,7 +1,7 @@
 import { test, expect, describe } from 'vitest';
-import { FlowProgressContainer } from '@/usecase/lib/flows/flow-progress-container';
-import { Progress } from '@/usecase/lib/progress';
-import { FlowProgress } from '@/usecase/lib/flows/flow-progress';
+import { FlowProgressContainer } from '@/usecase/flow/flow-progress-container';
+import { Progress } from '@/usecase/progress';
+import { FlowProgress } from '@/usecase/flow/flow-progress';
 
 describe('flows progress container', () => {
     describe('updatePercent', () => {

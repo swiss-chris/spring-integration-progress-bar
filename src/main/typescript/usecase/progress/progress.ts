@@ -1,4 +1,4 @@
-import { Percent, Duration, Time } from '../../../core';
+import { Percent, Duration, Time } from '@/core';
 
 export class Progress {
     private constructor(private _start: Time, private _now: Time, private _percent: Percent, private _lastUpdate: Time) {}
@@ -15,31 +15,31 @@ export class Progress {
         return new Progress(this._start, new Time(now.getTime()), new Percent(percent), new Time(now.getTime()))
     }
 
-    isFinished() {
+    get isFinished() {
         return this._percent.isOneHundred();
     }
 
-    start(): Time {
+    get start(): Time {
         return this._start;
     }
 
-    percent(): Percent {
+    get percent(): Percent {
         return this._percent;
     }
 
-    duration(): Duration {
+    get duration(): Duration {
         return this.elapsed();
     }
 
-    timeSinceLastUpdate(): Duration {
+    get timeSinceLastUpdate(): Duration {
         return this._lastUpdate.differenceTo(this._now);
     }
 
-    remaining(): Duration | undefined {
-        return this.end()?.differenceTo(this._now);
+    get remaining(): Duration | undefined {
+        return this.end?.differenceTo(this._now);
     }
 
-    end(): Time | undefined {
+    get end(): Time | undefined {
         return this.remainingSinceLastUpdate()?.addTo(this._lastUpdate);
     }
 

@@ -1,3 +1,3 @@
 export interface Formattable<T> {
-    format(formatter: (value: T) => string): void;
+    toString(formatter?: (value: T) => string): void;
 }

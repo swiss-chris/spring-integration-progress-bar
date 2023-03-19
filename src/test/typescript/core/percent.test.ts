@@ -1,7 +1,7 @@
-import { Percent } from '../../../main/typescript/lib/rows/progress/lib';
-import { expect, test } from 'vitest'
+import { Percent } from '@/core';
+import { expect, test, describe } from 'vitest'
 
-test('Percent', () => {
+describe('Percent', () => {
     test('Initializing Percent objects', () => {
         expect(() => new Percent(-1)).toThrowError();
         expect(() => new Percent(101)).toThrowError();
@@ -27,11 +27,11 @@ test('Percent', () => {
     });
 
     test('Percent.value()', () => {
-        expect(new Percent(42).format(percentFormatter)).toBe('42%');
+        expect(new Percent(42).toString(percentFormatter)).toBe('42%');
     });
 
     test('Percent.format()', () => {
-        expect(new Percent(42.5).format(percentFormatter)).toBe('42.5%');
+        expect(new Percent(42.5).toString(percentFormatter)).toBe('42.5%');
     });
 });
 

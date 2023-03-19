@@ -1,18 +1,18 @@
-import { Duration, Time } from "../../../main/typescript/lib/rows/progress/lib";
-import { expect, test } from 'vitest'
+import { Duration, Time } from "@/core";
+import { expect, test, describe } from 'vitest'
 
-test('Time', () => {
+describe('Time', () => {
     const startMillis = 1672866000000; // 21:00:00 UTC
     const start = new Time(startMillis);
     const now = new Time(1672867800000); // 21:30:00 UTC
     const duration = new Duration(30 * 60 * 1000); // 30 minutes
 
     test('Time.format()', () => {
-        expect(start.format(utcTimeFormatter)).toBe('21:00:00');
+        expect(start.toString(utcTimeFormatter)).toBe('21:00:00');
     });
 
     test('Time.plus()', () => {
-        expect(start.plus(duration).format(utcTimeFormatter)).toBe('21:30:00');
+        expect(start.plus(duration).toString(utcTimeFormatter)).toBe('21:30:00');
     });
 
     test('Time.differenceTo()', () => {
@@ -25,7 +25,7 @@ test('Time', () => {
     });
 });
 
-const utcTimeFormatter = (date: Date) => {
+export const utcTimeFormatter = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
         hour: '2-digit',
         minute: '2-digit',

@@ -1,7 +1,7 @@
-import { Duration, Time } from '../../../main/typescript/lib/rows/progress/lib';
-import { expect, test } from 'vitest'
+import { Duration, Time } from '@/core';
+import { expect, test, describe } from 'vitest'
 
-test('Duration', () => {
+describe('Duration', () => {
     test('Initializing Duration objects', () => {
         expect(() => new Duration(-1)).toThrowError();
         expect(() => new Duration(0)).not.toThrowError();
@@ -52,7 +52,7 @@ test('Duration', () => {
     });
 
     test('format()', () => {
-        expect(new Duration(1234).format(formatter)).toBe('some custom format: 1234');
+        expect(new Duration(1234).toString(formatter)).toBe('some custom format: 1234');
     });
 });
 

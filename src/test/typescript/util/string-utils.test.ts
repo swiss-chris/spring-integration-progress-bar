@@ -1,7 +1,7 @@
-import { replaceAfterColon } from '../../../main/typescript/lib/util/string-utils';
-import { expect, test } from 'vitest'
+import { replaceAfterColon } from '@/util/string-utils';
+import { expect, test, describe } from 'vitest'
 
-test('string-utils', () => {
+describe('string-utils', () => {
     test('getHost()', () => {
         const replacementString = '8080';
 

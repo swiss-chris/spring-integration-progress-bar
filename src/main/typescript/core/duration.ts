@@ -1,4 +1,5 @@
 import type { Time } from './time';
+import type { Formattable } from './formattable.interface';
 
 export class Duration implements Formattable<number>{
     private static readonly ONE_SECOND = 1000;
@@ -31,10 +32,10 @@ export class Duration implements Formattable<number>{
         return time.plus(this);
     }
 
-    toString() {
+    public static durationFormatter = (millis: number): string => {
         const format = (n: number) => Math.floor(n).toString().padStart(2, '0');
 
-        const seconds = Math.floor(this.millis / 1000);
+        const seconds = Math.floor(millis / 1000);
         return [
             format(seconds / 60 / 60),
             format(seconds / 60 % 60),
@@ -42,7 +43,7 @@ export class Duration implements Formattable<number>{
         ].join(':');
     }
 
-    format(formatter: (millis: number) => string) {
+    toString(formatter: (millis: number) => string = Duration.durationFormatter) {
         return formatter(this.millis);
     }
 }

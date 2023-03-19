@@ -1,3 +1,5 @@
+import type { Formattable } from './formattable.interface';
+
 export class Percent implements Formattable<number> {
     static ZERO_PERCENT = new Percent(0);
     static ONE_HUNDRED_PERCENT = new Percent(100);
@@ -42,12 +44,7 @@ export class Percent implements Formattable<number> {
                 : 0;
     }
 
-    format(callback: (percent: number) => string) {
+    toString(callback: (percent: number) => string = percent => `${percent}%`) {
         return callback(this.percent);
-    }
-
-    // TODO unit test
-    toString() {
-        return this.format(percent => `${percent}%`);
     }
 }

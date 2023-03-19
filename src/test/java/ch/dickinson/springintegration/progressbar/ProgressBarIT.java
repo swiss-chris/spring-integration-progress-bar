@@ -49,9 +49,10 @@ class ProgressBarIT {
             options.addArguments(
                     "--no-sandbox",
                     "--disable-dev-shm-usage",
-                    "--headless"
+                    "--headless=new"
             );
         }
+        options.addArguments("--remote-allow-origins=*"); // Bug: https://github.com/SeleniumHQ/selenium/issues/11750
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }

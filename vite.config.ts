@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
+import * as path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,4 +12,9 @@ export default defineConfig({
     'process.env.BACKEND_PORT': process.env.BACKEND_PORT || 8080
   },
   root: './src/main/typescript',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src/main/typescript')
+    }
+  }
 })

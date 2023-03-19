@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
-import { getBackendUrl } from '../util/host';
-import { WebsocketConnector } from '../websocket-connector';
+import { writable } from 'svelte/store'; // TODO try remove this dependency on svelte
+import { getBackendUrl } from '@/util/host';
+import { WebsocketConnector } from '@/util/websocket-connector';
 
 const { set, subscribe } = writable(undefined);
 

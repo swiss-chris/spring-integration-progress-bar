@@ -1,4 +1,4 @@
-import { websocketConnector } from '../rows/websocket-message-broker';
+import { websocketConnector } from '@/svelte/rows/websocket-message-broker'; // TODO try remove this dependency on svelte
 import { getBackendUrl } from '@/util/host';
 
 interface StartFlowParams {
@@ -7,7 +7,6 @@ interface StartFlowParams {
     percentPerSecond: number
 }
 
-////// -------- ON FORM SUBMIT -------- //////
 
 export class Form {
     static submit(percentPerSecond: number) {

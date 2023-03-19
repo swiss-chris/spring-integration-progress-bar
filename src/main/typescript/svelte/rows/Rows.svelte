@@ -2,7 +2,7 @@
     import { flip } from "svelte/animate";
     import { subscribe as websocketSubscribe } from "./websocket-message-broker";
     import RowsHeader from "./RowsHeader.svelte";
-    import { OnOffTimer } from './timer';
+    import { OnOffTimer } from '../../util/timer';
     import { onMount, onDestroy } from 'svelte';
     import { RowsPresenter } from '../../presentation/rows-presenter';
     import { FlowProgressContainer } from '../../usecase/flow/flow-progress-container';

@@ -86,12 +86,6 @@
 
 <RowsHeader/>
 
-{#each [...rows] as {flowId, percentPerSecond, progress} (flowId)}
-    <div animate:flip>
-        <SvelteRow {percentPerSecond} {progress}/>
-    </div>
-{/each}
-
 {#each [...sortedRows] as row (row.flowId)}
     <div animate:flip>
         <NewRow {...row}/>

@@ -1,4 +1,4 @@
-import { replaceAfterColon } from '@/svelte/util/string-utils';
+import { replaceAfterColon } from '@/util/string-utils';
 import { expect, test, describe } from 'vitest'
 
 describe('string-utils', () => {

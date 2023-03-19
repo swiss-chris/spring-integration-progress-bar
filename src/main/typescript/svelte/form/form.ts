@@ -1,5 +1,5 @@
 import { websocketConnector } from '../rows/websocket-message-broker';
-import { getBackendUrl } from '../util/host';
+import { getBackendUrl } from '@/util/host';
 
 interface StartFlowParams {
     flowId: string;

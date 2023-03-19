@@ -2,20 +2,29 @@
     import { flip } from "svelte/animate";
     import { Progress } from "../../usecase/progress";
     import { subscribe as websocketSubscribe } from "./websocket-message-broker";
-    import Row from "./Row.svelte";
+    import SvelteRow from "./Row.svelte";
     import RowsHeader from "./RowsHeader.svelte";
     import { OnOffTimer } from './timer';
     import { onMount, onDestroy } from 'svelte';
+    import { RowsPresenter } from '../../presentation/rows-presenter';
+    import { FlowProgressContainer } from '../../usecase/flow/flow-progress-container';
+    import type { Row } from '../../presentation/row';
+    import NewRow from './NewRow.svelte';
 
-    interface Row {
+    interface IRow {
         flowId: string;
         percentPerSecond: number;
         progress: Progress;
     }
 
-    let rows: Row[] = [];
+    const rowsPresenter = new RowsPresenter();
+    const flowProgressContainer = new FlowProgressContainer();
+
+    let rows: SvelteRow[] = [];
     let timer: OnOffTimer;
     let websocketUnsubscribe;
+
+    let sortedRows: Row[] = [];
 
     onMount(() => {
         timer = new OnOffTimer(timerBasedUpdate);
@@ -38,6 +47,9 @@
             if (rows.every(row => row.progress.isFinished)) {
                 timer.deactivate();
             }
+
+            // clean architecture
+            flowProgressContainer.updatePercent(flowId, new Date(parseInt(start)), percent, new Date(), percentPerSecond);
         })
     });
 
@@ -46,7 +58,7 @@
         timer.deactivate();
     });
 
-    function addOrUpdateRow(rows: Row[], row: Row): Row[] {
+    function addOrUpdateRow(rows: SvelteRow[], row: IRow): SvelteRow[] {
         const existingRowIndex = rows.findIndex((r) => r.flowId === row.flowId);
         if (existingRowIndex !== -1) {
             rows[existingRowIndex] = row;
@@ -64,6 +76,10 @@
             ...row,
             progress: row.progress.isFinished ? row.progress : row.progress.updateTime(now)
         }));
+
+        // clean architecture
+        const flowProgressList = flowProgressContainer.updateTime(new Date());
+        sortedRows = rowsPresenter.toSortedRows(flowProgressList);
     }
 </script>
 
@@ -71,6 +87,12 @@
 
 {#each [...rows] as {flowId, percentPerSecond, progress} (flowId)}
     <div animate:flip>
-        <Row {percentPerSecond} {progress}/>
+        <SvelteRow {percentPerSecond} {progress}/>
+    </div>
+{/each}
+
+{#each [...sortedRows] as row (row.flowId)}
+    <div animate:flip>
+        <NewRow {...row}/>
     </div>
 {/each}

@@ -31,7 +31,7 @@ export class RowPresenter {
                         : '',
             remaining: remaining?.toString() ?? '',
             end: end?.toString(this.timeFormatter) ?? '',
-            endColorClass: isFinished ? '' : 'dim'
+            endDim: !isFinished
         }
     }
 

@@ -9,5 +9,5 @@ export interface Row {
     timeSinceLastUpdateColor: string,
     remaining: string,
     end: string,
-    endColorClass: string,
+    endDim: boolean,
 }

@@ -14,6 +14,3 @@
     <Rows />
   </div>
 </main>
-
-<style>
-</style>

@@ -24,12 +24,13 @@ export class RowPresenter {
             percentPerSecond: `${percentPerSecond}%`,
             start: start.toString(this.timeFormatter),
             duration: duration.toString(),
-            timeSinceLastUpdate: timeSinceLastUpdate.toString(),
+            timeSinceLastUpdate: isFinished ? '' : timeSinceLastUpdate.toString(),
             timeSinceLastUpdateColor:
-                this.isVeryLate(timeSinceLastUpdate) ? 'orangered'
-                    : this.isLate(timeSinceLastUpdate) ? 'orange'
-                        : '',
-            remaining: remaining?.toString() ?? '',
+                isFinished ? ''
+                    : this.isVeryLate(timeSinceLastUpdate) ? 'orangered'
+                        : this.isLate(timeSinceLastUpdate) ? 'orange'
+                            : '',
+            remaining: isFinished ? '' : remaining?.toString() ?? '',
             end: end?.toString(this.timeFormatter) ?? '',
             endDim: !isFinished
         }

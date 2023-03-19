@@ -4,12 +4,8 @@ import type { Formattable } from './formattable.interface';
 export class Time implements Formattable<Date> {
     private readonly millis: number;
 
-    constructor(millis: number) {
+    constructor(millis: number = new Date().getTime()) {
         this.millis = millis;
-    }
-
-    static now(): Time {
-        return new Time(Date.now());
     }
 
     plus(duration: Duration): Time {

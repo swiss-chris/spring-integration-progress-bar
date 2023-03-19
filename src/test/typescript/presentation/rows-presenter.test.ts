@@ -32,7 +32,7 @@ describe('rows-presenter', () => {
             '',
             '00:00:01',
             '24:00:02',
-            'dim'
+            true
         );
     });
 

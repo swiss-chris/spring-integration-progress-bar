@@ -28,7 +28,7 @@ export class Progress {
     }
 
     get duration(): Duration {
-        return this.elapsed();
+        return this.isFinished ? this.start.differenceTo(this._lastUpdate) : this.elapsed();
     }
 
     get timeSinceLastUpdate(): Duration {
@@ -36,7 +36,7 @@ export class Progress {
     }
 
     get remaining(): Duration | undefined {
-        return this.end?.differenceTo(this._now);
+        return this.isFinished ? new Duration(0) : this.end?.differenceTo(this._now);
     }
 
     get end(): Time | undefined {

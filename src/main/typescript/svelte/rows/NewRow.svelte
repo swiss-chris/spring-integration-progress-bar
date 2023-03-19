@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-    <div class="col-1 percent-per-second">{percentPerSecond}%</div>
+    <div class="col-1 percent-per-second">{percentPerSecond}</div>
     <div class="col-1 percent">{percent}</div>
     <div class="col-1 start">{start}</div>
     <div class="col-1 duration">{duration}</div>

@@ -32,7 +32,7 @@ describe('row-presenter', () => {
             '',
             '',
             '',
-            'dim'
+            true
         );
     });
 
@@ -53,7 +53,7 @@ describe('row-presenter', () => {
             '',
             '00:00:03',
             '24:00:06',
-            'dim'
+            true
         );
     });
 
@@ -74,7 +74,7 @@ describe('row-presenter', () => {
             'orange',
             '00:01:26',
             '24:01:40',
-            'dim'
+            true
         );
     });
 
@@ -95,14 +95,14 @@ describe('row-presenter', () => {
             'orangered',
             '00:00:38',
             '24:01:40',
-            'dim'
+            true
         );
     });
 
     test('a row at 100% progress', () => {
         const row = rowPresenter.toRow(new FlowProgress(
             'flowId',
-            Progress.create(second_0, second_3, 100, second_3),
+            Progress.create(second_0, second_62, 100, second_3),
             {percentPerSecond: somePercentPerSecond}
         ));
 
@@ -112,11 +112,11 @@ describe('row-presenter', () => {
             '100%',
             '24:00:00',
             '00:00:03',
-            '00:00:00',
             '',
-            '00:00:00',
+            '',
+            '',
             '24:00:03',
-            ''
+            false
         );
     });
 });
@@ -131,7 +131,7 @@ export const expectResults = (
         timeSinceLastUpdateColor,
         remaining,
         end,
-        endColorClass
+        endDim
     },
     expectedFlowId,
     expectedPercentPerSecond,
@@ -142,7 +142,7 @@ export const expectResults = (
     expectedTimeSinceLastUpdateColor,
     expectedRemaining,
     expectedEnd,
-    expectedEndColorClass
+    expectedEndDim: boolean
 ) => {
     expect(flowId).toEqual(expectedFlowId);
     expect(percentPerSecond).toEqual(expectedPercentPerSecond)
@@ -153,5 +153,5 @@ export const expectResults = (
     expect(timeSinceLastUpdateColor).toEqual(expectedTimeSinceLastUpdateColor);
     expect(remaining).toEqual(expectedRemaining);
     expect(end).toEqual(expectedEnd);
-    expect(endColorClass).toEqual(expectedEndColorClass);
+    expect(endDim).toEqual(expectedEndDim);
 };

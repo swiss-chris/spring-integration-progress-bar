@@ -49,7 +49,8 @@
             }
 
             // clean architecture
-            flowProgressContainer.updatePercent(flowId, new Date(parseInt(start)), percent, new Date(), percentPerSecond);
+            const flows = flowProgressContainer.updatePercent(flowId, new Date(parseInt(start)), percent, new Date(), percentPerSecond);
+            sortedRows = rowsPresenter.toSortedRows(flows);
         })
     });
 

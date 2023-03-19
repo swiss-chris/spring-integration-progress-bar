@@ -4,7 +4,7 @@ import { Progress } from '../progress';
 export class FlowProgressContainer {
     private flows: Map<string, FlowProgress> = new Map<string, FlowProgress>();
 
-    constructor(flows: FlowProgress[]) {
+    constructor(flows: FlowProgress[] = []) {
         for (const flow of flows) {
             this.flows.set(flow.flowId, flow);
         }
@@ -22,9 +22,11 @@ export class FlowProgressContainer {
         return this.getFlowsAsArray();
     }
 
-    updateTime(flowId: string, now: Date) {
-        const flow = this.flows.get(flowId);
-        this.flows.set(flowId, new FlowProgress(flowId, flow.progress.updateTime(now), flow.metadata));
+    updateTime(now: Date) {
+        this.flows.forEach((flowProgress, flowId) => {
+            const {progress, metadata} = this.flows.get(flowId);
+            this.flows.set(flowId, new FlowProgress(flowId, progress.updateTime(now), metadata));
+        })
         return this.getFlowsAsArray();
     }
 

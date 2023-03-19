@@ -87,7 +87,7 @@ describe('flows progress container', () => {
             ]);
 
             const newNow = new Date(1500);
-            const updatedFlowProgressContainer = flowProgressContainer.updateTime(flowId, newNow);
+            const updatedFlowProgressContainer = flowProgressContainer.updateTime(newNow);
 
             expect(updatedFlowProgressContainer.length)
                 .toEqual(1);
@@ -109,12 +109,12 @@ describe('flows progress container', () => {
             ]);
 
             const newNow = new Date(1500);
-            const updatedFlowProgressContainer = flowProgressContainer.updateTime(flowId2, newNow);
+            const updatedFlowProgressContainer = flowProgressContainer.updateTime(newNow);
 
             expect(updatedFlowProgressContainer.length)
                 .toEqual(2);
             const flowProgress1 = updatedFlowProgressContainer.find(fp => fp.flowId === flowId1);
-            expect(flowProgress1.equals(new FlowProgress(flowId1, Progress.create(start, oldNow, percent), {percentPerSecond})))
+            expect(flowProgress1.equals(new FlowProgress(flowId1, Progress.create(start, newNow, percent, oldNow), {percentPerSecond})))
                 .toBeTruthy();
             const flowProgress2 = updatedFlowProgressContainer.find(fp => fp.flowId === flowId2);
             expect(flowProgress2.equals(new FlowProgress(flowId2, Progress.create(start, newNow, percent, oldNow), {percentPerSecond})))

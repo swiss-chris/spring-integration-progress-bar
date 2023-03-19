@@ -11,13 +11,13 @@ describe('rows-presenter', () => {
     const percentPerSecond = 12345;
 
     test('empty in, empty out', () => {
-        const rows = rowsPresenter.toRows([]);
+        const rows = rowsPresenter.toSortedRows([]);
 
         expect(rows).toEqual([]);
     });
 
     test('one row', () => {
-        const rows = rowsPresenter.toRows([
+        const rows = rowsPresenter.toSortedRows([
             new FlowProgress('flowId', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond})
         ]);
 
@@ -34,5 +34,18 @@ describe('rows-presenter', () => {
             '24:00:02',
             'dim'
         );
+    });
+
+    test('three rows', () => {
+        const rows = rowsPresenter.toSortedRows([
+            new FlowProgress('flowId3', Progress.create(new Date(0), new Date(1000), 75), {percentPerSecond}),
+            new FlowProgress('flowId1', Progress.create(new Date(0), new Date(1000), 25), {percentPerSecond}),
+            new FlowProgress('flowId2', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond}),
+        ]);
+
+        expect(rows.length).toEqual(3);
+        expect(rows[0].percent).toEqual('25%');
+        expect(rows[1].percent).toEqual('50%');
+        expect(rows[2].percent).toEqual('75%');
     });
 });

@@ -9,7 +9,10 @@ export class RowsPresenter {
         this.rowPresenter = new RowPresenter(timeFormatter);
     }
 
-    toRows(flowProgressList: FlowProgress[]): Row[] {
-        return flowProgressList.map(fp => this.rowPresenter.toRow(fp));
+    toSortedRows(flowProgressList: FlowProgress[]): Row[] {
+        return flowProgressList
+            .sort((flowA, flowB) => flowA.progress.percent
+                    .compare(flowB.progress.percent))
+            .map(fp => this.rowPresenter.toRow(fp));
     }
 }

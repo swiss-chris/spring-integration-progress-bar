@@ -1,5 +1,5 @@
 
-export interface Row {
+export interface RowPresentation {
     flowId: string,
     percent: string,
     percentPerSecond: string,

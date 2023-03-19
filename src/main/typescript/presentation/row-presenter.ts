@@ -1,5 +1,5 @@
 import type { FlowProgress } from '@/usecase/flow/flow-progress';
-import type { Row } from '@/presentation/row';
+import type { RowPresentation } from '@/presentation/row-presentation';
 import { Duration, localTimeFormatter } from '@/core';
 
 export class RowPresenter {
@@ -17,7 +17,7 @@ export class RowPresenter {
             progress: {percent, start, duration, timeSinceLastUpdate, remaining, end, isFinished},
             metadata: {percentPerSecond}
         }: FlowProgress
-    ): Row {
+    ): RowPresentation {
         return {
             flowId,
             percent: percent.toString(),

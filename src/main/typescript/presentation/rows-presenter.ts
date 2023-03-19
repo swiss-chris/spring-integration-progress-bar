@@ -1,4 +1,4 @@
-import type { Row } from '@/presentation/row';
+import type { RowPresentation } from '@/presentation/row-presentation';
 import { RowPresenter } from '@/presentation/row-presenter';
 import type { FlowProgress } from '@/usecase/flow/flow-progress';
 import { localTimeFormatter } from '@/core';
@@ -10,7 +10,7 @@ export class RowsPresenter {
         this.rowPresenter = new RowPresenter(timeFormatter);
     }
 
-    toSortedRows(flowProgressList: FlowProgress[]): Row[] {
+    toSortedRows(flowProgressList: FlowProgress[]): RowPresentation[] {
         return flowProgressList
             .sort((flowA, flowB) => flowA.progress.percent
                     .compare(flowB.progress.percent))

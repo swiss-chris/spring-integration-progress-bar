@@ -1,47 +1,31 @@
 <script lang="ts">
-    import type { Progress } from "../../usecase/progress";
-    import { Duration } from '../../core';
+    export let flowId: string;
+    export let percent: string;
+    export let percentPerSecond: string;
+    export let start: string;
+    export let duration: string;
+    export let timeSinceLastUpdate: string;
+    export let timeSinceLastUpdateColor: string;
+    export let remaining: string;
+    export let end: string;
+    export let endDim: boolean = true;
 
-    export let percentPerSecond: number;
-    export let progress: Progress;
-
-    $: dim = !progress?.isFinished;
-    $: isLate = progress?.timeSinceLastUpdate.isGreaterThan(Duration.ofSeconds(12))
-    $: isVeryLate = progress?.timeSinceLastUpdate.isGreaterThan(Duration.ofSeconds(60))
-    $: percentString = progress?.percent.toString();
+    $: dim = endDim;
 </script>
 
 <div class="row mt-4 flow-progress">
     <div class="col-3">
         <div class="progress" style="height: 24px;">
-            <div
-                class="progress-bar bg-primary"
-                role="progressbar"
-                style="width: {percentString}"
-            >
-                {percentString}
+            <div class="progress-bar bg-primary" role="progressbar" style="width: {percent}">
+                {percent}
             </div>
         </div>
     </div>
-    <div class="col-1 percent-per-second">{percentPerSecond}%</div>
-    <div class="col-1 percent">{progress.percent.toString()}</div>
-    <div class="col-1 start">{progress.start.toString()}</div>
-    <div class="col-1 duration">{progress.duration}</div>
-    <div class="col-1 time-since-last-update" class:isLate class:isVeryLate>
-        {progress.timeSinceLastUpdate}
-    </div>
-    <div class="col-1 remaining">{progress.remaining || ''}</div>
-    <div class="col-1 end" class:dim>
-        {progress.end?.toString() || ''}
-    </div>
+    <div class="col-1 percent-per-second">{percentPerSecond}</div>
+    <div class="col-1 percent">{percent}</div>
+    <div class="col-1 start">{start}</div>
+    <div class="col-1 duration">{duration}</div>
+    <div class="col-1 time-since-last-update" style="color: {timeSinceLastUpdateColor}">{timeSinceLastUpdate}</div>
+    <div class="col-1 remaining">{remaining}</div>
+    <div class="col-1 end" class:dim>{end}</div>
 </div>
-
-<style>
-    .isLate {
-        color: orange;
-    }
-
-    .isVeryLate {
-        color: orangered;
-    }
-</style>

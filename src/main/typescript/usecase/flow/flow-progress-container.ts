@@ -10,6 +10,14 @@ export class FlowProgressContainer {
         }
     }
 
+    contains(flowId: string): boolean {
+        return this.flows.has(flowId);
+    }
+
+    allFinished(): boolean {
+        return this.getFlowsAsArray().every(flow => flow.progress.isFinished);
+    }
+
     updatePercent(flowId: string, start: Date, percent: number, now: Date, percentPerSecond: number): FlowProgress[] {
         // check if we already have a flow with this flowId
         const flow = this.flows.get(flowId);
@@ -30,7 +38,7 @@ export class FlowProgressContainer {
         return this.getFlowsAsArray();
     }
 
-    private getFlowsAsArray() {
+    private getFlowsAsArray(): FlowProgress[] {
         return [...this.flows.values()];
     }
 }

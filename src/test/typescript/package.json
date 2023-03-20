@@ -7,6 +7,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "spring-integration-progress-bar-main": "1.0.0"
+    "spring-integration-progress-bar-main-typescript": "1.0.0"
   }
 }

@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "vitest",
     "dev": "vite",
     "dev:codespaces": "vite --host",
     "build": "vite build",
@@ -19,8 +18,7 @@
     "svelte-check": "^2.10.3",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
-    "vite": "^4.1.4",
-    "vitest": "^0.29.2"
+    "vite": "^4.1.4"
   },
   "dependencies": {
     "sockjs-client": "^1.6.1"

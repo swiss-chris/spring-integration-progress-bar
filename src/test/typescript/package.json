@@ -1,5 +1,6 @@
 {
   "name": "spring-integration-progress-bar-test",
+  "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {

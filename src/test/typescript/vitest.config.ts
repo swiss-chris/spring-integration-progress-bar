@@ -3,12 +3,11 @@ import * as path from 'path';
 
 export default defineConfig({
     test: {
-        exclude: [...configDefaults.exclude, 'packages/template/*'],
-        root: './src/test/typescript',
+        exclude: [...configDefaults.exclude, 'packages/template/*']
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src/main/typescript')
+            '@': path.resolve(__dirname, '../../main/typescript')
         }
     }
 })

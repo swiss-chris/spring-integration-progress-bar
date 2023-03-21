@@ -1,4 +1,4 @@
-import './presentation/app.css'
+import 'spring-integration-progress-bar-main-typescript/presentation/app.css'
 import App from './svelte/App.svelte'
 
 const app = new App({

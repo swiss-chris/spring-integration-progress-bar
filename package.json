@@ -5,6 +5,7 @@
   "type": "module",
   "workspaces": [
     "src/main/svelte",
+    "src/main/typescript",
     "src/test/typescript"
   ],
   "scripts": {

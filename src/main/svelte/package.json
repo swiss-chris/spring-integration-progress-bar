@@ -9,5 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig src/main/typescript/tsconfig.json"
+  },
+  "dependencies": {
+    "spring-integration-progress-bar-main-typescript": "1.0.0"
   }
 }

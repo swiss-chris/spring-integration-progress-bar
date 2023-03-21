@@ -1,7 +1,7 @@
-import type { RowPresentation } from '@/presentation/row-presentation';
-import { RowPresenter } from '@/presentation/row-presenter';
-import type { FlowProgress } from '@/usecase/flow/flow-progress';
-import { localTimeFormatter } from '@/core';
+import type { RowPresentation } from './row-presentation';
+import { RowPresenter } from './row-presenter';
+import type { FlowProgress } from '../usecase/flow/flow-progress';
+import { localTimeFormatter } from '../core';
 
 export class RowsPresenter {
     private rowPresenter: RowPresenter;

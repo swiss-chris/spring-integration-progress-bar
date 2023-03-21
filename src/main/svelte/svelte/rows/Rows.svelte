@@ -2,11 +2,11 @@
     import { flip } from "svelte/animate";
     import { subscribe as websocketSubscribe } from "./websocket-message-broker";
     import RowsHeader from "./RowsHeader.svelte";
-    import { OnOffTimer } from '../../util/timer';
+    import { OnOffTimer } from 'spring-integration-progress-bar-main-typescript/util/timer';
     import { onMount, onDestroy } from 'svelte';
-    import { RowsPresenter } from '../../presentation/rows-presenter';
-    import { FlowProgressContainer } from '../../usecase/flow/flow-progress-container';
-    import type { RowPresentation } from '../../presentation/row-presentation';
+    import { RowsPresenter } from 'spring-integration-progress-bar-main-typescript/presentation/rows-presenter';
+    import { FlowProgressContainer } from 'spring-integration-progress-bar-main-typescript/usecase/flow/flow-progress-container';
+    import type { RowPresentation } from 'spring-integration-progress-bar-main-typescript/presentation/row-presentation';
     import Row from './Row.svelte';
 
     const flowProgressContainer = new FlowProgressContainer();
@@ -51,8 +51,8 @@
 
 <RowsHeader/>
 
-{#each [...sortedRows] as row (row.flowId)}
+{#each [...sortedRows] as {flowId, ...rest} (flowId)}
     <div animate:flip>
-        <Row {...row}/>
+        <Row {...rest}/>
     </div>
 {/each}

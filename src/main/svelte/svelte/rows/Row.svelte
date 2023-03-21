@@ -1,5 +1,4 @@
 <script lang="ts">
-    export let flowId: string;
     export let percent: string;
     export let percentPerSecond: string;
     export let start: string;

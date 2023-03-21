@@ -1,6 +1,6 @@
-import type { FlowProgress } from '@/usecase/flow/flow-progress';
-import type { RowPresentation } from '@/presentation/row-presentation';
-import { Duration, localTimeFormatter } from '@/core';
+import type { FlowProgress } from '../usecase/flow/flow-progress';
+import type { RowPresentation } from './row-presentation';
+import { Duration, localTimeFormatter } from '../core';
 
 export class RowPresenter {
     private timeFormatter: (date: Date) => string;

@@ -1,5 +1,5 @@
 {
-  "name": "spring-integration-progress-bar-main-svelte",
+  "name": "main-svelte",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -11,6 +11,6 @@
     "check": "svelte-check --tsconfig src/main/typescript/tsconfig.json"
   },
   "dependencies": {
-    "spring-integration-progress-bar-main-typescript": "1.0.0"
+    "main-typescript": "1.0.0"
   }
 }

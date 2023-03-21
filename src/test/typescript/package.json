@@ -1,5 +1,5 @@
 {
-  "name": "spring-integration-progress-bar-test-typescript",
+  "name": "test-typescript",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,6 +7,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "spring-integration-progress-bar-main-typescript": "1.0.0"
+    "main-typescript": "1.0.0"
   }
 }

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store'; // TODO try remove this dependency on svelte
-import { getBackendUrl } from 'spring-integration-progress-bar-main-typescript/util/host';
-import { WebsocketConnector } from 'spring-integration-progress-bar-main-typescript/util/websocket-connector';
+import { getBackendUrl } from 'main-typescript/util';
+import { WebsocketConnector } from 'main-typescript/util';
 
 const { set, subscribe } = writable(undefined);
 

@@ -2,7 +2,7 @@
   import Form from "./form/Form.svelte";
   import Rows from "./rows/Rows.svelte";
   import Title from "./Title.svelte";
-  import { DarkModeSwitcher } from "main-typescript/util/dark-mode";
+  import { DarkModeSwitcher } from "main-typescript/presentation";
 
   DarkModeSwitcher.initialize();
 </script>

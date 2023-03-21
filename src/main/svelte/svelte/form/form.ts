@@ -1,5 +1,5 @@
 import { websocketConnector } from '../rows/websocket-message-broker'; // TODO try remove this dependency on svelte
-import { getBackendUrl } from 'spring-integration-progress-bar-main-typescript/util/host';
+import { getBackendUrl } from 'main-typescript/util';
 
 interface StartFlowParams {
     flowId: string;

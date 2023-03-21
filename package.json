@@ -4,16 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "workspaces": [
-    "src/main/typescript",
+    "src/main/svelte",
     "src/test/typescript"
   ],
   "scripts": {
     "test": "npm run test --workspace=src/test/typescript",
-    "dev": "npm run dev --workspace=src/main/typescript",
-    "dev:codespaces": "npm run dev:codespaces --workspace=src/main/typescript",
-    "build": "npm run build --workspace=src/main/typescript",
-    "preview": "npm run preview --workspace=src/main/typescript",
-    "check": "npm run check --tsconfig src/main/typescript/tsconfig.json"
+    "dev": "npm run dev --workspace=src/main/svelte",
+    "dev:codespaces": "npm run dev:codespaces --workspace=src/main/svelte",
+    "build": "npm run build --workspace=src/main/svelte",
+    "preview": "npm run preview --workspace=src/main/svelte",
+    "check": "npm run check --tsconfig src/main/svelte/tsconfig.json"
   },
   "devDependencies": {
     "@types/sockjs-client": "^1.5.1",

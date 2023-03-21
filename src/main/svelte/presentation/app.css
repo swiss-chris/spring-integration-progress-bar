@@ -1,0 +1,9 @@
+.dim {
+  color: lightgray;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dim {
+    color: #444;
+  }
+}

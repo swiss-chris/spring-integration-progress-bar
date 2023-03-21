@@ -1,0 +1,13 @@
+{
+  "name": "spring-integration-progress-bar-main-svelte",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:codespaces": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig src/main/typescript/tsconfig.json"
+  }
+}

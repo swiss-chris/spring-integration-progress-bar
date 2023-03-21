@@ -1,12 +1,11 @@
-import { writable } from 'svelte/store'; // TODO try remove this dependency on svelte
-import { getBackendUrl } from 'main-typescript/util';
-import { WebsocketConnector } from 'main-typescript/util';
+import { getBackendUrl, WebsocketConnector } from 'main-typescript/util';
+import { Subject } from 'rxjs';
 
-const { set, subscribe } = writable(undefined);
+const websocketMessages = new Subject();
 
 export const websocketConnector = new WebsocketConnector(
     `${getBackendUrl()}/messages`,
-    ({ data }: { data: string }) => set(data)
+    ({ data }: { data: string }) => websocketMessages.next(data)
 ).connect(); // on page refresh, we want to receive already running flows
 
-export { subscribe };
+export { websocketMessages };

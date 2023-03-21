@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { subscribe as websocketSubscribe } from "./websocket-message-broker";
+    import { websocketMessages } from "./websocket-message-broker";
     import RowsHeader from "./RowsHeader.svelte";
     import { OnOffTimer } from 'main-typescript/usecase';
     import { onMount, onDestroy } from 'svelte';
@@ -13,14 +13,12 @@
     const rowsPresenter = new RowsPresenter();
 
     let timer: OnOffTimer;
-    let websocketUnsubscribe;
+    let subscription;
     let sortedRows: RowPresentation[] = [];
 
     onMount(() => {
         timer = new OnOffTimer(timerBasedUpdate);
-        websocketUnsubscribe = websocketSubscribe((data) => {
-            if (!data) return; // FIXME see if we can prevent this check
-
+        websocketMessages.subscribe(data => {
             const {start, flowId, percentPerSecond, percent} = JSON.parse(data);
 
             if (!flowProgressContainer.contains(flowId)) {
@@ -38,7 +36,7 @@
     });
 
     onDestroy(() => {
-        websocketUnsubscribe();
+        subscription.unsubscribe();
         timer.deactivate();
     });
 

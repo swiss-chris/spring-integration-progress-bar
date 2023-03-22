@@ -1,11 +1,25 @@
 import { getBackendUrl, WebsocketConnector } from 'main-typescript/util';
 import { Subject } from 'rxjs';
 
-const websocketMessages = new Subject();
+let websocketConnector: WebsocketConnector | undefined;
+let websocketMessages: Subject<string> | undefined;
 
-export const websocketConnector = new WebsocketConnector(
-    `${getBackendUrl()}/messages`,
-    ({ data }: { data: string }) => websocketMessages.next(data)
-).connect(); // on page refresh, we want to receive already running flows
+function initializeWebsocketConnector(): { websocketConnector: WebsocketConnector; websocketMessages: Subject<string> } {
+    if (websocketConnector && websocketMessages) {
+        return { websocketConnector: websocketConnector, websocketMessages: websocketMessages };
+    }
 
-export { websocketMessages };
+    const websocketMessagesInternal = new Subject<string>();
+
+    const websocketConnectorInternal = new WebsocketConnector(
+        `${getBackendUrl()}/messages`,
+        ({ data }: { data: string }) => websocketMessagesInternal.next(data)
+    ).connect();
+
+    websocketMessages = websocketMessagesInternal;
+    websocketConnector = websocketConnectorInternal;
+
+    return { websocketConnector, websocketMessages };
+}
+
+export { initializeWebsocketConnector };

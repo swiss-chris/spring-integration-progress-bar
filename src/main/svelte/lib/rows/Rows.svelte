@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { websocketMessages } from "main-typescript/usecase/websocket-message-broker";
+    import { initializeWebsocketConnector } from "main-typescript/usecase/websocket-message-broker";
     import RowsHeader from "./RowsHeader.svelte";
     import { OnOffTimer } from 'main-typescript/usecase';
     import { onMount, onDestroy } from 'svelte';
@@ -18,7 +18,7 @@
 
     onMount(() => {
         timer = new OnOffTimer(timerBasedUpdate);
-        websocketMessages.subscribe(data => {
+        initializeWebsocketConnector().websocketMessages.subscribe(data => {
             const {start, flowId, percentPerSecond, percent} = JSON.parse(data);
 
             if (!flowProgressContainer.contains(flowId)) {

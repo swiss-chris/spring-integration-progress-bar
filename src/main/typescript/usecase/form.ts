@@ -1,4 +1,4 @@
-import { websocketConnector } from './websocket-message-broker';
+import { initializeWebsocketConnector } from './websocket-message-broker';
 import { getBackendUrl } from '../util';
 
 interface StartFlowParams {
@@ -10,7 +10,7 @@ interface StartFlowParams {
 // TODO refactor this file for clean architecture principles
 export class Form {
     static submit(percentPerSecond: number) {
-        websocketConnector.reconnect();
+        initializeWebsocketConnector().websocketConnector.reconnect();
         const {flowId, start} = this.getParams();
         this.startFlow({flowId, start, percentPerSecond});
     }

@@ -1,4 +1,4 @@
-import { replaceAfterColon } from '@/util/string-utils';
+import { replaceAfterColon } from 'main-typescript/util';
 import { expect, test, describe } from 'vitest'
 
 describe('string-utils', () => {

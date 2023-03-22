@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
-import { RowPresenter } from '@/presentation/row-presenter';
-import { FlowProgress } from '@/usecase/flow/flow-progress';
-import { Progress } from '@/usecase/progress';
+import { RowPresenter } from 'main-typescript/presentation';
+import { FlowProgress } from 'main-typescript/usecase';
+import { Progress } from 'main-typescript/usecase';
 import { utcTimeFormatter } from '../core/time.test';
 
 describe('row-presenter', () => {

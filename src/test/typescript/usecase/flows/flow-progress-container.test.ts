@@ -1,7 +1,7 @@
 import { test, expect, describe } from 'vitest';
-import { FlowProgressContainer } from '@/usecase/flow/flow-progress-container';
-import { Progress } from '@/usecase/progress';
-import { FlowProgress } from '@/usecase/flow/flow-progress';
+import { FlowProgressContainer } from 'main-typescript/usecase';
+import { Progress } from 'main-typescript/usecase';
+import { FlowProgress } from 'main-typescript/usecase';
 
 describe('flows progress container', () => {
     describe('updatePercent', () => {

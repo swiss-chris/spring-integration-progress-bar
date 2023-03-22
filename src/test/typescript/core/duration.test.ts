@@ -1,4 +1,4 @@
-import { Duration, Time } from '@/core';
+import { Duration, Time } from 'main-typescript/core';
 import { expect, test, describe } from 'vitest'
 
 describe('Duration', () => {

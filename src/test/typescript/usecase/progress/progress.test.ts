@@ -1,4 +1,4 @@
-import { Progress } from "@/usecase/progress";
+import { Progress } from "main-typescript/usecase";
 import { expect, test, describe } from 'vitest'
 
 describe('Progress', () => {

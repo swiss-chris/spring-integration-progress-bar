@@ -1,4 +1,4 @@
-import { Percent } from '@/core';
+import { Percent } from 'main-typescript/core';
 import { expect, test, describe } from 'vitest'
 
 describe('Percent', () => {

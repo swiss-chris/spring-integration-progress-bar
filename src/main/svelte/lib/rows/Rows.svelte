@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { websocketMessages } from "main-typescript/usecase";
+    import { websocketMessages } from "main-typescript/usecase/websocket-message-broker";
     import RowsHeader from "./RowsHeader.svelte";
     import { OnOffTimer } from 'main-typescript/usecase';
     import { onMount, onDestroy } from 'svelte';

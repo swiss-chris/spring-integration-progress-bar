@@ -1,5 +1,5 @@
-import { websocketConnector } from '../rows/websocket-message-broker'; // TODO try remove this dependency on svelte
-import { getBackendUrl } from 'main-typescript/util';
+import { websocketConnector } from './websocket-message-broker';
+import { getBackendUrl } from '../util';
 
 interface StartFlowParams {
     flowId: string;
@@ -7,7 +7,7 @@ interface StartFlowParams {
     percentPerSecond: number
 }
 
-
+// TODO refactor this file for clean architecture principles
 export class Form {
     static submit(percentPerSecond: number) {
         websocketConnector.reconnect();

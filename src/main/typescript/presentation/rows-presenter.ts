@@ -1,6 +1,6 @@
 import type { RowPresentation } from './row-presentation';
 import { RowPresenter } from './row-presenter';
-import type { FlowProgress } from '../usecase/flow/flow-progress';
+import type { FlowProgress } from '../usecase';
 import { localTimeFormatter } from '../core';
 
 export class RowsPresenter {
@@ -11,9 +11,16 @@ export class RowsPresenter {
     }
 
     toSortedRows(flowProgressList: FlowProgress[]): RowPresentation[] {
-        return flowProgressList
-            .sort((flowA, flowB) => flowA.progress.percent
-                    .compare(flowB.progress.percent))
+        return this.sort(flowProgressList)
             .map(fp => this.rowPresenter.toRow(fp));
+    }
+
+    sort(flowProgressList: FlowProgress[]): FlowProgress[] {
+        return flowProgressList
+            .sort((flowA, flowB) => {
+                const comparison = flowA.progress.percent
+                    .compare(flowB.progress.percent);
+                return comparison !== 0 ? comparison : flowB.flowId.localeCompare(flowA.flowId);
+            });
     }
 }

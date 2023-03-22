@@ -1,11 +1,11 @@
 import { getBackendUrl, WebsocketConnector } from 'main-typescript/util';
 import { Subject } from 'rxjs';
 
-const websocketMessages = new Subject<string>();
+export const websocketMessages = new Subject<string>();
 
 let websocketConnector: WebsocketConnector | undefined;
 
-function initializeWebsocketConnector(): { websocketConnector: WebsocketConnector; websocketMessages: Subject<string> } {
+export function initializeWebsocketConnector(): { websocketConnector: WebsocketConnector; websocketMessages: Subject<string> } {
     if (!websocketConnector) {
         websocketConnector = new WebsocketConnector(
             `${getBackendUrl()}/messages`,
@@ -14,5 +14,3 @@ function initializeWebsocketConnector(): { websocketConnector: WebsocketConnecto
     }
     return { websocketConnector, websocketMessages };
 }
-
-export { initializeWebsocketConnector };

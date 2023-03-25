@@ -5,12 +5,12 @@ export const websocketMessages = new Subject<string>();
 
 let websocketConnector: WebsocketConnector | undefined;
 
-export function initializeWebsocketConnector(): { websocketConnector: WebsocketConnector; websocketMessages: Subject<string> } {
+export function initializeWebsocketConnector(): WebsocketConnector {
     if (!websocketConnector) {
         websocketConnector = new WebsocketConnector(
             `${getBackendUrl()}/messages`,
             ({data}: { data: string }) => websocketMessages.next(data)
         ).connect();
     }
-    return { websocketConnector, websocketMessages };
+    return websocketConnector;
 }

@@ -7,10 +7,10 @@ interface StartFlowParams {
     percentPerSecond: number
 }
 
-// TODO refactor this file for clean architecture principles
+// TODO refactor this file for 'clean architecture' principles
 export class Form {
     static submit(percentPerSecond: number) {
-        initializeWebsocketConnector().websocketConnector.reconnect();
+        initializeWebsocketConnector().reconnect();
         const {flowId, start} = this.getParams();
         this.startFlow({flowId, start, percentPerSecond});
     }

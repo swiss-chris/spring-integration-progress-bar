@@ -1,7 +1,9 @@
-import { test, expect, describe } from 'vitest';
+import { test, expect, describe, vi } from 'vitest';
 import { FlowProgressContainer } from 'main-typescript/usecase';
 import { Progress } from 'main-typescript/usecase';
 import { FlowProgress } from 'main-typescript/usecase';
+
+const mockGetWSConnector = vi.fn();
 
 describe('flows progress container', () => {
     describe('updatePercent', () => {
@@ -14,7 +16,7 @@ describe('flows progress container', () => {
             const percentPerSecond = 10;
 
             // the Flows object contains the list of all started (and known finished) Flow objects.
-            const flowProgressContainer: FlowProgressContainer = new FlowProgressContainer([]);
+            const flowProgressContainer: FlowProgressContainer = new FlowProgressContainer([], mockGetWSConnector);
 
             const updatedFlowProgressContainer = flowProgressContainer._updatePercent(flowId, start, percent, now, percentPerSecond);
 
@@ -33,7 +35,7 @@ describe('flows progress container', () => {
 
             const flowProgressContainer = new FlowProgressContainer([
                 new FlowProgress(flowId, Progress.create(start, oldNow, oldPercent), {percentPerSecond}),
-            ]);
+            ], mockGetWSConnector);
 
             const newPercent = 75;
             const newNow = new Date(1500);
@@ -55,7 +57,7 @@ describe('flows progress container', () => {
 
             const flowProgressContainer = new FlowProgressContainer([
                 new FlowProgress(oldFlowId, Progress.create(start, oldNow, oldPercent), {percentPerSecond: oldPercentPerSecond}),
-            ]);
+            ], mockGetWSConnector);
 
             const newPercent = 75;
             const newNow = new Date(1500);
@@ -84,7 +86,7 @@ describe('flows progress container', () => {
 
             const flowProgressContainer = new FlowProgressContainer([
                 new FlowProgress(flowId, Progress.create(start, oldNow, percent), {percentPerSecond}),
-            ]);
+            ], mockGetWSConnector);
 
             const newNow = new Date(1500);
             const updatedFlowProgressContainer = flowProgressContainer.updateTime(newNow);
@@ -106,7 +108,7 @@ describe('flows progress container', () => {
             const flowProgressContainer = new FlowProgressContainer([
                 new FlowProgress(flowId1, Progress.create(start, oldNow, percent), {percentPerSecond}),
                 new FlowProgress(flowId2, Progress.create(start, oldNow, percent), {percentPerSecond}),
-            ]);
+            ], mockGetWSConnector);
 
             const newNow = new Date(1500);
             const updatedFlowProgressContainer = flowProgressContainer.updateTime(newNow);

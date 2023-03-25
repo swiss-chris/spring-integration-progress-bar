@@ -1,6 +1,5 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import { initializeWebsocketConnector } from "main-typescript/usecase";
     import RowsHeader from "./RowsHeader.svelte";
     import { onMount, onDestroy } from 'svelte';
     import { RowsPresenter } from 'main-typescript/presentation';
@@ -12,7 +11,6 @@
     let sortedRows: RowPresentation[] = [];
 
     onMount(() => {
-        initializeWebsocketConnector(); // TODO move this into the usecase module
         rowsPresenterSubscription = new RowsPresenter().subscribe((data: RowPresentation[]) => {
             sortedRows = data;
         });

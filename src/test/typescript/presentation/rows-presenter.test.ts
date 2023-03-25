@@ -1,12 +1,14 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, vi } from 'vitest';
 import { RowsPresenter } from 'main-typescript/presentation';
-import { FlowProgress } from 'main-typescript/usecase/flow';
+import { FlowProgress, FlowProgressContainer } from 'main-typescript/usecase/flow';
 import { Progress } from 'main-typescript/usecase';
 import { expectResults } from './row-presenter.test';
 import { utcTimeFormatter } from '../core/time.test';
 
+const flowProgressContainer = new FlowProgressContainer([], vi.fn());
+
 describe('rows-presenter', () => {
-    const rowsPresenter = new RowsPresenter(utcTimeFormatter);
+    const rowsPresenter = new RowsPresenter(utcTimeFormatter, flowProgressContainer);
 
     const percentPerSecond = 12345;
 

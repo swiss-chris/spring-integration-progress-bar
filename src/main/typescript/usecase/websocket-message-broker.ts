@@ -12,12 +12,13 @@ export const websocketMessages = new Subject<WebsocketMessage>();
 
 let websocketConnector: WebsocketConnector | undefined;
 
-export function initializeWebsocketConnector(): WebsocketConnector {
+// TODO unit test this class
+export function getWebsocketConnector(): WebsocketConnector {
     if (!websocketConnector) {
         websocketConnector = new WebsocketConnector(
             `${getBackendUrl()}/messages`,
             ({data}: { data: string }) => websocketMessages.next(JSON.parse(data))
-        ).connect();
+        );
     }
     return websocketConnector;
 }

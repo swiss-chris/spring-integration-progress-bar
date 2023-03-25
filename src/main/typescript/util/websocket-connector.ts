@@ -10,17 +10,17 @@ export class WebsocketConnector {
         this.onMessageReceived = onMessageReceived;
     }
 
-    connect() {
-        this.socket = new SockJS(this.url);
-        this.socket.onmessage = this.onMessageReceived;
-        return this;
-    }
-
     reconnect() {
         // e.g. if the server was restarted
         if (this.isSocketClosed()) {
-            this.connect();
+            this._connect();
         }
+    }
+
+    _connect() {
+        this.socket = new SockJS(this.url);
+        this.socket.onmessage = this.onMessageReceived;
+        return this;
     }
 
     private isSocketClosed() {

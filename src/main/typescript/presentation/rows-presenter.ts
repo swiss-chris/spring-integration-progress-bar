@@ -8,9 +8,12 @@ export class RowsPresenter {
     private rowPresenter: RowPresenter;
     private flowProgressContainer: FlowProgressContainer;
 
-    constructor(timeFormatter: (date: Date) => string = localTimeFormatter) {
+    constructor(
+        timeFormatter: (date: Date) => string = localTimeFormatter,
+        flowProgressContainer: FlowProgressContainer = new FlowProgressContainer()
+    ) {
         this.rowPresenter = new RowPresenter(timeFormatter);
-        this.flowProgressContainer = new FlowProgressContainer();
+        this.flowProgressContainer = flowProgressContainer;
     }
 
     subscribe(callback: (data: RowPresentation[]) => void) {

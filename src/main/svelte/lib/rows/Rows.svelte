@@ -31,6 +31,7 @@
         subscription.unsubscribe();
     });
 
+    // TODO try to extract all business logic from this file
     function timerBasedUpdate() {
         console.log("timer tick received")
         const flowProgressList = flowProgressContainer.updateTime(new Date());

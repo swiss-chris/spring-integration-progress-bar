@@ -16,7 +16,7 @@ describe('flows progress container', () => {
             // the Flows object contains the list of all started (and known finished) Flow objects.
             const flowProgressContainer: FlowProgressContainer = new FlowProgressContainer([]);
 
-            const updatedFlowProgressContainer = flowProgressContainer.updatePercent(flowId, start, percent, now, percentPerSecond);
+            const updatedFlowProgressContainer = flowProgressContainer._updatePercent(flowId, start, percent, now, percentPerSecond);
 
             expect(updatedFlowProgressContainer.length).toBe(1);
             expect(updatedFlowProgressContainer[0].equals(new FlowProgress(flowId, Progress.create(start, now, percent), {percentPerSecond})))
@@ -37,7 +37,7 @@ describe('flows progress container', () => {
 
             const newPercent = 75;
             const newNow = new Date(1500);
-            const updatedFlowProgressContainer = flowProgressContainer.updatePercent(flowId, start, newPercent, newNow, percentPerSecond);
+            const updatedFlowProgressContainer = flowProgressContainer._updatePercent(flowId, start, newPercent, newNow, percentPerSecond);
 
             expect(updatedFlowProgressContainer.length)
                 .toBe(1);
@@ -61,7 +61,7 @@ describe('flows progress container', () => {
             const newNow = new Date(1500);
             const newFlowId = 'newFlowId';
             const newPercentPerSecond = 10;
-            const updatedFlowProgressContainer = flowProgressContainer.updatePercent(newFlowId, start, newPercent, newNow, newPercentPerSecond);
+            const updatedFlowProgressContainer = flowProgressContainer._updatePercent(newFlowId, start, newPercent, newNow, newPercentPerSecond);
 
             expect(updatedFlowProgressContainer.length)
                 .toBe(2);

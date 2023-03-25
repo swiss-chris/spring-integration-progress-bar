@@ -1,13 +1,24 @@
 import { FlowProgress } from './flow-progress';
 import { Progress } from '../progress';
+import { Subject } from 'rxjs';
+import { websocketMessages } from '../websocket-message-broker';
 
 export class FlowProgressContainer {
     private flows: Map<string, FlowProgress> = new Map<string, FlowProgress>();
+    private updateReceived = new Subject<FlowProgress[]>();
 
     constructor(flows: FlowProgress[] = []) {
         for (const flow of flows) {
             this.flows.set(flow.flowId, flow);
         }
+        websocketMessages.subscribe(({flowId, start, percent, percentPerSecond}) => {
+            const flowProgresses = this._updatePercent(flowId, new Date(parseInt(start)), percent, new Date(), percentPerSecond);
+            this.updateReceived.next(flowProgresses);
+        })
+    }
+
+    subscribe(callback: (data: FlowProgress[]) => void) {
+        this.updateReceived.subscribe(callback);
     }
 
     contains(flowId: string): boolean {
@@ -18,7 +29,7 @@ export class FlowProgressContainer {
         return this.getFlowsAsArray().every(flow => flow.progress.isFinished);
     }
 
-    updatePercent(flowId: string, start: Date, percent: number, now: Date, percentPerSecond: number): FlowProgress[] {
+    _updatePercent(flowId: string, start: Date, percent: number, now: Date, percentPerSecond: number): FlowProgress[] {
         // check if we already have a flow with this flowId
         const flow = this.flows.get(flowId);
         if (!flow) {

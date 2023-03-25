@@ -12,13 +12,13 @@ describe('rows-presenter', () => {
 
     describe('toSortedRows()', () => {
         test('empty in, empty out', () => {
-            const rows = rowsPresenter.toSortedRows([]);
+            const rows = rowsPresenter._toSortedRows([]);
 
             expect(rows).toEqual([]);
         });
 
         test('one row', () => {
-            const rows = rowsPresenter.toSortedRows([
+            const rows = rowsPresenter._toSortedRows([
                 new FlowProgress('flowId', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond})
             ]);
 
@@ -38,7 +38,7 @@ describe('rows-presenter', () => {
         });
 
         test('three rows', () => {
-            const rows = rowsPresenter.toSortedRows([
+            const rows = rowsPresenter._toSortedRows([
                 new FlowProgress('flowId3', Progress.create(new Date(0), new Date(1000), 75), {percentPerSecond}),
                 new FlowProgress('flowId1', Progress.create(new Date(0), new Date(1000), 25), {percentPerSecond}),
                 new FlowProgress('flowId2', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond})
@@ -53,7 +53,7 @@ describe('rows-presenter', () => {
 
     describe('sort()', () => {
         test('three rows', () => {
-            const sorted = rowsPresenter.sort([
+            const sorted = rowsPresenter._sort([
                 new FlowProgress('flowId2', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond}),
                 new FlowProgress('flowId1', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond}),
                 new FlowProgress('flowId3', Progress.create(new Date(0), new Date(1000), 50), {percentPerSecond})

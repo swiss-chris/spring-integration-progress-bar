@@ -1,31 +1,48 @@
 import { FlowProgress } from './flow-progress';
 import { Progress } from '../progress';
-import { Subject } from 'rxjs';
+import { OnOffTimer } from '../timer';
 import { websocketMessages } from '../websocket-message-broker';
 
 export class FlowProgressContainer {
     private flows: Map<string, FlowProgress> = new Map<string, FlowProgress>();
-    private updateReceived = new Subject<FlowProgress[]>();
+    private timer: OnOffTimer;
 
     constructor(flows: FlowProgress[] = []) {
         for (const flow of flows) {
             this.flows.set(flow.flowId, flow);
         }
-        websocketMessages.subscribe(({flowId, start, percent, percentPerSecond}) => {
-            const flowProgresses = this._updatePercent(flowId, new Date(parseInt(start)), percent, new Date(), percentPerSecond);
-            this.updateReceived.next(flowProgresses);
-        })
+        this.timer = new OnOffTimer();
     }
 
     subscribe(callback: (data: FlowProgress[]) => void) {
-        this.updateReceived.subscribe(callback);
+        const websocketMessagesSubscription = websocketMessages.subscribe(({flowId, start, percent, percentPerSecond}) => {
+            const flowProgresses = this._updatePercent(flowId, new Date(parseInt(start)), percent, new Date(), percentPerSecond);
+            this._resetTimer();
+            callback(flowProgresses);
+        });
+        const timerSubscription = this.timer.subscribe(() => {
+            console.log("timer tick received")
+            const flowProgresses = this.updateTime(new Date());
+            callback(flowProgresses);
+        });
+        return {
+            unsubscribe: () => {
+                websocketMessagesSubscription.unsubscribe();
+                timerSubscription.unsubscribe();
+                this.timer.deactivate();
+            }
+        }
     }
 
-    contains(flowId: string): boolean {
-        return this.flows.has(flowId);
+    _resetTimer() {
+        if (this._allFinished()) {
+            this.timer.deactivate();
+        } else {
+            this.timer.keepActive();
+        }
     }
 
-    allFinished(): boolean {
+    _allFinished(): boolean {
         return this.getFlowsAsArray().every(flow => flow.progress.isFinished);
     }
 

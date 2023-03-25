@@ -1,12 +1,14 @@
+import { Subject, Subscription } from "rxjs";
+
 export class OnOffTimer {
     private static readonly ONE_SECOND = 1000;
 
-    private readonly callback;
     private intervalId?: NodeJS.Timer;
     private isActive = false;
+    private timerTick = new Subject<void>()
 
-    constructor(callback: () => void) {
-        this.callback = callback;
+    subscribe(callback: () => void): Subscription {
+        return this.timerTick.subscribe(callback);
     }
 
     deactivate() {
@@ -22,8 +24,8 @@ export class OnOffTimer {
     }
 
     private activate() {
-        this.callback(); // the first time, execute immediately without waiting for timeout/interval.
-        this.intervalId = setInterval(this.callback, OnOffTimer.ONE_SECOND);
+        this.timerTick.next(); // the first time, execute immediately without waiting for timeout/interval.
+        this.intervalId = setInterval(() => this.timerTick.next(), OnOffTimer.ONE_SECOND);
         this.isActive = true;
     }
 }

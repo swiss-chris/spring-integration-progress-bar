@@ -1,7 +1,7 @@
 import { getBackendUrl, WebsocketConnector } from 'main-typescript/util';
 import { Subject } from 'rxjs';
 
-interface WebsocketMessage {
+export interface WebsocketMessage {
     flowId: string,
     start: string,
     percent: number,

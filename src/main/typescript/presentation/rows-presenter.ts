@@ -3,21 +3,24 @@ import { RowPresenter } from './row-presenter';
 import type { FlowProgress } from '../usecase';
 import { FlowProgressContainer } from '../usecase';
 import { localTimeFormatter } from '../core';
-import { Subject } from 'rxjs';
 
 export class RowsPresenter {
     private rowPresenter: RowPresenter;
     private flowProgressContainer: FlowProgressContainer;
-    private updateReceived = new Subject<RowPresentation[]>()
 
     constructor(timeFormatter: (date: Date) => string = localTimeFormatter) {
         this.rowPresenter = new RowPresenter(timeFormatter);
         this.flowProgressContainer = new FlowProgressContainer();
-        this.flowProgressContainer.subscribe((data: FlowProgress[]) => this.updateReceived.next(this._toSortedRows(data)))
     }
 
     subscribe(callback: (data: RowPresentation[]) => void) {
-        this.updateReceived.subscribe(callback);
+        const flowProgressSubscription = this.flowProgressContainer.subscribe((data: FlowProgress[]) => {
+            callback(this._toSortedRows(data));
+        });
+
+        return {
+            unsubscribe: () => flowProgressSubscription.unsubscribe()
+        };
     }
 
     _toSortedRows(flowProgressList: FlowProgress[]): RowPresentation[] {

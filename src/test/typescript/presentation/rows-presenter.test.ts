@@ -5,7 +5,10 @@ import { Progress } from 'main-typescript/usecase';
 import { expectResults } from './row-presenter.test';
 import { utcTimeFormatter } from '../core/time.test';
 
-const flowProgressContainer = new FlowProgressContainer([], vi.fn());
+const getWSConnectorMock = vi.fn(() => ({
+    reconnect: vi.fn()
+}));
+const flowProgressContainer = new FlowProgressContainer([], getWSConnectorMock);
 
 describe('rows-presenter', () => {
     const rowsPresenter = new RowsPresenter(utcTimeFormatter, flowProgressContainer);

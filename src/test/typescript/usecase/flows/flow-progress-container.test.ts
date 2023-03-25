@@ -3,7 +3,9 @@ import { FlowProgressContainer } from 'main-typescript/usecase';
 import { Progress } from 'main-typescript/usecase';
 import { FlowProgress } from 'main-typescript/usecase';
 
-const mockGetWSConnector = vi.fn();
+const mockGetWSConnector = vi.fn(() => ({
+    reconnect: vi.fn()
+}));
 
 describe('flows progress container', () => {
     describe('updatePercent', () => {
@@ -15,7 +17,6 @@ describe('flows progress container', () => {
             const now = new Date(1000);
             const percentPerSecond = 10;
 
-            // the Flows object contains the list of all started (and known finished) Flow objects.
             const flowProgressContainer: FlowProgressContainer = new FlowProgressContainer([], mockGetWSConnector);
 
             const updatedFlowProgressContainer = flowProgressContainer._updatePercent(flowId, start, percent, now, percentPerSecond);

@@ -1,5 +1,6 @@
 import SockJS from 'sockjs-client/dist/sockjs';
 
+// TODO unit test
 export class WebsocketConnector {
     private readonly url;
     private readonly onMessageReceived;

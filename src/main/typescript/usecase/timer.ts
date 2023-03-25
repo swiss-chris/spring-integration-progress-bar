@@ -21,7 +21,6 @@ export class OnOffTimer {
         this.isActive = false;
     }
 
-    // TODO try to unit test all timer on/off logic in isolation
     keepActive() {
         if (!this.isActive) {
             this.activate();

@@ -1,5 +1,9 @@
 import SockJS from 'sockjs-client/dist/sockjs';
 
+export interface IWebsocketConnector {
+    reconnect: () => void
+}
+
 // TODO unit test
 export class WebsocketConnector {
     private readonly url;

@@ -1,11 +1,6 @@
-import { test, expect, describe, vi } from 'vitest';
-import { FlowProgressContainer } from 'main-typescript/usecase';
-import { Progress } from 'main-typescript/usecase';
-import { FlowProgress } from 'main-typescript/usecase';
-
-const mockGetWSConnector = vi.fn(() => ({
-    reconnect: vi.fn()
-}));
+import { test, expect, describe } from 'vitest';
+import { FlowProgressContainer, Progress, FlowProgress } from 'main-typescript/usecase';
+import { mockGetWSConnector } from '../../test-util';
 
 describe('flows progress container', () => {
     describe('updatePercent', () => {

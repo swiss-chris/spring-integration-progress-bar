@@ -2,7 +2,7 @@ import { FlowProgress } from './flow-progress';
 import { Progress } from '../progress';
 import { OnOffTimer } from '../timer';
 import { websocketMessages, getWebsocketConnector } from '../websocket-message-broker';
-import { WebsocketConnector } from '../../util';
+import { IWebsocketConnector } from '../../util';
 
 export class FlowProgressContainer {
     private flows: Map<string, FlowProgress> = new Map<string, FlowProgress>();
@@ -10,7 +10,7 @@ export class FlowProgressContainer {
 
     constructor(
         flows: FlowProgress[] = [],
-        _getWebsocketConnector: () => WebsocketConnector = getWebsocketConnector
+        _getWebsocketConnector: () => IWebsocketConnector = getWebsocketConnector
     ) {
         for (const flow of flows) {
             this.flows.set(flow.flowId, flow);

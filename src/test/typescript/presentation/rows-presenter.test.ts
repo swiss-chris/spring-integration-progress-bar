@@ -1,14 +1,12 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect } from 'vitest';
 import { RowsPresenter } from 'main-typescript/presentation';
 import { FlowProgress, FlowProgressContainer } from 'main-typescript/usecase/flow';
 import { Progress } from 'main-typescript/usecase';
 import { expectResults } from './row-presenter.test';
 import { utcTimeFormatter } from '../core/time.test';
+import { mockGetWSConnector } from '../test-util';
 
-const getWSConnectorMock = vi.fn(() => ({
-    reconnect: vi.fn()
-}));
-const flowProgressContainer = new FlowProgressContainer([], getWSConnectorMock);
+const flowProgressContainer = new FlowProgressContainer([], mockGetWSConnector);
 
 describe('rows-presenter', () => {
     const rowsPresenter = new RowsPresenter(utcTimeFormatter, flowProgressContainer);

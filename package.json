@@ -4,31 +4,54 @@
   "version": "1.0.0",
   "type": "module",
   "workspaces": [
+    "src/main/angular",
     "src/main/svelte",
     "src/main/typescript",
     "src/test/typescript"
   ],
   "scripts": {
     "test": "npm run test --workspace=src/test/typescript",
-    "dev": "npm run dev --workspace=src/main/svelte",
-    "dev:codespaces": "npm run dev:codespaces --workspace=src/main/svelte",
-    "build": "npm run build --workspace=src/main/svelte",
-    "preview": "npm run preview --workspace=src/main/svelte",
-    "check": "npm run check --tsconfig src/main/svelte/tsconfig.json"
+    "angular-start": "npm run start --workspace=src/main/angular",
+    "svelte-dev": "npm run dev --workspace=src/main/svelte",
+    "svelte-dev:codespaces": "npm run dev:codespaces --workspace=src/main/svelte",
+    "svelte-build": "npm run build --workspace=src/main/svelte",
+    "svelte-preview": "npm run preview --workspace=src/main/svelte",
+    "svelte-check": "npm run check --tsconfig src/main/svelte/tsconfig.json"
   },
   "devDependencies": {
-    "@types/sockjs-client": "^1.5.1",
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "@tsconfig/svelte": "^3.0.0",
+    "@types/sockjs-client": "^1.5.1",
     "svelte": "^3.55.1",
     "svelte-check": "^2.10.3",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.4",
-    "vitest": "^0.29.2"
+    "vitest": "^0.29.2",
+    "@angular-devkit/build-angular": "^15.2.4",
+    "@angular/cli": "~15.2.4",
+    "@angular/compiler-cli": "^15.2.0",
+    "@types/jasmine": "~4.3.0",
+    "jasmine-core": "~4.5.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0"
   },
   "dependencies": {
+    "@angular/cli": "^15.2.4",
+    "rxjs": "^7.8.0",
     "sockjs-client": "^1.6.1",
-    "rxjs": "^7.8.0"
+    "@angular/animations": "^15.2.0",
+    "@angular/common": "^15.2.0",
+    "@angular/compiler": "^15.2.0",
+    "@angular/core": "^15.2.0",
+    "@angular/forms": "^15.2.0",
+    "@angular/platform-browser": "^15.2.0",
+    "@angular/platform-browser-dynamic": "^15.2.0",
+    "@angular/router": "^15.2.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
   }
 }

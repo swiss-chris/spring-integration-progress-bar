@@ -5,3 +5,6 @@ node/
 
 **/resources/static/*[.js, .map]
 .devcontainer/devcontainer.json.bak
+
+# Angular
+**/.angular/cache
